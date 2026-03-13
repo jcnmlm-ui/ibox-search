@@ -354,9 +354,9 @@
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
         
         // 模擬格位資料：由於目前後端還沒傳送真實數據，先用隨機數字展示 UI 效果
-        const boxL = Math.floor(Math.random() * 5) + 2;  // 大格 (2~6)
-        const boxM = Math.floor(Math.random() * 15) + 10; // 中格 (10~24)
-        const boxS = Math.floor(Math.random() * 20) + 10; // 小格 (10~29)
+        const boxL = item.boxL; 
+        const boxM = item.boxM; 
+        const boxS = item.boxS;
 
         html += `
           <div class="result-card">
