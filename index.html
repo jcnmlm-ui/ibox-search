@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>i 郵箱機車導航搜尋</title>
+  <title>ｉ郵箱查找大師</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
   
@@ -18,16 +18,23 @@
       background: white; border-radius: 16px; padding: 18px; 
       margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea;
     }
-    .ad-slot { 
-      background: #fff8e1; border: 1px dashed #ffd54f; border-radius: 16px; 
-      padding: 15px; text-align: center; margin-bottom: 20px; color: #b79013; 
+    
+    /* 新增：招商廣告版位的專屬樣式 */
+    .ad-banner { 
+      background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 16px; 
+      padding: 20px 15px; text-align: center; margin-bottom: 16px; color: #6c757d; 
     }
-    .ad-slot h5 { font-weight: 700; font-size: 1.1rem; }
+    .ad-banner h6 { font-weight: 700; color: #495057; margin-bottom: 8px; }
+    .ad-banner p { font-size: 0.95rem; margin-bottom: 0; line-height: 1.5; }
+    
     .btn-gps { 
       width: 100%; border-radius: 12px; padding: 12px; font-weight: 500; 
       margin-bottom: 20px; background-color: #28a745; color: white; border: none;
     }
     .btn-gps:hover { background-color: #218838; }
+    
+    /* 新增：為新的輸入框統一外觀 */
+    .filter-input { border-radius: 12px; padding: 12px; }
     .search-group input { border-radius: 12px 0 0 12px; padding: 12px; }
     .search-group button { border-radius: 0 12px 12px 0; padding: 12px 20px; }
     .loading { display: none; margin-top: 20px; }
@@ -36,16 +43,32 @@
 </head>
 <body>
   <div class="container">
-    <h2 class="text-center mb-4" style="font-weight: 700;">🛵 i 郵箱機車導航搜尋</h2>
+    <h2 class="text-center mb-4" style="font-weight: 700;">🛵 ｉ郵箱查找大師</h2>
     
-    <div class="ad-slot">
-      <h5>【 贊助合作推薦 】</h5>
-      <p class="mb-0" style="font-size: 0.95rem;">這裡可以放置您的廣告連結或合作店家資訊</p>
+    <div class="ad-banner mb-4">
+      <h6>廣告版位 (展示尺寸: 320 x 100)</h6>
+      <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
     </div>
 
-    <div class="input-group search-group mb-3">
-      <input type="text" id="addressInput" class="form-control" placeholder="請輸入您的位置(例如：台北車站)">
-      <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn">搜尋</button>
+    <!-- 替換：全新的三欄位動態搜尋區塊 -->
+    <div class="row g-2 mb-3">
+      <!-- 縣市 -->
+      <div class="col-6">
+        <input type="text" id="cityInput" class="form-control filter-input" list="cityList" placeholder="縣市(下拉/輸入)" onchange="updateDistricts()" oninput="updateDistricts()">
+        <datalist id="cityList"></datalist>
+      </div>
+      <!-- 鄉鎮市區 -->
+      <div class="col-6">
+        <input type="text" id="districtInput" class="form-control filter-input" list="districtList" placeholder="鄉鎮市區">
+        <datalist id="districtList"></datalist>
+      </div>
+      <!-- 詳細地址與搜尋按鈕 -->
+      <div class="col-12">
+        <div class="input-group search-group">
+          <input type="text" id="detailInput" class="form-control" placeholder="詳細地址或路名 (選填)">
+          <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn">搜尋</button>
+        </div>
+      </div>
     </div>
 
     <button class="btn-gps shadow-sm" onclick="startSearchGPS()" id="gpsBtn">
@@ -58,6 +81,12 @@
     </div>
 
     <div id="results"></div>
+
+    <!-- 新增：初始狀態顯示在底部的廣告版位 -->
+    <div id="bottomAd" class="ad-banner mt-4 mb-2">
+      <h6>廣告版位 (展示尺寸: 320 x 100)</h6>
+      <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
+    </div>
 
     <div class="footer-copy">
       Design by Chiahsien &copy; 高雄郵局企劃行銷科<br>
@@ -72,26 +101,81 @@
     // 偵測是否為 LINE 內建瀏覽器
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
-    // 若為 LINE 瀏覽器，自動在畫面上方加入警告提示
+    // 台灣縣市與鄉鎮市區資料庫 (使用「台」字方便使用者輸入過濾)
+    const taiwanData = {
+      "台北市": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區", "北投區", "內湖區", "南港區", "文山區"],
+      "新北市": ["萬里區", "金山區", "板橋區", "汐止區", "深坑區", "石碇區", "瑞芳區", "平溪區", "雙溪區", "貢寮區", "新店區", "坪林區", "烏來區", "永和區", "中和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "新莊區", "泰山區", "林口區", "蘆洲區", "五股區", "八里區", "淡水區", "三芝區", "石門區"],
+      "桃園市": ["中壢區", "平鎮區", "龍潭區", "楊梅區", "新屋區", "觀音區", "桃園區", "龜山區", "八德區", "大溪區", "復興區", "大園區", "蘆竹區"],
+      "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
+      "台南市": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "歸仁區", "新化區", "左鎮區", "玉井區", "楠西區", "南化區", "仁德區", "關廟區", "龍崎區", "官田區", "麻豆區", "佳里區", "西港區", "七股區", "將軍區", "學甲區", "北門區", "新營區", "後壁區", "白河區", "東山區", "六甲區", "下營區", "柳營區", "鹽水區", "善化區", "大內區", "山上區", "新市區", "安定區"],
+      "高雄市": ["新興區", "前金區", "苓雅區", "鹽埕區", "鼓山區", "旗津區", "前鎮區", "三民區", "楠梓區", "小港區", "左營區", "仁武區", "大社區", "東沙群島", "南沙群島", "岡山區", "路竹區", "阿蓮區", "田寮區", "燕巢區", "橋頭區", "梓官區", "彌陀區", "永安區", "湖內區", "鳳山區", "大寮區", "林園區", "鳥松區", "大樹區", "旗山區", "美濃區", "六龜區", "內門區", "杉林區", "甲仙區", "桃源區", "那瑪夏區", "茂林區"],
+      "基隆市": ["仁愛區", "信義區", "中正區", "中山區", "安樂區", "暖暖區", "七堵區"],
+      "新竹市": ["東區", "北區", "香山區"],
+      "嘉義市": ["東區", "西區"],
+      "新竹縣": ["竹北市", "湖口鄉", "新豐鄉", "新埔鎮", "關西鎮", "芎林鄉", "寶山鄉", "竹東鎮", "五峰鄉", "橫山鄉", "尖石鄉", "北埔鄉", "峨眉鄉"],
+      "苗栗縣": ["竹南鎮", "頭份市", "三灣鄉", "南庄鄉", "獅潭鄉", "後龍鎮", "通霄鎮", "苑裡鎮", "苗栗市", "造橋鄉", "頭屋鄉", "公館鄉", "大湖鄉", "泰安鄉", "銅鑼鄉", "三義鄉", "西湖鄉", "卓蘭鎮"],
+      "彰化縣": ["彰化市", "芬園鄉", "花壇鄉", "秀水鄉", "鹿港鎮", "福興鄉", "線西鄉", "和美鎮", "伸港鄉", "員林市", "社頭鄉", "永靖鄉", "埔心鄉", "溪湖鎮", "大村鄉", "埔鹽鄉", "田中鎮", "北斗鎮", "田尾鄉", "埤頭鄉", "溪州鄉", "竹塘鄉", "二林鎮", "大城鄉", "芳苑鄉", "二水鄉"],
+      "南投縣": ["南投市", "中寮鄉", "草屯鎮", "國姓鄉", "埔里鎮", "仁愛鄉", "名間鄉", "集集鎮", "水里鄉", "魚池鄉", "信義鄉", "竹山鎮", "鹿谷鄉"],
+      "雲林縣": ["斗南鎮", "大埤鄉", "虎尾鎮", "土庫鎮", "褒忠鄉", "東勢鄉", "台西鄉", "崙背鄉", "麥寮鄉", "斗六市", "林內鄉", "古坑鄉", "莿桐鄉", "西螺鎮", "二崙鄉", "北港鎮", "水林鄉", "口湖鄉", "四湖鄉", "元長鄉"],
+      "嘉義縣": ["番路鄉", "梅山鄉", "竹崎鄉", "阿里山鄉", "中埔鄉", "大埔鄉", "水上鄉", "鹿草鄉", "太保市", "朴子市", "東石鄉", "六腳鄉", "新港鄉", "民雄鄉", "大林鎮", "溪口鄉", "義竹鄉", "布袋鎮"],
+      "屏東縣": ["屏東市", "三地門鄉", "霧台鄉", "瑪家鄉", "九如鄉", "里港鄉", "高樹鄉", "鹽埔鄉", "長治鄉", "麟洛鄉", "竹田鄉", "內埔鄉", "萬丹鄉", "潮州鎮", "泰武鄉", "來義鄉", "萬巒鄉", "崁頂鄉", "新埤鄉", "南州鄉", "林邊鄉", "東港鎮", "琉球鄉", "佳冬鄉", "新園鄉", "枋寮鄉", "枋山鄉", "春日鄉", "獅子鄉", "車城鄉", "牡丹鄉", "恆春鎮", "滿州鄉"],
+      "宜蘭縣": ["宜蘭市", "頭城鎮", "礁溪鄉", "壯圍鄉", "員山鄉", "羅東鎮", "三星鄉", "大同鄉", "五結鄉", "冬山鄉", "蘇澳鎮", "南澳鄉", "釣魚台"],
+      "花蓮縣": ["花蓮市", "新城鄉", "秀林鄉", "吉安鄉", "壽豐鄉", "鳳林鎮", "光復鄉", "豐濱鄉", "瑞穗鄉", "萬榮鄉", "玉里鎮", "卓溪鄉", "富里鄉"],
+      "台東縣": ["台東市", "綠島鄉", "蘭嶼鄉", "延平鄉", "卑南鄉", "鹿野鄉", "關山鎮", "海端鄉", "池上鄉", "東河鄉", "成功鎮", "長濱鄉", "太麻里鄉", "金峰鄉", "大武鄉", "達仁鄉"],
+      "澎湖縣": ["馬公市", "西嶼鄉", "望安鄉", "七美鄉", "白沙鄉", "湖西鄉"],
+      "金門縣": ["金沙鎮", "金湖鎮", "金寧鄉", "金城鎮", "烈嶼鄉", "烏坵鄉"],
+      "連江縣": ["南竿鄉", "北竿鄉", "莒光鄉", "東引鄉"]
+    };
+
+    // 初始化與警告提示
     window.onload = function() {
+      // 1. 動態載入縣市選單
+      const cityList = document.getElementById('cityList');
+      for (let city in taiwanData) {
+        let option = document.createElement('option');
+        option.value = city;
+        cityList.appendChild(option);
+      }
+
+      // 2. LINE 瀏覽器警告
       if (isLineApp) {
         const warning = document.createElement('div');
         warning.className = 'alert alert-danger text-center mb-3 shadow-sm';
         warning.style.borderRadius = '12px';
         warning.innerHTML = '<strong>⚠️ 偵測到 LINE 內建瀏覽器</strong><br>定位功能將受到限制。請點擊螢幕角落的選單，選擇<strong>「以預設瀏覽器開啟」</strong> (Safari/Chrome) 以獲得最佳體驗！';
         
-        // 將警告插入到標題的下方
         const container = document.querySelector('.container');
         const title = container.querySelector('h2');
         title.insertAdjacentElement('afterend', warning);
       }
     };
 
+    // 連動更新：當縣市改變時，載入對應的鄉鎮市區
+    function updateDistricts() {
+      const city = document.getElementById('cityInput').value.trim();
+      const districtList = document.getElementById('districtList');
+      
+      // 清空舊的區域選項
+      districtList.innerHTML = '';
+      
+      // 若有選擇縣市，載入對應區域
+      if (taiwanData[city]) {
+        taiwanData[city].forEach(district => {
+          let option = document.createElement('option');
+          option.value = district;
+          districtList.appendChild(option);
+        });
+      }
+    }
+
     function toggleUI(isProcessing) {
       document.getElementById('searchBtn').disabled = isProcessing;
       document.getElementById('gpsBtn').disabled = isProcessing;
       document.getElementById('loader').style.display = isProcessing ? 'block' : 'none';
-      if(isProcessing) document.getElementById('results').innerHTML = '';
+      if(isProcessing) {
+        document.getElementById('results').innerHTML = '';
+        document.getElementById('bottomAd').style.display = 'none'; // 搜尋時先隱藏底部廣告
+      }
     }
 
     // 發送請求到 GAS 後端
@@ -115,14 +199,26 @@
       } catch (err) {
         alert('系統發生錯誤：' + err.message);
         toggleUI(false);
+        document.getElementById('bottomAd').style.display = 'block'; // 發生錯誤時恢復底部廣告
       }
     }
 
     function startSearchText() {
-      const addr = document.getElementById('addressInput').value;
-      if (!addr) return alert('請輸入地址');
+      // 抓取三個欄位的值
+      const city = document.getElementById('cityInput').value.trim();
+      const district = document.getElementById('districtInput').value.trim();
+      const detail = document.getElementById('detailInput').value.trim();
+
+      // 防呆：如果全空就不給搜
+      if (!city && !district && !detail) {
+        return alert('請至少輸入縣市、區域或地標！');
+      }
+
+      // 將三個欄位無縫組合起來交給 Google 導航 API
+      const fullAddress = city + district + detail;
+
       toggleUI(true);
-      callBackendAPI(addr); // 傳送地址字串
+      callBackendAPI(fullAddress); 
     }
 
     function startSearchGPS() {
@@ -140,6 +236,7 @@
           },
           (error) => {
             toggleUI(false);
+            document.getElementById('bottomAd').style.display = 'block'; // 發生錯誤時恢復底部廣告
             if (error.code === 1) {
               alert('【定位被拒絕】請允許瀏覽器存取您的位置權限。');
             } else {
@@ -156,6 +253,20 @@
     function showResults(data) {
       toggleUI(false);
       let html = '';
+      
+      // 新增：動態插入結果列表中的廣告版位 HTML
+      const adBannerHtml = `
+        <div class="ad-banner shadow-sm" style="background: #fff;">
+          <h6>廣告版位 (展示尺寸: 320 x 100)</h6>
+          <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
+        </div>
+      `;
+
+      // 偵測是否為手機裝置 (iOS 或 Android)
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      // 手機版取消 target="_blank"，讓系統能直接喚醒 Google Maps App；電腦版保留開新分頁
+      const targetAttr = isMobile ? '' : 'target="_blank"';
+
       data.forEach((item, index) => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
         html += `
@@ -169,11 +280,16 @@
                 <button class="btn btn-outline-secondary w-100" onclick="copyText('${item.address}')">複製地址</button>
               </div>
               <div class="col-6">
-                <a href="${mapUrl}" target="_blank" class="btn btn-primary w-100">開啟導航</a>
+                <a href="${mapUrl}" ${targetAttr} class="btn btn-primary w-100">開啟導航</a>
               </div>
             </div>
           </div>
         `;
+
+        // 新增核心邏輯：在第 1 近與第 2 近的結果之間 (index 為 0 的後面) 插入廣告
+        if (index === 0) {
+          html += adBannerHtml;
+        }
       });
       document.getElementById('results').innerHTML = html;
     }
