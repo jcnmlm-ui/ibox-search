@@ -19,13 +19,13 @@
       margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea;
     }
     
-    /* 招商廣告版位的專屬樣式 */
+    /* 招商廣告版位的專屬樣式 (已調小高度以符合 320x80) */
     .ad-banner { 
       background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 16px; 
-      padding: 20px 15px; text-align: center; margin-bottom: 16px; color: #6c757d; 
+      padding: 12px 15px; text-align: center; margin-bottom: 16px; color: #6c757d; 
     }
-    .ad-banner h6 { font-weight: 700; color: #495057; margin-bottom: 8px; }
-    .ad-banner p { font-size: 0.95rem; margin-bottom: 0; line-height: 1.5; }
+    .ad-banner h6 { font-weight: 700; color: #495057; margin-bottom: 4px; }
+    .ad-banner p { font-size: 0.9rem; margin-bottom: 0; line-height: 1.4; }
     
     .btn-gps { 
       width: 100%; border-radius: 12px; padding: 12px; font-weight: 500; 
@@ -46,7 +46,7 @@
     <h2 class="text-center mb-4" style="font-weight: 700;">🛵 ｉ郵箱查找大師</h2>
     
     <div class="ad-banner mb-4">
-      <h6>廣告版位 (展示尺寸: 320 x 100)</h6>
+      <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
       <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
     </div>
 
@@ -86,7 +86,7 @@
 
     <!-- 初始狀態顯示在底部的廣告版位 -->
     <div id="bottomAd" class="ad-banner mt-4 mb-2">
-      <h6>廣告版位 (展示尺寸: 320 x 100)</h6>
+      <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
       <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
     </div>
 
@@ -278,7 +278,7 @@
       // 動態插入結果列表中的廣告版位 HTML
       const adBannerHtml = `
         <div class="ad-banner shadow-sm" style="background: #fff;">
-          <h6>廣告版位 (展示尺寸: 320 x 100)</h6>
+          <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
           <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
         </div>
       `;
