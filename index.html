@@ -67,7 +67,25 @@
 
   <script>
     // 🔥 重要：請將這串網址替換為你剛剛在 GAS 部署產生的 Web App URL！
-    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwXO-oMiYRG4RuqenL4lBtBKuIY2S3U_QSnDxMGQ_kEpwgXzW8Q7wvWObBL_wHPpe2A6Q/exec';
+    const GAS_API_URL = '請貼上你的_GAS_網頁應用程式網址';
+
+    // 偵測是否為 LINE 內建瀏覽器
+    const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
+
+    // 若為 LINE 瀏覽器，自動在畫面上方加入警告提示
+    window.onload = function() {
+      if (isLineApp) {
+        const warning = document.createElement('div');
+        warning.className = 'alert alert-danger text-center mb-3 shadow-sm';
+        warning.style.borderRadius = '12px';
+        warning.innerHTML = '<strong>⚠️ 偵測到 LINE 內建瀏覽器</strong><br>定位功能將受到限制。請點擊螢幕角落的選單，選擇<strong>「以預設瀏覽器開啟」</strong> (Safari/Chrome) 以獲得最佳體驗！';
+        
+        // 將警告插入到標題的下方
+        const container = document.querySelector('.container');
+        const title = container.querySelector('h2');
+        title.insertAdjacentElement('afterend', warning);
+      }
+    };
 
     function toggleUI(isProcessing) {
       document.getElementById('searchBtn').disabled = isProcessing;
@@ -79,7 +97,9 @@
     // 發送請求到 GAS 後端
     async function callBackendAPI(inputData) {
       try {
-        const response = await fetch(GAS_API_URL, {
+        // 加入 .trim() 魔法：自動把網址前後不小心複製到的隱藏空白和換行刪掉
+        const cleanUrl = GAS_API_URL.trim();
+        const response = await fetch(cleanUrl, {
           method: 'POST',
           // 避免跨域預檢的寫法
           body: JSON.stringify({ inputData: inputData })
@@ -106,6 +126,11 @@
     }
 
     function startSearchGPS() {
+      if (isLineApp) {
+        alert('【功能受限】\n\nLINE 內建瀏覽器會阻擋定位請求。\n\n👉 請點擊畫面上方或下方的選單按鈕，選擇「以預設瀏覽器開啟」(Safari/Chrome) 後再試一次！');
+        return; // 直接中斷，不執行會報錯的定位程式
+      }
+
       if (navigator.geolocation) {
         toggleUI(true);
         navigator.geolocation.getCurrentPosition(
