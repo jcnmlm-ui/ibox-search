@@ -19,7 +19,7 @@
       margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea;
     }
     
-    /* 新增：招商廣告版位的專屬樣式 */
+    /* 招商廣告版位的專屬樣式 */
     .ad-banner { 
       background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 16px; 
       padding: 20px 15px; text-align: center; margin-bottom: 16px; color: #6c757d; 
@@ -33,7 +33,7 @@
     }
     .btn-gps:hover { background-color: #218838; }
     
-    /* 新增：為新的輸入框統一外觀 */
+    /* 為新的下拉框統一外觀 */
     .filter-input { border-radius: 12px; padding: 12px; }
     .search-group input { border-radius: 12px 0 0 12px; padding: 12px; }
     .search-group button { border-radius: 0 12px 12px 0; padding: 12px 20px; }
@@ -50,22 +50,24 @@
       <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
     </div>
 
-    <!-- 替換：全新的三欄位動態搜尋區塊 -->
+    <!-- 全新的純下拉選單與必填搜尋區塊 -->
     <div class="row g-2 mb-3">
-      <!-- 縣市 -->
+      <!-- 縣市 (純下拉) -->
       <div class="col-6">
-        <input type="text" id="cityInput" class="form-control filter-input" list="cityList" placeholder="縣市(下拉/輸入)" onchange="updateDistricts()" oninput="updateDistricts()">
-        <datalist id="cityList"></datalist>
+        <select id="cityInput" class="form-select filter-input" onchange="updateDistricts()">
+          <option value="">選擇縣市</option>
+        </select>
       </div>
-      <!-- 鄉鎮市區 -->
+      <!-- 鄉鎮市區 (純下拉) -->
       <div class="col-6">
-        <input type="text" id="districtInput" class="form-control filter-input" list="districtList" placeholder="鄉鎮市區">
-        <datalist id="districtList"></datalist>
+        <select id="districtInput" class="form-select filter-input">
+          <option value="">選擇鄉鎮市區</option>
+        </select>
       </div>
       <!-- 詳細地址與搜尋按鈕 -->
       <div class="col-12">
         <div class="input-group search-group">
-          <input type="text" id="detailInput" class="form-control" placeholder="詳細地址或路名 (選填)">
+          <input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)">
           <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn">搜尋</button>
         </div>
       </div>
@@ -82,7 +84,7 @@
 
     <div id="results"></div>
 
-    <!-- 新增：初始狀態顯示在底部的廣告版位 -->
+    <!-- 初始狀態顯示在底部的廣告版位 -->
     <div id="bottomAd" class="ad-banner mt-4 mb-2">
       <h6>廣告版位 (展示尺寸: 320 x 100)</h6>
       <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
@@ -101,7 +103,7 @@
     // 偵測是否為 LINE 內建瀏覽器
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
-    // 台灣縣市與鄉鎮市區資料庫 (使用「台」字方便使用者輸入過濾)
+    // 台灣縣市與鄉鎮市區資料庫
     const taiwanData = {
       "台北市": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區", "北投區", "內湖區", "南港區", "文山區"],
       "新北市": ["萬里區", "金山區", "板橋區", "汐止區", "深坑區", "石碇區", "瑞芳區", "平溪區", "雙溪區", "貢寮區", "新店區", "坪林區", "烏來區", "永和區", "中和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "新莊區", "泰山區", "林口區", "蘆洲區", "五股區", "八里區", "淡水區", "三芝區", "石門區"],
@@ -129,12 +131,13 @@
 
     // 初始化與警告提示
     window.onload = function() {
-      // 1. 動態載入縣市選單
-      const cityList = document.getElementById('cityList');
+      // 1. 動態載入縣市選單 (改為操作 select 標籤)
+      const citySelect = document.getElementById('cityInput');
       for (let city in taiwanData) {
         let option = document.createElement('option');
         option.value = city;
-        cityList.appendChild(option);
+        option.text = city;
+        citySelect.appendChild(option);
       }
 
       // 2. LINE 瀏覽器警告
@@ -152,18 +155,19 @@
 
     // 連動更新：當縣市改變時，載入對應的鄉鎮市區
     function updateDistricts() {
-      const city = document.getElementById('cityInput').value.trim();
-      const districtList = document.getElementById('districtList');
+      const city = document.getElementById('cityInput').value;
+      const districtSelect = document.getElementById('districtInput');
       
-      // 清空舊的區域選項
-      districtList.innerHTML = '';
+      // 清空舊的區域選項，保留預設選項
+      districtSelect.innerHTML = '<option value="">選擇鄉鎮市區</option>';
       
       // 若有選擇縣市，載入對應區域
       if (taiwanData[city]) {
         taiwanData[city].forEach(district => {
           let option = document.createElement('option');
           option.value = district;
-          districtList.appendChild(option);
+          option.text = district;
+          districtSelect.appendChild(option);
         });
       }
     }
@@ -181,8 +185,14 @@
     // 發送請求到 GAS 後端
     async function callBackendAPI(inputData) {
       try {
-        // 加入 .trim() 魔法：自動把網址前後不小心複製到的隱藏空白和換行刪掉
-        const cleanUrl = GAS_API_URL.trim();
+        // 加入終極清理魔法：自動把網址內所有不小心複製到的隱藏空白和換行刪除
+        const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
+        
+        // 防呆檢查：如果忘記貼上網址
+        if (cleanUrl.includes('請貼上')) {
+          throw new Error('開發者忘記在 GitHub 貼上 GAS API 網址了！請編輯程式碼補上。');
+        }
+
         const response = await fetch(cleanUrl, {
           method: 'POST',
           // 避免跨域預檢的寫法
@@ -205,13 +215,24 @@
 
     function startSearchText() {
       // 抓取三個欄位的值
-      const city = document.getElementById('cityInput').value.trim();
-      const district = document.getElementById('districtInput').value.trim();
+      const city = document.getElementById('cityInput').value;
+      const district = document.getElementById('districtInput').value;
       const detail = document.getElementById('detailInput').value.trim();
 
-      // 防呆：如果全空就不給搜
-      if (!city && !district && !detail) {
-        return alert('請至少輸入縣市、區域或地標！');
+      // 防呆：強烈要求三個欄位都必須填寫
+      if (!city) {
+        return alert('請選擇「縣市」！');
+      }
+      if (!district) {
+        return alert('請選擇「鄉鎮市區」！');
+      }
+      if (!detail) {
+        return alert('請輸入「詳細地址」！');
+      }
+
+      // 進階防呆：強制要求地址內必須包含門牌「號」
+      if (!detail.includes('號')) {
+        return alert('為確保導航精準度，詳細地址請務必包含門牌號碼 (例如：ＯＯ路ＸＸ號)！\n請勿僅輸入地標名稱 (如：高雄車站)。');
       }
 
       // 將三個欄位無縫組合起來交給 Google 導航 API
@@ -254,7 +275,7 @@
       toggleUI(false);
       let html = '';
       
-      // 新增：動態插入結果列表中的廣告版位 HTML
+      // 動態插入結果列表中的廣告版位 HTML
       const adBannerHtml = `
         <div class="ad-banner shadow-sm" style="background: #fff;">
           <h6>廣告版位 (展示尺寸: 320 x 100)</h6>
@@ -286,7 +307,7 @@
           </div>
         `;
 
-        // 新增核心邏輯：在第 1 近與第 2 近的結果之間 (index 為 0 的後面) 插入廣告
+        // 核心邏輯：在第 1 近與第 2 近的結果之間 (index 為 0 的後面) 插入廣告
         if (index === 0) {
           html += adBannerHtml;
         }
