@@ -1,1 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>i 郵箱機車導航搜尋</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body { 
+      background-color: #f4f6f9; 
+      font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; 
+      color: #333;
+    }
+    .container { max-width: 600px; margin-top: 25px; padding-bottom: 30px; }
+    .result-card { 
+      background: white; border-radius: 16px; padding: 18px; 
+      margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea;
+    }
+    .ad-slot { 
+      background: #fff8e1; border: 1px dashed #ffd54f; border-radius: 16px; 
+      padding: 15px; text-align: center; margin-bottom: 20px; color: #b79013; 
+    }
+    .ad-slot h5 { font-weight: 700; font-size: 1.1rem; }
+    .btn-gps { 
+      width: 100%; border-radius: 12px; padding: 12px; font-weight: 500; 
+      margin-bottom: 20px; background-color: #28a745; color: white; border: none;
+    }
+    .btn-gps:hover { background-color: #218838; }
+    .search-group input { border-radius: 12px 0 0 12px; padding: 12px; }
+    .search-group button { border-radius: 0 12px 12px 0; padding: 12px 20px; }
+    .loading { display: none; margin-top: 20px; }
+    .footer-copy { text-align: center; margin-top: 40px; font-size: 0.85rem; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center mb-4" style="font-weight: 700;">🛵 i 郵箱機車導航搜尋</h2>
+    
+    <div class="ad-slot">
+      <h5>【 贊助合作推薦 】</h5>
+      <p class="mb-0" style="font-size: 0.95rem;">這裡可以放置您的廣告連結或合作店家資訊</p>
+    </div>
 
+    <div class="input-group search-group mb-3">
+      <input type="text" id="addressInput" class="form-control" placeholder="請輸入您的位置(例如：台北車站)">
+      <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn">搜尋</button>
+    </div>
+
+    <button class="btn-gps shadow-sm" onclick="startSearchGPS()" id="gpsBtn">
+      📍 自動定位並搜尋附近
+    </button>
+
+    <div id="loader" class="text-center loading">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2 text-secondary">正在為您規劃最佳機車路徑...</p>
+    </div>
+
+    <div id="results"></div>
+
+    <div class="footer-copy">
+      Design by Chiahsien &copy; 高雄郵局企劃行銷科<br>
+      ｉ郵箱查找大師 beta
+    </div>
+  </div>
+
+  <script>
+    // 🔥 重要：請將這串網址替換為你剛剛在 GAS 部署產生的 Web App URL！
+    const GAS_API_URL = '請貼上你的_GAS_網頁應用程式網址';
+
+    function toggleUI(isProcessing) {
+      document.getElementById('searchBtn').disabled = isProcessing;
+      document.getElementById('gpsBtn').disabled = isProcessing;
+      document.getElementById('loader').style.display = isProcessing ? 'block' : 'none';
+      if(isProcessing) document.getElementById('results').innerHTML = '';
+    }
+
+    // 發送請求到 GAS 後端
+    async function callBackendAPI(inputData) {
+      try {
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          // 避免跨域預檢的寫法
+          body: JSON.stringify({ inputData: inputData })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          showResults(result.data);
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (err) {
+        alert('系統發生錯誤：' + err.message);
+        toggleUI(false);
+      }
+    }
+
+    function startSearchText() {
+      const addr = document.getElementById('addressInput').value;
+      if (!addr) return alert('請輸入地址');
+      toggleUI(true);
+      callBackendAPI(addr); // 傳送地址字串
+    }
+
+    function startSearchGPS() {
+      if (navigator.geolocation) {
+        toggleUI(true);
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
+            callBackendAPI(coords); // 傳送座標物件
+          },
+          (error) => {
+            toggleUI(false);
+            if (error.code === 1) {
+              alert('【定位被拒絕】請允許瀏覽器存取您的位置權限。');
+            } else {
+              alert('無法取得定位，請改用手動輸入。');
+            }
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      } else {
+        alert("您的裝置不支援定位功能。");
+      }
+    }
+
+    function showResults(data) {
+      toggleUI(false);
+      let html = '';
+      data.forEach((item, index) => {
+        const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
+        html += `
+          <div class="result-card">
+            <span class="badge bg-success mb-2">距離第 ${index + 1} 近</span>
+            <h5 style="font-weight: 700;">${item.name}</h5>
+            <p class="mb-1">🛵 路程：<span class="text-danger fw-bold">${item.distanceText}</span> (約 ${item.duration})</p>
+            <p class="small text-secondary mb-3">${item.address}</p>
+            <div class="row g-2">
+              <div class="col-6">
+                <button class="btn btn-outline-secondary w-100" onclick="copyText('${item.address}')">複製地址</button>
+              </div>
+              <div class="col-6">
+                <a href="${mapUrl}" target="_blank" class="btn btn-primary w-100">開啟導航</a>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('results').innerHTML = html;
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => alert('地址已複製！'));
+    }
+  </script>
+</body>
+</html>
