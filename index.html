@@ -71,8 +71,8 @@
   <div class="container">
     <h2 class="text-center mb-2" style="font-weight: 700;">🛵 ｉ郵箱查找大師</h2>
     
-    <!-- 新增：動態顯示累積查詢人次 -->
-    <div id="statsContainer" class="text-center mb-4" style="display: none;">
+    <!-- 優化：移除 display: none，預留版面空間，避免畫面載入時跳動 -->
+    <div id="statsContainer" class="text-center mb-4">
       <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
         🎉 累積已提供 <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> 次最佳機車路徑
       </span>
@@ -294,7 +294,7 @@
         if (result.status === 'success' && result.totalSearches > 0) {
           // toLocaleString() 會自動把數字加上千分位逗號 (如 1,234)
           document.getElementById('totalSearchCount').innerText = result.totalSearches.toLocaleString();
-          document.getElementById('statsContainer').style.display = 'block';
+          // 移除了原本讓元素突然顯示出來的代碼，直接替換文字就不會跳動了
         }
       } catch (err) {
         console.log('統計數據讀取失敗', err); // 背景失敗不影響使用者操作
@@ -490,13 +490,13 @@
       });
       document.getElementById('results').innerHTML = html;
 
-      // 【新增】：結果顯示後 3 秒，若未填寫過問卷，則自動彈出
-      if (!localStorage.getItem('iBoxSurveyDone')) {
+      // 【測試期間修改】：把 if 判斷式註解掉，讓它每次搜尋完 3 秒必定強制彈出！
+      // if (!localStorage.getItem('iBoxSurveyDone')) {
         setTimeout(() => {
           const surveyModal = new bootstrap.Modal(document.getElementById('surveyModal'));
           surveyModal.show();
         }, 3000);
-      }
+      // }
     }
 
     function copyText(text) {
@@ -555,41 +555,27 @@
       // localStorage.setItem('iBoxSurveyDone', 'true');
     }
 
-    async function submitSurvey() {
+    function submitSurvey() {
       const role = document.getElementById('surveyRole').value;
       const ux = document.getElementById('surveyUX').value;
       const accuracy = document.getElementById('surveyAccuracy').value;
-      const btn = document.getElementById('submitSurveyBtn');
 
       if (!role || !ux || !accuracy) {
         return alert('請幫我們填寫完整的 3 個問題喔！');
       }
 
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> 傳送中...';
+      // 1. 優化：立即關閉視窗並標記已完成，給予無縫體驗
+      const modal = bootstrap.Modal.getInstance(document.getElementById('surveyModal'));
+      modal.hide();
+      markSurveyDone(); // 寫入瀏覽器記憶
 
-      try {
-        const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
-        const response = await fetch(cleanUrl, {
+      // 2. 優化：偷偷在背景執行傳送，不卡住畫面 (Fire and forget)
+      const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
+      if (!cleanUrl.includes('請貼上')) {
+        fetch(cleanUrl, {
           method: 'POST',
           body: JSON.stringify({ action: 'survey', role: role, ux: ux, accuracy: accuracy })
-        });
-        
-        const result = await response.json();
-        
-        if (result.status === 'success') {
-          alert('非常感謝您的回饋！這對我們非常重要。');
-          markSurveyDone(); // 寫入瀏覽器記憶，以後不再跳出
-          const modal = bootstrap.Modal.getInstance(document.getElementById('surveyModal'));
-          modal.hide();
-        } else {
-          throw new Error(result.message);
-        }
-      } catch (err) {
-        alert('傳送失敗：' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerText = '送出問卷';
+        }).catch(err => console.log('背景傳送問卷失敗:', err)); // 即使失敗也不干擾使用者
       }
     }
   </script>
