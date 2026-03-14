@@ -200,12 +200,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // 🔥 重要：請將這串網址替換為你剛剛在 GAS 部署產生的 Web App URL！
-    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwXO-oMiYRG4RuqenL4lBtBKuIY2S3U_QSnDxMGQ_kEpwgXzW8Q7wvWObBL_wHPpe2A6Q/exec';
+    // 🔥 【雙核心架構】請貼上您的兩個 GAS 網址 🔥
+    
+    // 專案 A：專門負責「導航與查詢」(唯讀，速度極快)
+    const GAS_API_URL_SEARCH = 'https://script.google.com/macros/s/AKfycbwXO-oMiYRG4RuqenL4lBtBKuIY2S3U_QSnDxMGQ_kEpwgXzW8Q7wvWObBL_wHPpe2A6Q/exec';
+    
+    // 專案 B：專門負責「日誌、統計、問卷、留言」(專門寫入)
+    const GAS_API_URL_LOG = 'https://script.google.com/macros/s/AKfycbxVGuaW1uBynyiQdrzTlUO3g5WQ9lD3aI1bJnYVkcDreDJk7kgLMjKB4jHTiP-oCrU_dQ/exec';
 
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
-    // 【新增】：定義兩組不同版位的廣告代碼，方便輪播與穿插
     const adBanners = [
       `
       <div class="ad-banner shadow-sm" style="background: #fff; border-left: 5px solid #4e73df;">
@@ -222,6 +226,7 @@
     ];
 
     const taiwanData = {
+      // (保持原有的台灣縣市資料不動)
       "台北市": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區", "北投區", "內湖區", "南港區", "文山區"],
       "新北市": ["萬里區", "金山區", "板橋區", "汐止區", "深坑區", "石碇區", "瑞芳區", "平溪區", "雙溪區", "貢寮區", "新店區", "坪林區", "烏來區", "永和區", "中和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "新莊區", "泰山區", "林口區", "蘆洲區", "五股區", "八里區", "淡水區", "三芝區", "石門區"],
       "桃園市": ["中壢區", "平鎮區", "龍潭區", "楊梅區", "新屋區", "觀音區", "桃園區", "龜山區", "八德區", "大溪區", "復興區", "大園區", "蘆竹區"],
@@ -247,9 +252,9 @@
     };
 
     window.onload = function() {
+      // 讀取總搜尋人次 (指向專案 B)
       loadTotalSearches();
 
-      // 【新增】：網頁載入時，隨機選一個廣告版位顯示在未搜尋的畫面下方
       const randomAdIndex = Math.floor(Math.random() * adBanners.length);
       document.getElementById('bottomAd').innerHTML = adBanners[randomAdIndex];
       document.getElementById('bottomAd').style.display = 'block';
@@ -267,7 +272,6 @@
         warning.className = 'alert alert-danger text-center mb-3 shadow-sm';
         warning.style.borderRadius = '12px';
         warning.innerHTML = '<strong>⚠️ 偵測到 LINE 內建瀏覽器</strong><br>定位功能將受到限制。請點擊螢幕角落的選單，選擇<strong>「以預設瀏覽器開啟」</strong> (Safari/Chrome) 以獲得最佳體驗！';
-        
         const container = document.querySelector('.container');
         const title = container.querySelector('h2');
         title.insertAdjacentElement('afterend', warning);
@@ -276,10 +280,11 @@
 
     async function loadTotalSearches() {
       try {
-        const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
-        if (cleanUrl.includes('請貼上')) return;
+        const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
+        if (cleanLogUrl.includes('請貼上')) return;
         
-        const response = await fetch(cleanUrl, {
+        // 呼叫專案 B 取得數據
+        const response = await fetch(cleanLogUrl, {
           method: 'POST',
           body: JSON.stringify({ action: 'getStats' })
         });
@@ -296,9 +301,7 @@
     function updateDistricts() {
       const city = document.getElementById('cityInput').value;
       const districtSelect = document.getElementById('districtInput');
-      
       districtSelect.innerHTML = '<option value="">選擇鄉鎮市區</option>';
-      
       if (taiwanData[city]) {
         taiwanData[city].forEach(district => {
           let option = document.createElement('option');
@@ -315,20 +318,22 @@
       document.getElementById('loader').style.display = isProcessing ? 'block' : 'none';
       if(isProcessing) {
         document.getElementById('results').innerHTML = '';
-        // 開始搜尋時，隱藏底部的隨機廣告
         document.getElementById('bottomAd').style.display = 'none'; 
       }
     }
 
+    // 核心搜尋功能 (指向專案 A) + 背景寫入 (指向專案 B)
     async function callBackendAPI(inputData) {
       try {
-        const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
+        const cleanSearchUrl = GAS_API_URL_SEARCH.replace(/\s+/g, '');
+        const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
         
-        if (cleanUrl.includes('請貼上')) {
-          throw new Error('開發者忘記在 GitHub 貼上 GAS API 網址了！請編輯程式碼補上。');
+        if (cleanSearchUrl.includes('請貼上')) {
+          throw new Error('請在程式碼填入專案 A 的網址。');
         }
 
-        const response = await fetch(cleanUrl, {
+        // 1. 呼叫專案 A 進行高速搜尋
+        const response = await fetch(cleanSearchUrl, {
           method: 'POST',
           body: JSON.stringify({ inputData: inputData })
         });
@@ -337,13 +342,26 @@
         
         if (result.status === 'success') {
           showResults(result.data);
+
+          // 2. 【雙核心絕技】成功顯示結果後，在背景呼叫專案 B 寫入紀錄 (使用者完全感覺不到)
+          if (!cleanLogUrl.includes('請貼上') && result.data.length > 0) {
+            const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
+            fetch(cleanLogUrl, {
+              method: 'POST',
+              body: JSON.stringify({ 
+                action: 'logSearch', 
+                address: result.data[0].address, // 拿第一近的地址當作紀錄參考
+                searchType: searchType 
+              })
+            }).catch(err => console.log('背景寫入日誌失敗:', err));
+          }
+
         } else {
           throw new Error(result.message);
         }
       } catch (err) {
         alert('系統發生錯誤：' + err.message);
         toggleUI(false);
-        // 錯誤時恢復顯示底部廣告
         document.getElementById('bottomAd').style.display = 'block'; 
       }
     }
@@ -362,7 +380,6 @@
       }
 
       const fullAddress = city + district + detail;
-
       toggleUI(true);
       callBackendAPI(fullAddress); 
     }
@@ -382,7 +399,6 @@
           },
           (error) => {
             toggleUI(false);
-            // 錯誤時恢復顯示底部廣告
             document.getElementById('bottomAd').style.display = 'block'; 
             if (error.code === 1) {
               alert('【定位被拒絕】請允許瀏覽器存取您的位置權限。');
@@ -410,19 +426,16 @@
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const targetAttr = isMobile ? '' : 'target="_blank"';
 
-      // 【新增】：步驟 1. 先為所有資料標記它原本的真實排名 (1, 2, 3...)
       data.forEach((item, index) => {
         item.originalRank = index + 1;
       });
 
-      // 【新增】：步驟 2. 如果結果有2筆以上，調換第1名與第2名的位置 (變成 2, 1, 3, 4, 5)
       if (data.length >= 2) {
         const temp = data[0];
         data[0] = data[1];
         data[1] = temp;
       }
 
-      // 開始依照新順序繪製卡片
       data.forEach((item, loopIndex) => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
         
@@ -491,7 +504,6 @@
           tableHtml = '<div class="small text-muted text-center mt-2">暫無資料</div>';
         }
 
-        // 使用 item.originalRank 來顯示它是「距離第幾近」，避免因為順序調換而顯示錯誤的文字
         html += `
           <div class="result-card">
             <div class="d-flex justify-content-between">
@@ -525,15 +537,13 @@
           </div>
         `;
 
-        // 【新增】：步驟 3. 依照您的要求，精準插入廣告
-        // loopIndex 0 代表剛剛畫完第一張卡片 (也就是被調換上來的「第2近」) -> 插入版位1號
-        if (loopIndex === 0) {
-          html += adBanners[0];
-        } 
-        // loopIndex 1 代表剛剛畫完第二張卡片 (也就是原本最棒的「第1近」) -> 插入版位2號
-        else if (loopIndex === 1) {
-          html += adBanners[1];
-        }
+        // 插入廣告版位
+        // 【測試期間暫時隱藏廣告】可以移除下方註解來開啟
+        // if (loopIndex === 0) {
+        //   html += adBanners[0];
+        // } else if (loopIndex === 1) {
+        //   html += adBanners[1];
+        // }
       });
 
       document.getElementById('results').innerHTML = html;
@@ -551,29 +561,27 @@
       navigator.clipboard.writeText(text).then(() => alert('地址已複製！'));
     }
 
+    // 呼叫專案 B 進行意見回饋
     async function submitFeedback() {
       const name = document.getElementById('feedbackName').value.trim() || '匿名使用者';
       const message = document.getElementById('feedbackMessage').value.trim();
       const btn = document.getElementById('submitFeedbackBtn');
 
-      if (!message) {
-        return alert('請輸入回饋內容喔！');
-      }
+      if (!message) return alert('請輸入回饋內容喔！');
 
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 傳送中...';
 
       try {
-        const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
-        if (cleanUrl.includes('請貼上')) throw new Error('API 網址尚未設定。');
+        const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
+        if (cleanLogUrl.includes('請貼上')) throw new Error('日誌 API 網址尚未設定。');
 
-        const response = await fetch(cleanUrl, {
+        const response = await fetch(cleanLogUrl, {
           method: 'POST',
           body: JSON.stringify({ action: 'feedback', name: name, message: message })
         });
         
         const result = await response.json();
-        
         if (result.status === 'success') {
           alert('感謝您的回饋！我們已經收到您的留言了。');
           document.getElementById('feedbackMessage').value = '';
@@ -591,26 +599,24 @@
     }
 
     function markSurveyDone() {
-      // 【測試期間修改】：暫時不讓瀏覽器記住你填過了
       // localStorage.setItem('iBoxSurveyDone', 'true');
     }
 
+    // 呼叫專案 B 進行問卷傳送
     function submitSurvey() {
       const role = document.getElementById('surveyRole').value;
       const ux = document.getElementById('surveyUX').value;
       const accuracy = document.getElementById('surveyAccuracy').value;
 
-      if (!role || !ux || !accuracy) {
-        return alert('請幫我們填寫完整的 3 個問題喔！');
-      }
+      if (!role || !ux || !accuracy) return alert('請幫我們填寫完整的 3 個問題喔！');
 
       const modal = bootstrap.Modal.getInstance(document.getElementById('surveyModal'));
       modal.hide();
       markSurveyDone();
 
-      const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
-      if (!cleanUrl.includes('請貼上')) {
-        fetch(cleanUrl, {
+      const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
+      if (!cleanLogUrl.includes('請貼上')) {
+        fetch(cleanLogUrl, {
           method: 'POST',
           body: JSON.stringify({ action: 'survey', role: role, ux: ux, accuracy: accuracy })
         }).catch(err => console.log('背景傳送問卷失敗:', err));
