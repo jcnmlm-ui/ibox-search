@@ -69,8 +69,15 @@
 </head>
 <body>
   <div class="container">
-    <h2 class="text-center mb-4" style="font-weight: 700;">🛵 ｉ郵箱查找大師</h2>
+    <h2 class="text-center mb-2" style="font-weight: 700;">🛵 ｉ郵箱查找大師</h2>
     
+    <!-- 新增：動態顯示累積查詢人次 -->
+    <div id="statsContainer" class="text-center mb-4" style="display: none;">
+      <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
+        🎉 累積已提供 <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> 次最佳機車路徑
+      </span>
+    </div>
+
     <div class="ad-banner mb-4">
       <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
       <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
@@ -149,6 +156,60 @@
       </div>
     </div>
 
+    <!-- 新增：查詢後的滿意度調查視窗 (Modal) -->
+    <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title fw-bold">📝 幫助我們變得更好</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button>
+          </div>
+          <div class="modal-body text-start p-4">
+            <p class="small text-secondary mb-4">耽誤您 10 秒鐘，您的回饋能讓 i 郵箱導航服務更精準！</p>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label>
+              <select class="form-select" id="surveyRole">
+                <option value="">請選擇...</option>
+                <option value="寄件">📦 我要寄包裹</option>
+                <option value="收件">🛍️ 我要收包裹</option>
+                <option value="純粹測試/好奇">🤔 純粹測試/好奇</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold text-dark">2. 請問這次的使用體驗？ (1-5分)</label>
+              <select class="form-select" id="surveyUX">
+                <option value="">請選擇評分...</option>
+                <option value="5">⭐⭐⭐⭐⭐ 5分 (超級好用！)</option>
+                <option value="4">⭐⭐⭐⭐ 4分 (還不錯)</option>
+                <option value="3">⭐⭐⭐ 3分 (普通)</option>
+                <option value="2">⭐⭐ 2分 (不太好用)</option>
+                <option value="1">⭐ 1分 (很糟糕)</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">3. 找出的 i 郵箱精準度如何？ (1-5分)</label>
+              <select class="form-select" id="surveyAccuracy">
+                <option value="">請選擇評分...</option>
+                <option value="5">⭐⭐⭐⭐⭐ 5分 (超精準！)</option>
+                <option value="4">⭐⭐⭐⭐ 4分 (還算準確)</option>
+                <option value="3">⭐⭐⭐ 3分 (普通)</option>
+                <option value="2">⭐⭐ 2分 (有點誤差)</option>
+                <option value="1">⭐ 1分 (完全找錯地方)</option>
+              </select>
+            </div>
+            
+            <button type="button" class="btn btn-primary w-100 py-2 fw-bold" onclick="submitSurvey()" id="submitSurveyBtn">送出問卷</button>
+            <div class="text-center mt-2">
+               <a href="#" class="text-muted small text-decoration-none" data-bs-dismiss="modal" onclick="markSurveyDone()">先不要，略過</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="footer-copy">
       Design by Chiahsien &copy; 高雄郵局企劃行銷科<br>
       ｉ郵箱查找大師 beta
@@ -160,7 +221,7 @@
 
   <script>
     // 🔥 重要：請將這串網址替換為你剛剛在 GAS 部署產生的 Web App URL！
-    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwXO-oMiYRG4RuqenL4lBtBKuIY2S3U_QSnDxMGQ_kEpwgXzW8Q7wvWObBL_wHPpe2A6Q/exec';
+    const GAS_API_URL = '請貼上你的_GAS_網頁應用程式網址';
 
     // 偵測是否為 LINE 內建瀏覽器
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
@@ -193,7 +254,10 @@
 
     // 初始化與警告提示
     window.onload = function() {
-      // 1. 動態載入縣市選單 (改為操作 select 標籤)
+      // 0. 網頁載入時，自動去後端讀取查詢人次
+      loadTotalSearches();
+
+      // 1. 動態載入縣市選單
       const citySelect = document.getElementById('cityInput');
       for (let city in taiwanData) {
         let option = document.createElement('option');
@@ -214,6 +278,28 @@
         title.insertAdjacentElement('afterend', warning);
       }
     };
+
+    // 新增：向後端取得總搜尋次數的專屬函數
+    async function loadTotalSearches() {
+      try {
+        const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
+        if (cleanUrl.includes('請貼上')) return;
+        
+        const response = await fetch(cleanUrl, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'getStats' })
+        });
+        const result = await response.json();
+        
+        if (result.status === 'success' && result.totalSearches > 0) {
+          // toLocaleString() 會自動把數字加上千分位逗號 (如 1,234)
+          document.getElementById('totalSearchCount').innerText = result.totalSearches.toLocaleString();
+          document.getElementById('statsContainer').style.display = 'block';
+        }
+      } catch (err) {
+        console.log('統計數據讀取失敗', err); // 背景失敗不影響使用者操作
+      }
+    }
 
     // 連動更新：當縣市改變時，載入對應的鄉鎮市區
     function updateDistricts() {
@@ -337,6 +423,13 @@
       toggleUI(false);
       let html = '';
       
+      // 更新統計數字：當這次搜尋成功，畫面上的人數自動 +1
+      const countSpan = document.getElementById('totalSearchCount');
+      if (countSpan.innerText !== '...') {
+         const currentCount = parseInt(countSpan.innerText.replace(/,/g, ''));
+         countSpan.innerText = (currentCount + 1).toLocaleString();
+      }
+
       // 動態插入結果列表中的廣告版位 HTML
       const adBannerHtml = `
         <div class="ad-banner shadow-sm" style="background: #fff;">
@@ -396,6 +489,14 @@
         }
       });
       document.getElementById('results').innerHTML = html;
+
+      // 【新增】：結果顯示後 3 秒，若未填寫過問卷，則自動彈出
+      if (!localStorage.getItem('iBoxSurveyDone')) {
+        setTimeout(() => {
+          const surveyModal = new bootstrap.Modal(document.getElementById('surveyModal'));
+          surveyModal.show();
+        }, 3000);
+      }
     }
 
     function copyText(text) {
@@ -443,6 +544,51 @@
         // 恢復按鈕狀態
         btn.disabled = false;
         btn.innerText = '送出回饋';
+      }
+    }
+
+    // --- 【新增：問卷調查相關邏輯】 ---
+
+    // 標記問卷已處理 (避免一直干擾使用者)
+    function markSurveyDone() {
+      localStorage.setItem('iBoxSurveyDone', 'true');
+    }
+
+    async function submitSurvey() {
+      const role = document.getElementById('surveyRole').value;
+      const ux = document.getElementById('surveyUX').value;
+      const accuracy = document.getElementById('surveyAccuracy').value;
+      const btn = document.getElementById('submitSurveyBtn');
+
+      if (!role || !ux || !accuracy) {
+        return alert('請幫我們填寫完整的 3 個問題喔！');
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> 傳送中...';
+
+      try {
+        const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
+        const response = await fetch(cleanUrl, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'survey', role: role, ux: ux, accuracy: accuracy })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          alert('非常感謝您的回饋！這對我們非常重要。');
+          markSurveyDone(); // 寫入瀏覽器記憶，以後不再跳出
+          const modal = bootstrap.Modal.getInstance(document.getElementById('surveyModal'));
+          modal.hide();
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (err) {
+        alert('傳送失敗：' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '送出問卷';
       }
     }
   </script>
