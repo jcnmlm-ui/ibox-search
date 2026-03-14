@@ -13,7 +13,6 @@
       font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; 
       color: #333;
     }
-    /* 增加左右內縮讓畫面兩側有呼吸空間 */
     .container { max-width: 600px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; }
     .result-card { 
       background: white; border-radius: 16px; padding: 18px; 
@@ -28,7 +27,6 @@
     .ad-banner h6 { font-weight: 700; color: #495057; margin-bottom: 4px; }
     .ad-banner p { font-size: 0.9rem; margin-bottom: 0; line-height: 1.4; }
     
-    /* 右側格位資訊小方塊的樣式 (表格排版) */
     .box-status {
       background-color: #f8f9fc;
       border: 1px solid #e3e6f0;
@@ -55,7 +53,6 @@
     }
     .btn-gps:hover { background-color: #218838; }
     
-    /* 下拉框統一外觀 */
     .filter-input { border-radius: 12px; padding: 12px; }
     .search-group input { border-radius: 12px 0 0 12px; padding: 12px; }
     .search-group button { border-radius: 0 12px 12px 0; padding: 12px 20px; }
@@ -67,21 +64,14 @@
   <div class="container">
     <h2 class="text-center mb-2" style="font-weight: 700;">🛵 ｉ郵箱查找大師</h2>
     
-    <!-- 預留版面空間的統計數字，避免跳動 -->
     <div id="statsContainer" class="text-center mb-4">
       <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
         🎉 累積已提供 <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> 次最佳機車路徑
       </span>
     </div>
 
-    <!-- 【測試期間暫時隱藏頂部廣告】
-    <div class="ad-banner mb-4">
-      <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
-      <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
-    </div>
-    -->
+    <!-- 頂部不再放置預設廣告，改為在無搜尋時顯示於下方 bottomAd -->
 
-    <!-- 全新的純下拉選單與必填搜尋區塊 -->
     <div class="row g-2 mb-3">
       <div class="col-6">
         <select id="cityInput" class="form-select filter-input" onchange="updateDistricts()">
@@ -112,21 +102,16 @@
 
     <div id="results"></div>
 
+    <!-- 沒有搜尋時，預設顯示的隨機廣告區塊 -->
+    <div id="bottomAd" class="mt-4 mb-2"></div>
 
-    <div id="bottomAd" class="ad-banner mt-4 mb-2">
-      <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
-      <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
-    </div>
-
-
-    <!-- 意見回饋按鈕 -->
     <div class="text-center mt-3 mb-4">
       <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">
         💡 錯誤回報 / 意見回饋
       </button>
     </div>
 
-    <!-- 意見回饋的懸浮視窗 (Modal) -->
+    <!-- 意見回饋 Modal -->
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px;">
@@ -152,7 +137,7 @@
       </div>
     </div>
 
-    <!-- 查詢後的滿意度調查視窗 (Modal) -->
+    <!-- 問卷調查 Modal -->
     <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px;">
@@ -220,6 +205,22 @@
 
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
+    // 【新增】：定義兩組不同版位的廣告代碼，方便輪播與穿插
+    const adBanners = [
+      `
+      <div class="ad-banner shadow-sm" style="background: #fff; border-left: 5px solid #4e73df;">
+        <h6 style="color: #4e73df;">廣告版位 1 號 (展示尺寸: 320 x 80)</h6>
+        <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
+      </div>
+      `,
+      `
+      <div class="ad-banner shadow-sm" style="background: #fff; border-left: 5px solid #1cc88a;">
+        <h6 style="color: #1cc88a;">廣告版位 2 號 (展示尺寸: 320 x 80)</h6>
+        <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
+      </div>
+      `
+    ];
+
     const taiwanData = {
       "台北市": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區", "北投區", "內湖區", "南港區", "文山區"],
       "新北市": ["萬里區", "金山區", "板橋區", "汐止區", "深坑區", "石碇區", "瑞芳區", "平溪區", "雙溪區", "貢寮區", "新店區", "坪林區", "烏來區", "永和區", "中和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "新莊區", "泰山區", "林口區", "蘆洲區", "五股區", "八里區", "淡水區", "三芝區", "石門區"],
@@ -247,6 +248,11 @@
 
     window.onload = function() {
       loadTotalSearches();
+
+      // 【新增】：網頁載入時，隨機選一個廣告版位顯示在未搜尋的畫面下方
+      const randomAdIndex = Math.floor(Math.random() * adBanners.length);
+      document.getElementById('bottomAd').innerHTML = adBanners[randomAdIndex];
+      document.getElementById('bottomAd').style.display = 'block';
 
       const citySelect = document.getElementById('cityInput');
       for (let city in taiwanData) {
@@ -309,7 +315,8 @@
       document.getElementById('loader').style.display = isProcessing ? 'block' : 'none';
       if(isProcessing) {
         document.getElementById('results').innerHTML = '';
-        // 【測試期間暫時隱藏廣告】 document.getElementById('bottomAd').style.display = 'none'; 
+        // 開始搜尋時，隱藏底部的隨機廣告
+        document.getElementById('bottomAd').style.display = 'none'; 
       }
     }
 
@@ -336,7 +343,8 @@
       } catch (err) {
         alert('系統發生錯誤：' + err.message);
         toggleUI(false);
-        // 【測試期間暫時隱藏廣告】 document.getElementById('bottomAd').style.display = 'block'; 
+        // 錯誤時恢復顯示底部廣告
+        document.getElementById('bottomAd').style.display = 'block'; 
       }
     }
 
@@ -374,7 +382,8 @@
           },
           (error) => {
             toggleUI(false);
-            // 【測試期間暫時隱藏廣告】 document.getElementById('bottomAd').style.display = 'block'; 
+            // 錯誤時恢復顯示底部廣告
+            document.getElementById('bottomAd').style.display = 'block'; 
             if (error.code === 1) {
               alert('【定位被拒絕】請允許瀏覽器存取您的位置權限。');
             } else {
@@ -398,26 +407,29 @@
          countSpan.innerText = (currentCount + 1).toLocaleString();
       }
 
-      // 【測試期間暫時隱藏廣告】
-      // const adBannerHtml = `
-      //   <div class="ad-banner shadow-sm" style="background: #fff;">
-      //     <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
-      //     <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
-      //   </div>
-      // `;
-
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const targetAttr = isMobile ? '' : 'target="_blank"';
 
+      // 【新增】：步驟 1. 先為所有資料標記它原本的真實排名 (1, 2, 3...)
       data.forEach((item, index) => {
+        item.originalRank = index + 1;
+      });
+
+      // 【新增】：步驟 2. 如果結果有2筆以上，調換第1名與第2名的位置 (變成 2, 1, 3, 4, 5)
+      if (data.length >= 2) {
+        const temp = data[0];
+        data[0] = data[1];
+        data[1] = temp;
+      }
+
+      // 開始依照新順序繪製卡片
+      data.forEach((item, loopIndex) => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
         
-        // 處理具體位置說明 (綠色標籤)
         const locationHtml = item.locationDesc 
           ? `<p class="small mb-0 mt-2" style="color: #2e7d32; background-color: #e8f5e9; padding: 5px 8px; border-radius: 6px; display: inline-block;">💡 <b>位置：</b>${item.locationDesc}</p>` 
           : '';
 
-        // 處理帶有 "使用數/總數" 的格位資料
         let boxesHtml = '';
         let hasBoxes = false;
         
@@ -440,11 +452,10 @@
               hasBoxes = true;
               const remainColorClass = (remain === 0) ? 'text-danger' : 'text-success';
               
-              // 【更新】：將尺寸 140x170(mm) 轉換為 47x14x17 (含深度 cm)
               let displaySize = size;
               const sizeParts = size.split('x');
               if (sizeParts.length === 2) {
-                const w = parseInt(sizeParts[0], 10) / 10; // 除以10轉公分
+                const w = parseInt(sizeParts[0], 10) / 10; 
                 const h = parseInt(sizeParts[1], 10) / 10;
                 displaySize = `47x${w}x${h}`;
               }
@@ -480,32 +491,29 @@
           tableHtml = '<div class="small text-muted text-center mt-2">暫無資料</div>';
         }
 
+        // 使用 item.originalRank 來顯示它是「距離第幾近」，避免因為順序調換而顯示錯誤的文字
         html += `
           <div class="result-card">
             <div class="d-flex justify-content-between">
-              <!-- 左側：原有資訊 + 位置說明 -->
               <div class="flex-grow-1 pe-2 d-flex flex-column">
                 <div>
-                  <span class="badge bg-success mb-2">距離第 ${index + 1} 近</span>
+                  <span class="badge ${item.originalRank === 1 ? 'bg-danger' : 'bg-success'} mb-2">距離第 ${item.originalRank} 近</span>
                   <h5 style="font-weight: 700;">${item.name}</h5>
                   <p class="mb-1">🛵 路程：<span class="text-danger fw-bold">${item.distanceText}</span> (約 ${item.duration})</p>
                   <p class="small text-secondary mb-0">${item.address}</p>
                   ${locationHtml}
                 </div>
-                <!-- 【新增】：利用 mt-auto 將更新時間推至底部 -->
                 <div class="mt-auto pt-3 text-secondary" style="font-size: 0.75rem;">
                   ${item.updateTime ? `🕒 更新時間：${item.updateTime}` : ''}
                 </div>
               </div>
               
-              <!-- 右側：新的格位資訊三欄表格 -->
               <div class="box-status flex-shrink-0 shadow-sm align-self-start">
                 <div class="box-status-title">格位狀態</div>
                 ${tableHtml}
               </div>
             </div>
             
-            <!-- 下方按鈕區 -->
             <div class="row g-2 mt-2">
               <div class="col-6">
                 <button class="btn btn-outline-secondary w-100" onclick="copyText('${item.address}')">複製地址</button>
@@ -517,11 +525,17 @@
           </div>
         `;
 
-        // 【測試期間暫時隱藏廣告】
-        // if (index === 0) {
-        //   html += adBannerHtml;
-        // }
+        // 【新增】：步驟 3. 依照您的要求，精準插入廣告
+        // loopIndex 0 代表剛剛畫完第一張卡片 (也就是被調換上來的「第2近」) -> 插入版位1號
+        if (loopIndex === 0) {
+          html += adBanners[0];
+        } 
+        // loopIndex 1 代表剛剛畫完第二張卡片 (也就是原本最棒的「第1近」) -> 插入版位2號
+        else if (loopIndex === 1) {
+          html += adBanners[1];
+        }
       });
+
       document.getElementById('results').innerHTML = html;
 
       // 【測試期間修改】：每次搜尋完 3 秒強制彈出滿意度問卷
@@ -590,12 +604,10 @@
         return alert('請幫我們填寫完整的 3 個問題喔！');
       }
 
-      // 立即關閉視窗，無縫體驗
       const modal = bootstrap.Modal.getInstance(document.getElementById('surveyModal'));
       modal.hide();
       markSurveyDone();
 
-      // 在背景執行傳送
       const cleanUrl = GAS_API_URL.replace(/\s+/g, '');
       if (!cleanUrl.includes('請貼上')) {
         fetch(cleanUrl, {
