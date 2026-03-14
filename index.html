@@ -539,11 +539,11 @@
 
         // 插入廣告版位
         // 【測試期間暫時隱藏廣告】可以移除下方註解來開啟
-        // if (loopIndex === 0) {
-        //   html += adBanners[0];
-        // } else if (loopIndex === 1) {
-        //   html += adBanners[1];
-        // }
+         if (loopIndex === 0) {
+           html += adBanners[0];
+         } else if (loopIndex === 1) {
+           html += adBanners[1];
+         }
       });
 
       document.getElementById('results').innerHTML = html;
