@@ -13,7 +13,8 @@
       font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; 
       color: #333;
     }
-    .container { max-width: 600px; margin-top: 25px; padding-bottom: 30px; }
+    /* 優化：增加左右內縮 (padding-left, padding-right) 讓畫面兩側有呼吸空間 */
+    .container { max-width: 600px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; }
     .result-card { 
       background: white; border-radius: 16px; padding: 18px; 
       margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea;
@@ -78,10 +79,12 @@
       </span>
     </div>
 
+    <!-- 【測試期間暫時隱藏頂部廣告】
     <div class="ad-banner mb-4">
       <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
       <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
     </div>
+    -->
 
     <!-- 全新的純下拉選單與必填搜尋區塊 -->
     <div class="row g-2 mb-3">
@@ -117,11 +120,12 @@
 
     <div id="results"></div>
 
-    <!-- 初始狀態顯示在底部的廣告版位 -->
+    <!-- 【測試期間暫時隱藏底部廣告】
     <div id="bottomAd" class="ad-banner mt-4 mb-2">
       <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
       <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
     </div>
+    -->
 
     <!-- 新增：意見回饋按鈕 -->
     <div class="text-center mt-3 mb-4">
@@ -326,7 +330,7 @@
       document.getElementById('loader').style.display = isProcessing ? 'block' : 'none';
       if(isProcessing) {
         document.getElementById('results').innerHTML = '';
-        document.getElementById('bottomAd').style.display = 'none'; // 搜尋時先隱藏底部廣告
+        // 【測試期間暫時隱藏廣告】 document.getElementById('bottomAd').style.display = 'none'; 
       }
     }
 
@@ -357,7 +361,7 @@
       } catch (err) {
         alert('系統發生錯誤：' + err.message);
         toggleUI(false);
-        document.getElementById('bottomAd').style.display = 'block'; // 發生錯誤時恢復底部廣告
+        // 【測試期間暫時隱藏廣告】 document.getElementById('bottomAd').style.display = 'block'; 
       }
     }
 
@@ -405,7 +409,7 @@
           },
           (error) => {
             toggleUI(false);
-            document.getElementById('bottomAd').style.display = 'block'; // 發生錯誤時恢復底部廣告
+            // 【測試期間暫時隱藏廣告】 document.getElementById('bottomAd').style.display = 'block'; 
             if (error.code === 1) {
               alert('【定位被拒絕】請允許瀏覽器存取您的位置權限。');
             } else {
@@ -430,13 +434,13 @@
          countSpan.innerText = (currentCount + 1).toLocaleString();
       }
 
-      // 動態插入結果列表中的廣告版位 HTML
-      const adBannerHtml = `
-        <div class="ad-banner shadow-sm" style="background: #fff;">
-          <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
-          <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
-        </div>
-      `;
+      // 【測試期間暫時隱藏廣告】
+      // const adBannerHtml = `
+      //   <div class="ad-banner shadow-sm" style="background: #fff;">
+      //     <h6>廣告版位 (展示尺寸: 320 x 80)</h6>
+      //     <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
+      //   </div>
+      // `;
 
       // 偵測是否為手機裝置 (iOS 或 Android)
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -483,10 +487,10 @@
           </div>
         `;
 
-        // 核心邏輯：在第 1 近與第 2 近的結果之間 (index 為 0 的後面) 插入廣告
-        if (index === 0) {
-          html += adBannerHtml;
-        }
+        // 【測試期間暫時隱藏廣告】
+        // if (index === 0) {
+        //   html += adBannerHtml;
+        // }
       });
       document.getElementById('results').innerHTML = html;
 
