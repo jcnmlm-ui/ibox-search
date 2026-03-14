@@ -551,7 +551,8 @@
 
     // 標記問卷已處理 (避免一直干擾使用者)
     function markSurveyDone() {
-      localStorage.setItem('iBoxSurveyDone', 'true');
+      // 【測試期間修改】：暫時不讓瀏覽器記住你填過了
+      // localStorage.setItem('iBoxSurveyDone', 'true');
     }
 
     async function submitSurvey() {
