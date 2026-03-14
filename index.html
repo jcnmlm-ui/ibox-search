@@ -440,9 +440,18 @@
               hasBoxes = true;
               const remainColorClass = (remain === 0) ? 'text-danger' : 'text-success';
               
+              // 【更新】：將尺寸 140x170(mm) 轉換為 47x14x17 (含深度 cm)
+              let displaySize = size;
+              const sizeParts = size.split('x');
+              if (sizeParts.length === 2) {
+                const w = parseInt(sizeParts[0], 10) / 10; // 除以10轉公分
+                const h = parseInt(sizeParts[1], 10) / 10;
+                displaySize = `47x${w}x${h}`;
+              }
+
               boxesHtml += `
                 <tr>
-                  <td class="size-col">${size}</td>
+                  <td class="size-col">${displaySize}</td>
                   <td class="fw-bold">${total}</td>
                   <td class="fw-bold ${remainColorClass}">${remain}</td>
                 </tr>
@@ -457,7 +466,7 @@
             <table class="box-table">
               <thead>
                 <tr>
-                  <th style="text-align: left;">尺寸</th>
+                  <th style="text-align: left;">尺寸<span style="font-size:0.65rem; color:#aaa;">(cm)</span></th>
                   <th>總數</th>
                   <th>剩餘</th>
                 </tr>
@@ -473,18 +482,24 @@
 
         html += `
           <div class="result-card">
-            <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex justify-content-between">
               <!-- 左側：原有資訊 + 位置說明 -->
-              <div class="flex-grow-1 pe-2">
-                <span class="badge bg-success mb-2">距離第 ${index + 1} 近</span>
-                <h5 style="font-weight: 700;">${item.name}</h5>
-                <p class="mb-1">🛵 路程：<span class="text-danger fw-bold">${item.distanceText}</span> (約 ${item.duration})</p>
-                <p class="small text-secondary mb-0">${item.address}</p>
-                ${locationHtml}
+              <div class="flex-grow-1 pe-2 d-flex flex-column">
+                <div>
+                  <span class="badge bg-success mb-2">距離第 ${index + 1} 近</span>
+                  <h5 style="font-weight: 700;">${item.name}</h5>
+                  <p class="mb-1">🛵 路程：<span class="text-danger fw-bold">${item.distanceText}</span> (約 ${item.duration})</p>
+                  <p class="small text-secondary mb-0">${item.address}</p>
+                  ${locationHtml}
+                </div>
+                <!-- 【新增】：利用 mt-auto 將更新時間推至底部 -->
+                <div class="mt-auto pt-3 text-secondary" style="font-size: 0.75rem;">
+                  ${item.updateTime ? `🕒 更新時間：${item.updateTime}` : ''}
+                </div>
               </div>
               
               <!-- 右側：新的格位資訊三欄表格 -->
-              <div class="box-status flex-shrink-0 shadow-sm">
+              <div class="box-status flex-shrink-0 shadow-sm align-self-start">
                 <div class="box-status-title">格位狀態</div>
                 ${tableHtml}
               </div>
