@@ -34,7 +34,7 @@
       border: 1px solid #e3e6f0;
       border-radius: 10px;
       padding: 8px 12px;
-      min-width: 75px;
+      min-width: 95px; /* 稍微加寬以容納新版 340x270 這種長字串 */
       text-align: center;
     }
     .box-status-title {
@@ -50,6 +50,7 @@
       justify-content: space-between;
       font-size: 0.85rem;
       line-height: 1.5;
+      gap: 6px; /* 尺寸與數量中間拉開一點間距 */
     }
     .box-size { color: #5a5c69; }
     .box-count { font-weight: 700; color: #1cc88a; }
@@ -450,10 +451,29 @@
       data.forEach((item, index) => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
         
-        // 模擬格位資料：由於目前後端還沒傳送真實數據，先用隨機數字展示 UI 效果
-        const boxL = item.boxL; 
-        const boxM = item.boxM; 
-        const boxS = item.boxS;
+        // 處理新舊版本的格位資料 (新版有多達 11 種尺寸，只顯示大於 0 的)
+        let boxesHtml = '';
+        if (item.boxes) {
+          for (const [size, count] of Object.entries(item.boxes)) {
+            if (count > 0) {
+              // 用較小的字體顯示尺寸字串，避免撐破版面
+              boxesHtml += `<div class="box-status-row"><span class="box-size" style="font-size: 0.7rem;">${size}</span><span class="box-count">${count}</span></div>`;
+            }
+          }
+          if (boxesHtml === '') {
+            boxesHtml = '<div class="small text-muted text-center mt-1">暫無資料</div>';
+          }
+        } else {
+          // 相容舊版大中小資料
+          const boxL = item.boxL || 0; 
+          const boxM = item.boxM || 0; 
+          const boxS = item.boxS || 0;
+          boxesHtml = `
+            <div class="box-status-row"><span class="box-size">大</span><span class="box-count">${boxL}</span></div>
+            <div class="box-status-row"><span class="box-size">中</span><span class="box-count">${boxM}</span></div>
+            <div class="box-status-row"><span class="box-size">小</span><span class="box-count">${boxS}</span></div>
+          `;
+        }
 
         html += `
           <div class="result-card">
@@ -469,9 +489,7 @@
               <!-- 右側：新增的格位資訊方塊 -->
               <div class="box-status flex-shrink-0 shadow-sm">
                 <div class="box-status-title">格位數量</div>
-                <div class="box-status-row"><span class="box-size">大</span><span class="box-count">${boxL}</span></div>
-                <div class="box-status-row"><span class="box-size">中</span><span class="box-count">${boxM}</span></div>
-                <div class="box-status-row"><span class="box-size">小</span><span class="box-count">${boxS}</span></div>
+                ${boxesHtml}
               </div>
             </div>
             
