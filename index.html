@@ -175,7 +175,7 @@
       </div>
     </div>
 
-    <!-- 優化版問卷調查 Modal -->
+    <!-- 優化版問卷調查 Modal (全按鈕介面) -->
     <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
@@ -233,7 +233,7 @@
     </div>
 
     <div class="footer-copy">
-      &copy Design by Chiahsien <br>
+      &copy; Design by Chiahsien <br>
       ｉ郵箱查找大師 v1.0 (非官方網站)
     </div>
   </div>
@@ -289,7 +289,7 @@
     let progressInterval;
     function updateProgressBar(targetWidth) {
       const bar = document.getElementById('fakeProgressBar');
-      bar.style.width = targetWidth + '%';
+      if (bar) bar.style.width = targetWidth + '%';
     }
 
     window.onload = function() {
@@ -358,17 +358,15 @@
         document.getElementById('results').innerHTML = '';
         document.getElementById('bottomAd').style.display = 'none'; 
         
-        // 「先快後慢」心理學進度條邏輯
+        // 「先快後慢」心理學進度條
         let currentWidth = 0;
         updateProgressBar(0);
         
-        // 瞬間衝到 70%
         setTimeout(() => { 
           currentWidth = 70;
           updateProgressBar(currentWidth);
         }, 100);
 
-        // 之後每 0.5 秒慢慢推 1~2%
         progressInterval = setInterval(() => {
           if (currentWidth < 95) {
             currentWidth += Math.random() * 2;
@@ -413,8 +411,18 @@
           throw new Error(result.message);
         }
       } catch (err) {
-        alert('系統發生錯誤：' + err.message);
         toggleUI(false);
+        let errorMsg = err.message;
+        if (errorMsg.includes('解析地址')) {
+            errorMsg = '🔎 找不到這個地址，請確認輸入是否正確！';
+        }
+        document.getElementById('results').innerHTML = `
+          <div class="alert alert-warning text-center shadow-sm" style="border-radius: 16px; padding: 30px;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🤔</div>
+            <h5 class="fw-bold">${errorMsg}</h5>
+            <p class="text-secondary small mb-0">建議檢查縣市、區域及門牌號碼是否填寫完整。</p>
+          </div>
+        `;
         document.getElementById('bottomAd').style.display = 'block'; 
       }
     }
@@ -565,7 +573,6 @@
     function markSurveyDone() {}
 
     function submitSurvey() {
-      // 改用 Radio Button 取得資料
       const roleEl = document.querySelector('input[name="surveyRole"]:checked');
       const uxEl = document.querySelector('input[name="surveyUX"]:checked');
       const accEl = document.querySelector('input[name="surveyAccuracy"]:checked');
@@ -579,7 +586,6 @@
       bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
       const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
       
-      // 靜默傳送
       fetch(cleanLogUrl, { 
         method: 'POST', 
         body: JSON.stringify({ action: 'survey', role: role, ux: ux, accuracy: acc }) 
