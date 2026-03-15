@@ -429,6 +429,10 @@
         const response = await fetch(cleanSearchUrl, { method: 'POST', body: JSON.stringify({ inputData: inputData }) });
         const result = await response.json();
         if (result.status === 'success') {
+          
+          // 💡 【核心修正】：在 showResults 把陣列順序對調前，先備份真正的「第 1 近地址」
+          const trueClosestAddress = result.data.length > 0 ? result.data[0].address : '';
+
           // 【防呆機制】將 userAddressStr 傳遞給 showResults 顯示提示
           showResults(result.data, userAddressStr);
           
@@ -449,7 +453,7 @@
                 method: 'POST', 
                 body: JSON.stringify({ 
                     action: 'logSearch', 
-                    address: result.data[0].address,    // E 欄：參考地址 (距離最近的 i郵箱地址)
+                    address: trueClosestAddress,        // 【修改】使用備份的真實第 1 近地址，不受排序影響
                     searchType: searchType, 
                     userAddress: maskedUserAddress      // F 欄：儲存搜尋地址 (去識別化的使用者地址)
                 }) 
@@ -515,6 +519,8 @@
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const targetAttr = isMobile ? '' : 'target="_blank"';
       data.forEach((item, index) => item.originalRank = index + 1);
+      
+      // 💡 【還原商業邏輯】：將第 1 名與第 2 名對調，強迫使用者下滑以增加廣告曝光度
       if (data.length >= 2) { const temp = data[0]; data[0] = data[1]; data[1] = temp; }
 
       data.forEach((item, loopIndex) => {
