@@ -69,16 +69,28 @@
     /* 讀取狀態控制 */
     .loading { display: none; margin-top: 20px; }
 
-    /* 極速進度條 CSS 特效 */
-    .progress {
-      height: 10px; 
-      border-radius: 5px; 
-      background-color: #e9ecef; 
-      overflow: hidden;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+    /* 進度條增強動畫 */
+    .progress { height: 12px; border-radius: 6px; background-color: #e9ecef; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
+    .progress-bar-animated { animation: progress-bar-stripes 0.4s linear infinite !important; }
+
+    /* 問卷按鈕優化樣式 */
+    .survey-options { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+    .survey-btn-check { display: none; }
+    .survey-btn-label {
+      padding: 8px 16px; border-radius: 20px; border: 2px solid #eee;
+      background: white; cursor: pointer; transition: all 0.2s; font-size: 0.9rem;
+      flex: 1; text-align: center; min-width: 80px;
     }
-    .progress-bar-animated {
-      animation: progress-bar-stripes 0.4s linear infinite !important; /* 讓斜紋動得超快 */
+    .survey-btn-check:checked + .survey-btn-label {
+      border-color: #0d6efd; background-color: #eef5ff; color: #0d6efd; font-weight: bold;
+    }
+    .rating-circle {
+      width: 40px; height: 40px; border-radius: 50%; border: 2px solid #eee;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: all 0.2s; font-weight: bold;
+    }
+    .survey-btn-check:checked + .rating-circle {
+      border-color: #0d6efd; background-color: #0d6efd; color: white;
     }
 
     .footer-copy { text-align: center; margin-top: 40px; font-size: 0.85rem; color: #888; }
@@ -117,16 +129,14 @@
       📍 自動定位並搜尋附近
     </button>
 
-    <!-- 升級後的極速進度條讀取區 -->
+    <!-- 升級版「極速感」進度條 -->
     <div id="loader" class="text-center loading" style="margin-bottom: 25px;">
-      <div class="progress shadow-sm">
-        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
-             role="progressbar" 
-             style="width: 100%;" 
-             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress shadow-sm mb-2">
+        <div id="fakeProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+             role="progressbar" style="width: 0%; transition: width 0.3s ease-out;">
         </div>
       </div>
-      <p class="mt-3 text-secondary" style="font-size: 0.9rem; font-weight: 500;">🚀 正在火速規劃最佳機車路徑...</p>
+      <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;">🚀 正在火速規劃最佳機車路徑...</p>
     </div>
 
     <div id="results"></div>
@@ -139,7 +149,7 @@
       </button>
     </div>
 
-    <!-- Modals (Feedback & Survey) 保持原有邏輯 -->
+    <!-- 意見回饋 Modal -->
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px;">
@@ -165,48 +175,56 @@
       </div>
     </div>
 
+    <!-- 優化版問卷調查 Modal -->
     <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 16px;">
-          <div class="modal-header bg-light">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+          <div class="modal-header bg-light" style="border-radius: 20px 20px 0 0;">
             <h5 class="modal-title fw-bold">📝 幫助我們變得更好</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button>
           </div>
           <div class="modal-body text-start p-4">
-            <p class="small text-secondary mb-4">耽誤您 10 秒鐘，您的回饋能讓 i 郵箱導航服務更精準！</p>
-            <div class="mb-3">
-              <label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label>
-              <select class="form-select" id="surveyRole">
-                <option value="">請選擇...</option>
-                <option value="寄件">📦 我要寄包裹</option>
-                <option value="收件">🛍️ 我要收包裹</option>
-                <option value="純粹測試/好奇">🤔 純粹測試/好奇</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-bold text-dark">2. 請問這次的使用體驗？ (1-5分)</label>
-              <select class="form-select" id="surveyUX">
-                <option value="">請選擇評分...</option>
-                <option value="5">⭐⭐⭐⭐⭐ 5分 (超級好用！)</option>
-                <option value="4">⭐⭐⭐⭐ 4分 (還不錯)</option>
-                <option value="3">⭐⭐⭐ 3分 (普通)</option>
-                <option value="2">⭐⭐ 2分 (不太好用)</option>
-                <option value="1">⭐ 1分 (很糟糕)</option>
-              </select>
-            </div>
+            <!-- 問題 1 -->
             <div class="mb-4">
-              <label class="form-label fw-bold text-dark">3. 找出的 i 郵箱精準度如何？ (1-5分)</label>
-              <select class="form-select" id="surveyAccuracy">
-                <option value="">請選擇評分...</option>
-                <option value="5">⭐⭐⭐⭐⭐ 5分 (超精準！)</option>
-                <option value="4">⭐⭐⭐⭐ 4分 (還算準確)</option>
-                <option value="3">⭐⭐⭐ 3分 (普通)</option>
-                <option value="2">⭐⭐ 2分 (有點誤差)</option>
-                <option value="1">⭐ 1分 (完全找錯地方)</option>
-              </select>
+              <label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label>
+              <div class="survey-options">
+                <input type="radio" name="surveyRole" id="role1" value="寄件" class="survey-btn-check">
+                <label for="role1" class="survey-btn-label">📦 我要寄件</label>
+                
+                <input type="radio" name="surveyRole" id="role2" value="取件" class="survey-btn-check">
+                <label for="role2" class="survey-btn-label">🛍️ 我要取件</label>
+
+                <input type="radio" name="surveyRole" id="role3" value="測試" class="survey-btn-check">
+                <label for="role3" class="survey-btn-label">🤔 純粹測試</label>
+              </div>
             </div>
-            <button type="button" class="btn btn-primary w-100 py-2 fw-bold" onclick="submitSurvey()" id="submitSurveyBtn">送出問卷</button>
-            <div class="text-center mt-2">
+
+            <!-- 問題 2 -->
+            <div class="mb-4 text-center">
+              <label class="form-label fw-bold text-dark d-block text-start">2. 使用體驗？ (1很差 → 5很棒)</label>
+              <div class="survey-options mt-2">
+                <input type="radio" name="surveyUX" id="ux1" value="1" class="survey-btn-check"><label for="ux1" class="rating-circle">1</label>
+                <input type="radio" name="surveyUX" id="ux2" value="2" class="survey-btn-check"><label for="ux2" class="rating-circle">2</label>
+                <input type="radio" name="surveyUX" id="ux3" value="3" class="survey-btn-check"><label for="ux3" class="rating-circle">3</label>
+                <input type="radio" name="surveyUX" id="ux4" value="4" class="survey-btn-check"><label for="ux4" class="rating-circle">4</label>
+                <input type="radio" name="surveyUX" id="ux5" value="5" class="survey-btn-check"><label for="ux5" class="rating-circle">5</label>
+              </div>
+            </div>
+
+            <!-- 問題 3 -->
+            <div class="mb-4 text-center">
+              <label class="form-label fw-bold text-dark d-block text-start">3. 格位準確度？ (1不準 → 5很準)</label>
+              <div class="survey-options mt-2">
+                <input type="radio" name="surveyAccuracy" id="acc1" value="1" class="survey-btn-check"><label for="acc1" class="rating-circle">1</label>
+                <input type="radio" name="surveyAccuracy" id="acc2" value="2" class="survey-btn-check"><label for="acc2" class="rating-circle">2</label>
+                <input type="radio" name="surveyAccuracy" id="acc3" value="3" class="survey-btn-check"><label for="acc3" class="rating-circle">3</label>
+                <input type="radio" name="surveyAccuracy" id="acc4" value="4" class="survey-btn-check"><label for="acc4" class="rating-circle">4</label>
+                <input type="radio" name="surveyAccuracy" id="acc5" value="5" class="survey-btn-check"><label for="acc5" class="rating-circle">5</label>
+              </div>
+            </div>
+            
+            <button type="button" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-pill" onclick="submitSurvey()" id="submitSurveyBtn">送出問卷</button>
+            <div class="text-center mt-3">
                <a href="#" class="text-muted small text-decoration-none" data-bs-dismiss="modal" onclick="markSurveyDone()">先不要，略過</a>
             </div>
           </div>
@@ -215,8 +233,8 @@
     </div>
 
     <div class="footer-copy">
-      Design by Chiahsien &copy; 高雄郵局企劃行銷科<br>
-      ｉ郵箱查找大師 beta
+      &copy Design by Chiahsien <br>
+      ｉ郵箱查找大師 v1.0 (非官方網站)
     </div>
   </div>
 
@@ -232,13 +250,13 @@
       `
       <div class="ad-banner shadow-sm" style="background: #fff; border-left: 5px solid #4e73df;">
         <h6 style="color: #4e73df;">廣告版位 1 號 (展示尺寸: 320 x 80)</h6>
-        <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
+        <p>誠徵版位贊助<br>意者請於回饋欄留下聯繫方式<br>07-2614171#409</p>
       </div>
       `,
       `
       <div class="ad-banner shadow-sm" style="background: #fff; border-left: 5px solid #1cc88a;">
         <h6 style="color: #1cc88a;">廣告版位 2 號 (展示尺寸: 320 x 80)</h6>
-        <p>誠徵版位贊助<br>意者電洽高雄郵局企劃行銷科<br>07-2614171#409</p>
+        <p>誠徵版位贊助<br>意者請於回饋欄留下聯繫方式<br>07-2614171#409</p>
       </div>
       `
     ];
@@ -267,6 +285,12 @@
       "金門縣": ["金沙鎮", "金湖鎮", "金寧鄉", "金城鎮", "烈嶼鄉", "烏坵鄉"],
       "連江縣": ["南竿鄉", "北竿鄉", "莒光鄉", "東引鄉"]
     };
+
+    let progressInterval;
+    function updateProgressBar(targetWidth) {
+      const bar = document.getElementById('fakeProgressBar');
+      bar.style.width = targetWidth + '%';
+    }
 
     window.onload = function() {
       loadTotalSearches();
@@ -327,10 +351,37 @@
     function toggleUI(isProcessing) {
       document.getElementById('searchBtn').disabled = isProcessing;
       document.getElementById('gpsBtn').disabled = isProcessing;
-      document.getElementById('loader').style.display = isProcessing ? 'block' : 'none';
+      const loader = document.getElementById('loader');
+      
       if(isProcessing) {
+        loader.style.display = 'block';
         document.getElementById('results').innerHTML = '';
         document.getElementById('bottomAd').style.display = 'none'; 
+        
+        // 「先快後慢」心理學進度條邏輯
+        let currentWidth = 0;
+        updateProgressBar(0);
+        
+        // 瞬間衝到 70%
+        setTimeout(() => { 
+          currentWidth = 70;
+          updateProgressBar(currentWidth);
+        }, 100);
+
+        // 之後每 0.5 秒慢慢推 1~2%
+        progressInterval = setInterval(() => {
+          if (currentWidth < 95) {
+            currentWidth += Math.random() * 2;
+            updateProgressBar(currentWidth);
+          }
+        }, 500);
+
+      } else {
+        clearInterval(progressInterval);
+        updateProgressBar(100);
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 300);
       }
     }
 
@@ -514,11 +565,25 @@
     function markSurveyDone() {}
 
     function submitSurvey() {
-      const role = document.getElementById('surveyRole').value, ux = document.getElementById('surveyUX').value, acc = document.getElementById('surveyAccuracy').value;
-      if (!role || !ux || !acc) return alert('請填寫完整問卷喔！');
+      // 改用 Radio Button 取得資料
+      const roleEl = document.querySelector('input[name="surveyRole"]:checked');
+      const uxEl = document.querySelector('input[name="surveyUX"]:checked');
+      const accEl = document.querySelector('input[name="surveyAccuracy"]:checked');
+
+      if (!roleEl || !uxEl || !accEl) return alert('請幫我們填寫完整問卷，讓服務更好喔！');
+
+      const role = roleEl.value;
+      const ux = uxEl.value;
+      const acc = accEl.value;
+
       bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
       const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
-      fetch(cleanLogUrl, { method: 'POST', body: JSON.stringify({ action: 'survey', role: role, ux: ux, accuracy: acc }) });
+      
+      // 靜默傳送
+      fetch(cleanLogUrl, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'survey', role: role, ux: ux, accuracy: acc }) 
+      }).catch(err => console.log('背景傳送失敗:', err));
     }
   </script>
 </body>
