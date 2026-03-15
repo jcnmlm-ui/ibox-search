@@ -131,8 +131,9 @@
             </select>
           </div>
           <div class="col-6">
+            <!-- 【修改】將預設改為全區不指定 -->
             <select id="districtInput" class="form-select filter-input">
-              <option value="">選擇鄉鎮市區</option>
+              <option value="">全區 / 不指定 (推薦)</option>
             </select>
           </div>
           <div class="col-12">
@@ -393,7 +394,8 @@
     function updateDistricts() {
       const city = document.getElementById('cityInput').value;
       const districtSelect = document.getElementById('districtInput');
-      districtSelect.innerHTML = '<option value="">選擇鄉鎮市區</option>';
+      // 【修改】切換縣市時，鄉鎮市區的預設選項也改為全區不指定
+      districtSelect.innerHTML = '<option value="">全區 / 不指定 (推薦)</option>';
       if (taiwanData[city]) {
         taiwanData[city].forEach(district => {
           let option = document.createElement('option');
@@ -427,7 +429,8 @@
         const response = await fetch(cleanSearchUrl, { method: 'POST', body: JSON.stringify({ inputData: inputData }) });
         const result = await response.json();
         if (result.status === 'success') {
-          showResults(result.data);
+          // 【修改】將 userAddressStr 傳遞給 showResults 顯示
+          showResults(result.data, userAddressStr);
           
           if (result.data.length > 0) {
             const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
@@ -460,7 +463,8 @@
 
     function startSearchText() {
       const city = document.getElementById('cityInput').value, district = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
-      if (!city || !district || !detail) return alert('請完整填寫地址資訊喔！');
+      // 【修改】放寬限制，不再強制要求 district 必填，只要有縣市和地址即可
+      if (!city || !detail) return alert('請至少選擇縣市並填寫詳細地址喔！');
       if (!detail.includes('號')) return alert('詳細地址請務必包含門牌號碼 (例如：ＯＯ路ＸＸ號)！');
       
       const fullAddress = city + district + detail;
@@ -469,20 +473,23 @@
     }
 
     function startSearchGPS() {
-      if (isLineApp) return alert('【功能受限】請切換至 Chrome/Safari 瀏覽器。');
-      if (navigator.geolocation) {
-        toggleUI(true);
-        navigator.geolocation.getCurrentPosition(
-          (pos) => callBackendAPI({ lat: pos.coords.latitude, lng: pos.coords.longitude }, ''),
-          (err) => { toggleUI(false); document.getElementById('bottomAd').style.display = 'block'; alert('無法取得定位，請改用手動輸入。'); },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-      } else { alert("您的裝置不支援定位功能。"); }
-    }
-
-    function showResults(data) {
+    // 【修改】接收 userAddressStr 參數
+    function showResults(data, userAddressStr) {
       toggleUI(false);
       let html = '';
+
+      // 【新增】方案二：提示當前搜尋基準，並給予防呆建議
+      if (userAddressStr) {
+         html += `<div class="alert alert-info border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #eef5ff; color: #0d6efd; font-size: 0.85rem; padding: 12px 16px;">
+             <strong>📍 搜尋中心：</strong>${userAddressStr}<br>
+             <span class="text-secondary" style="font-size: 0.8rem; display: block; margin-top: 4px;">💡 若結果過遠或不準確，可能是路段跨區，建議鄉鎮市區改選「全區 / 不指定」再試一次！</span>
+           </div>`;
+      } else {
+         html += `<div class="alert alert-success border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #e8f5e9; color: #1b5e20; font-size: 0.85rem; padding: 12px 16px;">
+             <strong>📍 搜尋中心：</strong>您的 GPS 目前精準定位
+           </div>`;
+      }
+
       const countSpan = document.getElementById('totalSearchCount');
       if (countSpan.innerText !== '...') {
          const currentCount = parseInt(countSpan.innerText.replace(/,/g, ''));
