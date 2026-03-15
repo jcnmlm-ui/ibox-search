@@ -17,6 +17,32 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://goibox.tw/favicon.png"> 
   
+  <!-- 【新增 SEO 強化標籤】 -->
+  <meta name="keywords" content="i郵箱, i郵箱查詢, i郵箱據點, i郵箱導航, 機車導航, 寄件, 取件, 蝦皮取件, 中華郵政, 24小時取件, 郵局, ezPost">
+  <link rel="canonical" href="https://goibox.tw/" />
+  
+  <!-- 【新增 JSON-LD 結構化資料】讓 Google 爬蟲秒懂你的網站 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ｉ郵箱查找大師",
+    "url": "https://goibox.tw/",
+    "description": "全台首創！自動定位尋找距離您最近的 i 郵箱，提供精準機車導航與即時儲格（大中小格位）狀態，寄件收件超方便！",
+    "applicationCategory": "NavigationApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "TWD"
+    },
+    "creator": {
+      "@type": "Person",
+      "name": "Chiahsien"
+    }
+  }
+  </script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
   
@@ -90,7 +116,8 @@
 </head>
 <body>
   <div class="container">
-    <h2 class="text-center mb-2" style="font-weight: 700;">🛵 ｉ郵箱查找大師</h2>
+    <!-- 【修改 SEO 權重】將 h2 改為 h1，這是 Google 判斷網頁主題的最重要標籤 -->
+    <h1 class="text-center mb-2" style="font-weight: 700; font-size: 1.8rem;">🛵 ｉ郵箱查找大師</h1>
     
     <div id="statsContainer" class="text-center mb-4">
       <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
@@ -214,7 +241,12 @@
       </div>
     </div>
 
-    <div class="footer-copy">
+    <!-- 【新增頁尾 SEO 關鍵字農場】自然融入使用者可能會搜尋的字眼 -->
+    <div class="footer-copy mt-4">
+      <div class="text-start text-muted mb-3 p-3 rounded" style="background-color: #eef2f7; font-size: 0.8rem; line-height: 1.6;">
+        <strong>💡 關於 ｉ郵箱查找大師：</strong><br>
+        提供全台 24 小時 <strong>i 郵箱據點查詢</strong>、即時空格狀態（大、中、小格位），以及獨家的<strong>機車導航</strong>路線規劃。無論是中華郵政國內包裹寄件、蝦皮網購取件、ezPost 郵寄便，只要一鍵定位，就能馬上為您找到距離最近的 i 郵箱，省時又便利！
+      </div>
       &copy; Design by Chiahsien <br>
       ｉ郵箱查找大師 v1.0 (非官方網站)
     </div>
