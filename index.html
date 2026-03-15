@@ -320,11 +320,11 @@
           if (result.data.length > 0) {
             const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
             
-            // 處理使用者輸入的地址（去除數字及以後的部分，達到去識別化）
+            // 處理使用者輸入的地址（去除門牌號碼及以後的部分，達到去識別化）
             let maskedUserAddress = '';
             if (searchType === '文字搜尋' && userAddressStr) {
-                // 將第一次出現數字開始的字元全部刪掉 (如：高雄市左營區博愛二路777號 -> 高雄市左營區博愛二路)
-                maskedUserAddress = userAddressStr.replace(/\d+.*$/, "");
+                // 【優化】精準去除門牌號碼 (如：37-3號、37之3號、777號)，完美保留前面的 123巷、8弄
+                maskedUserAddress = userAddressStr.replace(/\d+[-之]?\d*號.*$/, "");
             } else {
                 maskedUserAddress = 'GPS定位(無地址)';
             }
