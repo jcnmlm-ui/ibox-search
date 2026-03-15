@@ -175,7 +175,7 @@
       </div>
     </div>
 
-    <!-- 優化版問卷調查 Modal (全按鈕介面) -->
+    <!-- 問卷調查 Modal -->
     <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
@@ -358,7 +358,6 @@
         document.getElementById('results').innerHTML = '';
         document.getElementById('bottomAd').style.display = 'none'; 
         
-        // 「先快後慢」心理學進度條
         let currentWidth = 0;
         updateProgressBar(0);
         
@@ -515,8 +514,11 @@
         
         let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">尺寸(cm)</th><th>總數</th><th>剩餘</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : '<div class="small text-muted text-center mt-2">暫無資料</div>';
 
+        // 在這裡為「距離第 1 近」的卡片加上 id="rank1Card" 用於滾動追蹤
+        const cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
+
         html += `
-          <div class="result-card">
+          <div class="result-card" ${cardId}>
             <div class="d-flex justify-content-between">
               <div class="flex-grow-1 pe-2 d-flex flex-column">
                 <div>
@@ -543,11 +545,39 @@
         if (loopIndex === 0) html += adBanners[0];
         else if (loopIndex === 1) html += adBanners[1];
       });
+      
       document.getElementById('results').innerHTML = html;
-      setTimeout(() => {
-        const surveyModal = new bootstrap.Modal(document.getElementById('surveyModal'));
-        surveyModal.show();
-      }, 3000);
+
+      // 啟動「滾動至第1名」彈出問卷的偵測邏輯
+      initSurveyObserver();
+    }
+
+    // --- 新增：滾動偵測邏輯 ---
+    let surveyShownThisSearch = false; // 紀錄本次搜尋是否已彈出過問卷
+    
+    function initSurveyObserver() {
+      surveyShownThisSearch = false; // 每次新搜尋都重設
+      const target = document.getElementById('rank1Card');
+      if (!target) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          // 如果卡片出現在螢幕中，且這次搜尋還沒彈出過問卷
+          if (entry.isIntersecting && !surveyShownThisSearch) {
+            surveyShownThisSearch = true; // 標記已顯示
+            
+            // 延遲 1 秒再彈出，體驗較自然，不會一看到就跳出來
+            setTimeout(() => {
+              const surveyModal = new bootstrap.Modal(document.getElementById('surveyModal'));
+              surveyModal.show();
+            }, 1000);
+            
+            observer.unobserve(target); // 停止觀察，節省資源
+          }
+        });
+      }, { threshold: 0.5 }); // 當卡片露出 50% 時觸發
+
+      observer.observe(target);
     }
 
     function copyText(text) { navigator.clipboard.writeText(text).then(() => alert('地址已複製！')); }
