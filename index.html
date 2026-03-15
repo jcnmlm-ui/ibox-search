@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   
-  <!-- 【新增】：SEO 與社群分享 (LINE/FB) 預覽設定 -->
+  <!-- SEO 與社群分享 (LINE/FB) 預覽設定 -->
   <title>ｉ郵箱查找大師 | 一鍵尋找最近的 i 郵箱</title>
   <meta name="description" content="自動定位尋找距離您最近的 i 郵箱，提供精準機車導航與即時儲格狀態，寄件收件超方便！">
   <meta property="og:title" content="🛵 ｉ郵箱查找大師">
   <meta property="og:description" content="一鍵尋找距離您最近的 i 郵箱，提供精準機車路徑與即時格位狀態！">
   <meta property="og:url" content="https://goibox.tw/">
   <meta property="og:type" content="website">
-  <!-- 建議：你可以做一張 1200x630 的宣傳圖上傳到 GitHub，然後把下面的網址換成圖片網址 -->
   <meta property="og:image" content="https://goibox.tw/preview-image.jpg"> 
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
@@ -66,7 +65,22 @@
     .filter-input { border-radius: 12px; padding: 12px; }
     .search-group input { border-radius: 12px 0 0 12px; padding: 12px; }
     .search-group button { border-radius: 0 12px 12px 0; padding: 12px 20px; }
+    
+    /* 讀取狀態控制 */
     .loading { display: none; margin-top: 20px; }
+
+    /* 極速進度條 CSS 特效 */
+    .progress {
+      height: 10px; 
+      border-radius: 5px; 
+      background-color: #e9ecef; 
+      overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+    }
+    .progress-bar-animated {
+      animation: progress-bar-stripes 0.4s linear infinite !important; /* 讓斜紋動得超快 */
+    }
+
     .footer-copy { text-align: center; margin-top: 40px; font-size: 0.85rem; color: #888; }
   </style>
 </head>
@@ -79,8 +93,6 @@
         🎉 累積已提供 <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> 次最佳機車路徑
       </span>
     </div>
-
-    <!-- 頂部不再放置預設廣告，改為在無搜尋時顯示於下方 bottomAd -->
 
     <div class="row g-2 mb-3">
       <div class="col-6">
@@ -105,14 +117,20 @@
       📍 自動定位並搜尋附近
     </button>
 
-    <div id="loader" class="text-center loading">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="mt-2 text-secondary">正在為您規劃最佳機車路徑...</p>
+    <!-- 升級後的極速進度條讀取區 -->
+    <div id="loader" class="text-center loading" style="margin-bottom: 25px;">
+      <div class="progress shadow-sm">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+             role="progressbar" 
+             style="width: 100%;" 
+             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+        </div>
+      </div>
+      <p class="mt-3 text-secondary" style="font-size: 0.9rem; font-weight: 500;">🚀 正在火速規劃最佳機車路徑...</p>
     </div>
 
     <div id="results"></div>
 
-    <!-- 沒有搜尋時，預設顯示的隨機廣告區塊 -->
     <div id="bottomAd" class="mt-4 mb-2"></div>
 
     <div class="text-center mt-3 mb-4">
@@ -121,12 +139,12 @@
       </button>
     </div>
 
-    <!-- 意見回饋 Modal -->
-    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <!-- Modals (Feedback & Survey) 保持原有邏輯 -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px;">
           <div class="modal-header">
-            <h5 class="modal-title fw-bold" id="feedbackModalLabel">意見回饋</h5>
+            <h5 class="modal-title fw-bold">意見回饋</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-start">
@@ -147,7 +165,6 @@
       </div>
     </div>
 
-    <!-- 問卷調查 Modal -->
     <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px;">
@@ -157,7 +174,6 @@
           </div>
           <div class="modal-body text-start p-4">
             <p class="small text-secondary mb-4">耽誤您 10 秒鐘，您的回饋能讓 i 郵箱導航服務更精準！</p>
-            
             <div class="mb-3">
               <label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label>
               <select class="form-select" id="surveyRole">
@@ -167,7 +183,6 @@
                 <option value="純粹測試/好奇">🤔 純粹測試/好奇</option>
               </select>
             </div>
-
             <div class="mb-3">
               <label class="form-label fw-bold text-dark">2. 請問這次的使用體驗？ (1-5分)</label>
               <select class="form-select" id="surveyUX">
@@ -179,7 +194,6 @@
                 <option value="1">⭐ 1分 (很糟糕)</option>
               </select>
             </div>
-
             <div class="mb-4">
               <label class="form-label fw-bold text-dark">3. 找出的 i 郵箱精準度如何？ (1-5分)</label>
               <select class="form-select" id="surveyAccuracy">
@@ -191,7 +205,6 @@
                 <option value="1">⭐ 1分 (完全找錯地方)</option>
               </select>
             </div>
-            
             <button type="button" class="btn btn-primary w-100 py-2 fw-bold" onclick="submitSurvey()" id="submitSurveyBtn">送出問卷</button>
             <div class="text-center mt-2">
                <a href="#" class="text-muted small text-decoration-none" data-bs-dismiss="modal" onclick="markSurveyDone()">先不要，略過</a>
@@ -210,12 +223,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // 🔥 【雙核心架構】請貼上您的兩個 GAS 網址 🔥
-    
-    // 專案 A：專門負責「導航與查詢」(唯讀，速度極快)
     const GAS_API_URL_SEARCH = 'https://script.google.com/macros/s/AKfycbwXO-oMiYRG4RuqenL4lBtBKuIY2S3U_QSnDxMGQ_kEpwgXzW8Q7wvWObBL_wHPpe2A6Q/exec';
-    
-    // 專案 B：專門負責「日誌、統計、問卷、留言」(專門寫入)
     const GAS_API_URL_LOG = 'https://script.google.com/macros/s/AKfycbxVGuaW1uBynyiQdrzTlUO3g5WQ9lD3aI1bJnYVkcDreDJk7kgLMjKB4jHTiP-oCrU_dQ/exec';
 
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
@@ -236,7 +244,6 @@
     ];
 
     const taiwanData = {
-      // (保持原有的台灣縣市資料不動)
       "台北市": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區", "北投區", "內湖區", "南港區", "文山區"],
       "新北市": ["萬里區", "金山區", "板橋區", "汐止區", "深坑區", "石碇區", "瑞芳區", "平溪區", "雙溪區", "貢寮區", "新店區", "坪林區", "烏來區", "永和區", "中和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "新莊區", "泰山區", "林口區", "蘆洲區", "五股區", "八里區", "淡水區", "三芝區", "石門區"],
       "桃園市": ["中壢區", "平鎮區", "龍潭區", "楊梅區", "新屋區", "觀音區", "桃園區", "龜山區", "八德區", "大溪區", "復興區", "大園區", "蘆竹區"],
@@ -262,9 +269,7 @@
     };
 
     window.onload = function() {
-      // 讀取總搜尋人次 (指向專案 B)
       loadTotalSearches();
-
       const randomAdIndex = Math.floor(Math.random() * adBanners.length);
       document.getElementById('bottomAd').innerHTML = adBanners[randomAdIndex];
       document.getElementById('bottomAd').style.display = 'block';
@@ -292,14 +297,11 @@
       try {
         const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
         if (cleanLogUrl.includes('請貼上')) return;
-        
-        // 呼叫專案 B 取得數據
         const response = await fetch(cleanLogUrl, {
           method: 'POST',
           body: JSON.stringify({ action: 'getStats' })
         });
         const result = await response.json();
-        
         if (result.status === 'success' && result.totalSearches > 0) {
           document.getElementById('totalSearchCount').innerText = result.totalSearches.toLocaleString();
         }
@@ -332,40 +334,30 @@
       }
     }
 
-    // 核心搜尋功能 (指向專案 A) + 背景寫入 (指向專案 B)
     async function callBackendAPI(inputData) {
       try {
         const cleanSearchUrl = GAS_API_URL_SEARCH.replace(/\s+/g, '');
         const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
-        
-        if (cleanSearchUrl.includes('請貼上')) {
-          throw new Error('請在程式碼填入專案 A 的網址。');
-        }
+        if (cleanSearchUrl.includes('請貼上')) throw new Error('請在程式碼填入專案 A 的網址。');
 
-        // 1. 呼叫專案 A 進行高速搜尋
         const response = await fetch(cleanSearchUrl, {
           method: 'POST',
           body: JSON.stringify({ inputData: inputData })
         });
-        
         const result = await response.json();
-        
         if (result.status === 'success') {
           showResults(result.data);
-
-          // 2. 【雙核心絕技】成功顯示結果後，在背景呼叫專案 B 寫入紀錄 (使用者完全感覺不到)
           if (!cleanLogUrl.includes('請貼上') && result.data.length > 0) {
             const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
             fetch(cleanLogUrl, {
               method: 'POST',
               body: JSON.stringify({ 
                 action: 'logSearch', 
-                address: result.data[0].address, // 拿第一近的地址當作紀錄參考
+                address: result.data[0].address,
                 searchType: searchType 
               })
             }).catch(err => console.log('背景寫入日誌失敗:', err));
           }
-
         } else {
           throw new Error(result.message);
         }
@@ -380,15 +372,8 @@
       const city = document.getElementById('cityInput').value;
       const district = document.getElementById('districtInput').value;
       const detail = document.getElementById('detailInput').value.trim();
-
-      if (!city) return alert('請選擇「縣市」！');
-      if (!district) return alert('請選擇「鄉鎮市區」！');
-      if (!detail) return alert('請輸入「詳細地址」！');
-
-      if (!detail.includes('號')) {
-        return alert('為確保導航精準度，詳細地址請務必包含門牌號碼 (例如：ＯＯ路ＸＸ號)！\n請勿僅輸入地標名稱 (如：高雄車站)。');
-      }
-
+      if (!city || !district || !detail) return alert('請完整填寫地址資訊喔！');
+      if (!detail.includes('號')) return alert('詳細地址請務必包含門牌號碼 (例如：ＯＯ路ＸＸ號)！');
       const fullAddress = city + district + detail;
       toggleUI(true);
       callBackendAPI(fullAddress); 
@@ -396,25 +381,17 @@
 
     function startSearchGPS() {
       if (isLineApp) {
-        alert('【功能受限】\n\nLINE 內建瀏覽器會阻擋定位請求。\n\n👉 請點擊畫面上方或下方的選單按鈕，選擇「以預設瀏覽器開啟」(Safari/Chrome) 後再試一次！');
+        alert('【功能受限】請切換至 Chrome/Safari 瀏覽器以使用定位功能。');
         return; 
       }
-
       if (navigator.geolocation) {
         toggleUI(true);
         navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
-            callBackendAPI(coords); 
-          },
+          (position) => callBackendAPI({ lat: position.coords.latitude, lng: position.coords.longitude }),
           (error) => {
             toggleUI(false);
             document.getElementById('bottomAd').style.display = 'block'; 
-            if (error.code === 1) {
-              alert('【定位被拒絕】請允許瀏覽器存取您的位置權限。');
-            } else {
-              alert('無法取得定位，請改用手動輸入。');
-            }
+            alert('無法取得定位，請改用手動輸入。');
           },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
@@ -426,7 +403,6 @@
     function showResults(data) {
       toggleUI(false);
       let html = '';
-      
       const countSpan = document.getElementById('totalSearchCount');
       if (countSpan.innerText !== '...') {
          const currentCount = parseInt(countSpan.innerText.replace(/,/g, ''));
@@ -436,10 +412,7 @@
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const targetAttr = isMobile ? '' : 'target="_blank"';
 
-      data.forEach((item, index) => {
-        item.originalRank = index + 1;
-      });
-
+      data.forEach((item, index) => item.originalRank = index + 1);
       if (data.length >= 2) {
         const temp = data[0];
         data[0] = data[1];
@@ -448,20 +421,15 @@
 
       data.forEach((item, loopIndex) => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
-        
         const locationHtml = item.locationDesc 
           ? `<p class="small mb-0 mt-2" style="color: #2e7d32; background-color: #e8f5e9; padding: 5px 8px; border-radius: 6px; display: inline-block;">💡 <b>位置：</b>${item.locationDesc}</p>` 
           : '';
 
         let boxesHtml = '';
         let hasBoxes = false;
-        
         if (item.boxes) {
           for (const [size, rawValue] of Object.entries(item.boxes)) {
-            let total = 0;
-            let used = 0;
-            let remain = '-';
-
+            let total = 0, used = 0, remain = '-';
             if (typeof rawValue === 'string' && rawValue.includes('/')) {
               const parts = rawValue.split('/');
               used = parseInt(parts[0], 10) || 0;    
@@ -474,7 +442,6 @@
             if (total > 0) {
               hasBoxes = true;
               const remainColorClass = (remain === 0) ? 'text-danger' : 'text-success';
-              
               let displaySize = size;
               const sizeParts = size.split('x');
               if (sizeParts.length === 2) {
@@ -482,37 +449,12 @@
                 const h = parseInt(sizeParts[1], 10) / 10;
                 displaySize = `47x${w}x${h}`;
               }
-
-              boxesHtml += `
-                <tr>
-                  <td class="size-col">${displaySize}</td>
-                  <td class="fw-bold">${total}</td>
-                  <td class="fw-bold ${remainColorClass}">${remain}</td>
-                </tr>
-              `;
+              boxesHtml += `<tr><td class="size-col">${displaySize}</td><td class="fw-bold">${total}</td><td class="fw-bold ${remainColorClass}">${remain}</td></tr>`;
             }
           }
         }
         
-        let tableHtml = '';
-        if (hasBoxes) {
-          tableHtml = `
-            <table class="box-table">
-              <thead>
-                <tr>
-                  <th style="text-align: left;">尺寸<span style="font-size:0.65rem; color:#aaa;">(cm)</span></th>
-                  <th>總數</th>
-                  <th>剩餘</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${boxesHtml}
-              </tbody>
-            </table>
-          `;
-        } else {
-          tableHtml = '<div class="small text-muted text-center mt-2">暫無資料</div>';
-        }
+        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">尺寸(cm)</th><th>總數</th><th>剩餘</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : '<div class="small text-muted text-center mt-2">暫無資料</div>';
 
         html += `
           <div class="result-card">
@@ -525,112 +467,58 @@
                   <p class="small text-secondary mb-0">${item.address}</p>
                   ${locationHtml}
                 </div>
-                <div class="mt-auto pt-3 text-secondary" style="font-size: 0.75rem;">
-                  ${item.updateTime ? `🕒 更新時間：${item.updateTime}` : ''}
-                </div>
+                <div class="mt-auto pt-3 text-secondary" style="font-size: 0.75rem;">${item.updateTime ? `🕒 更新時間：${item.updateTime}` : ''}</div>
               </div>
-              
               <div class="box-status flex-shrink-0 shadow-sm align-self-start">
                 <div class="box-status-title">格位狀態</div>
                 ${tableHtml}
               </div>
             </div>
-            
             <div class="row g-2 mt-2">
-              <div class="col-6">
-                <button class="btn btn-outline-secondary w-100" onclick="copyText('${item.address}')">複製地址</button>
-              </div>
-              <div class="col-6">
-                <a href="${mapUrl}" ${targetAttr} class="btn btn-primary w-100">開啟導航</a>
-              </div>
+              <div class="col-6"><button class="btn btn-outline-secondary w-100" onclick="copyText('${item.address}')">複製地址</button></div>
+              <div class="col-6"><a href="${mapUrl}" ${targetAttr} class="btn btn-primary w-100">開啟導航</a></div>
             </div>
           </div>
         `;
 
-        // 插入廣告版位
-        // 【測試期間暫時隱藏廣告】可以移除下方註解來開啟
-         if (loopIndex === 0) {
-           html += adBanners[0];
-         } else if (loopIndex === 1) {
-           html += adBanners[1];
-         }
+        if (loopIndex === 0) html += adBanners[0];
+        else if (loopIndex === 1) html += adBanners[1];
       });
-
       document.getElementById('results').innerHTML = html;
-
-      // 【測試期間修改】：每次搜尋完 3 秒強制彈出滿意度問卷
-      // if (!localStorage.getItem('iBoxSurveyDone')) {
-        setTimeout(() => {
-          const surveyModal = new bootstrap.Modal(document.getElementById('surveyModal'));
-          surveyModal.show();
-        }, 3000);
-      // }
+      setTimeout(() => {
+        const surveyModal = new bootstrap.Modal(document.getElementById('surveyModal'));
+        surveyModal.show();
+      }, 3000);
     }
 
-    function copyText(text) {
-      navigator.clipboard.writeText(text).then(() => alert('地址已複製！'));
-    }
+    function copyText(text) { navigator.clipboard.writeText(text).then(() => alert('地址已複製！')); }
 
-    // 呼叫專案 B 進行意見回饋
     async function submitFeedback() {
       const name = document.getElementById('feedbackName').value.trim() || '匿名使用者';
       const message = document.getElementById('feedbackMessage').value.trim();
       const btn = document.getElementById('submitFeedbackBtn');
-
       if (!message) return alert('請輸入回饋內容喔！');
-
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 傳送中...';
-
+      btn.innerHTML = '傳送中...';
       try {
         const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
-        if (cleanLogUrl.includes('請貼上')) throw new Error('日誌 API 網址尚未設定。');
-
-        const response = await fetch(cleanLogUrl, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'feedback', name: name, message: message })
-        });
-        
+        const response = await fetch(cleanLogUrl, { method: 'POST', body: JSON.stringify({ action: 'feedback', name: name, message: message }) });
         const result = await response.json();
         if (result.status === 'success') {
-          alert('感謝您的回饋！我們已經收到您的留言了。');
-          document.getElementById('feedbackMessage').value = '';
-          const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
-          modal.hide();
-        } else {
-          throw new Error(result.message);
-        }
-      } catch (err) {
-        alert('傳送失敗：' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerText = '送出回饋';
-      }
+          alert('感謝您的回饋！');
+          bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
+        } else throw new Error(result.message);
+      } catch (err) { alert('傳送失敗：' + err.message); } finally { btn.disabled = false; btn.innerText = '送出回饋'; }
     }
 
-    function markSurveyDone() {
-      // localStorage.setItem('iBoxSurveyDone', 'true');
-    }
+    function markSurveyDone() {}
 
-    // 呼叫專案 B 進行問卷傳送
     function submitSurvey() {
-      const role = document.getElementById('surveyRole').value;
-      const ux = document.getElementById('surveyUX').value;
-      const accuracy = document.getElementById('surveyAccuracy').value;
-
-      if (!role || !ux || !accuracy) return alert('請幫我們填寫完整的 3 個問題喔！');
-
-      const modal = bootstrap.Modal.getInstance(document.getElementById('surveyModal'));
-      modal.hide();
-      markSurveyDone();
-
+      const role = document.getElementById('surveyRole').value, ux = document.getElementById('surveyUX').value, acc = document.getElementById('surveyAccuracy').value;
+      if (!role || !ux || !acc) return alert('請填寫完整問卷喔！');
+      bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
       const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
-      if (!cleanLogUrl.includes('請貼上')) {
-        fetch(cleanLogUrl, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'survey', role: role, ux: ux, accuracy: accuracy })
-        }).catch(err => console.log('背景傳送問卷失敗:', err));
-      }
+      fetch(cleanLogUrl, { method: 'POST', body: JSON.stringify({ action: 'survey', role: role, ux: ux, accuracy: acc }) });
     }
   </script>
 </body>
