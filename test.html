@@ -119,8 +119,8 @@
       </span>
     </div>
 
-    <!-- 【修改】：加入 Bootstrap 格線系統 (row)，電腦版分成左右兩欄 -->
-    <div class="row g-lg-4">
+    <!-- 【核心修改】：加入 justify-content-center，這樣當右側側邊欄隱藏時，左側的搜尋器就會自動置中！ -->
+    <div class="row g-lg-4 justify-content-center">
       
       <!-- 左欄：搜尋功能與結果 (電腦版佔 7 欄，手機版佔 12 欄) -->
       <div class="col-lg-7">
@@ -168,17 +168,18 @@
       </div> <!-- 左欄結束 -->
 
       <!-- 右欄：實用指南與 FAQ (電腦版佔 5 欄，手機版疊在下方) -->
-      <div class="col-lg-5">
+      <!-- 💡【隱藏開關】在這裡加上 style="display: none;" 讓這整欄直接消失。未來想打開側邊欄時，把這句刪掉即可！ -->
+      <div class="col-lg-5" style="display: none;">
         
-        <!-- 💡【隱藏開關】使用 display: none 隱藏下方所有內容。未來想顯示時，把這個 div 跟最下面的 </div> 刪掉即可！ -->
-        <div style="display: none;">
-        
-          <!-- 面板一：實用指南與尺寸表 -->
-          <div class="side-card">
-            <h5 class="fw-bold mb-3 text-dark">📦 i 郵箱實用指南</h5>
-            <!-- 這裡呼叫您上傳的 original.webp -->
-            <img src="original.webp" alt="i郵箱格位圖解" class="img-fluid rounded mb-3 w-100" style="border: 1px solid #f0f0f0;">
-            <h6 class="fw-bold text-success mb-2" style="font-size: 0.9rem;">📏 常見格位尺寸與基本資費</h6>
+        <!-- 面板一：實用指南與尺寸表 -->
+        <div class="side-card">
+          <h5 class="fw-bold mb-3 text-dark">📦 i 郵箱實用指南</h5>
+          <!-- 這裡呼叫您上傳的 original.webp -->
+          <img src="original.webp" alt="i郵箱格位圖解" class="img-fluid rounded mb-3 w-100" style="border: 1px solid #f0f0f0;">
+          <h6 class="fw-bold text-success mb-2" style="font-size: 0.9rem;">📏 常見格位尺寸與基本資費</h6>
+          <ul class="list-unstyled small text-secondary lh-lg mb-0">
+            <li><span class="badge bg-light text-dark border me-2">大格</span> 47 x 34 x 31 cm <span class="float-end">NT$ 70</span></li>
+            <li><span class="badge bg-light text-dark border me-2">中格</span> 47 x 34 x 17 cm <span class="float-end">NT$ 65</span></li>
             <li><span class="badge bg-light text-dark border me-2">小格</span> 47 x 14 x 17 cm <span class="float-end">NT$ 60</span></li>
             <li class="mt-2 text-muted" style="font-size: 0.75rem; line-height: 1.4;">* 尺寸長寬高限重 20 公斤。<br>* 實際可用格位與收費標準依中華郵政官方公告為準。</li>
           </ul>
@@ -213,23 +214,23 @@
                   沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，直接複製地址或據點名稱填入即可輕鬆取件。
                 </div>
               </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                    取件時忘記帶手機怎麼辦？
-                  </button>
-                </h2>
-                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body small text-secondary" style="line-height: 1.6;">
-                    免擔心！只要您記得自己的<strong>「手機號碼」</strong>以及簡訊內收到的<strong>「6 位數取件碼」</strong>，直接在機台螢幕上輸入就可以把包裹領回家了。
-                  </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                  取件時忘記帶手機怎麼辦？
+                </button>
+              </h2>
+              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body small text-secondary" style="line-height: 1.6;">
+                  免擔心！只要您記得自己的<strong>「手機號碼」</strong>以及簡訊內收到的<strong>「6 位數取件碼」</strong>，直接在機台螢幕上輸入就可以把包裹領回家了。
                 </div>
               </div>
-
             </div>
-          </div>
 
-        </div> <!-- 💡【隱藏開關】結束標籤 -->
+          </div>
+        </div>
 
       </div> <!-- 右欄結束 -->
     </div> <!-- Row 結束 -->
@@ -488,7 +489,7 @@
         navigator.geolocation.getCurrentPosition(
           // GPS 定位時，第二個參數傳空字串即可
           (pos) => callBackendAPI({ lat: pos.coords.latitude, lng: pos.coords.longitude }, ''),
-          (err) => { toggleUI(false); document.getElementById('bottomAd').style.display = 'block'; alert('無法取得定位，請改用手動輸入。'); },
+          (err) => { toggleUI(false); document.getElementById('bottomAd').style.display = 'block'; alert('無法取得定位，請改用手手動輸入。'); },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
       } else { alert("您的裝置不支援定位功能。"); }
