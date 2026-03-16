@@ -323,9 +323,17 @@
 
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
+    // 【修改】：將原本的純文字區塊，換成您上傳的圖片與超連結
     const adBanners = [
-      `<div class="ad-banner shadow-sm" style="background: #fff; border-left: 5px solid #4e73df;"><h6 style="color: #4e73df;">廣告版位 1 號 (展示尺寸: 320 x 80)</h6><p>誠徵版位贊助<br>意者請於回饋欄留下聯繫方式</p></div>`,
-      `<div class="ad-banner shadow-sm" style="background: #fff; border-left: 5px solid #1cc88a;"><h6 style="color: #1cc88a;">廣告版位 2 號 (展示尺寸: 320 x 80)</h6><p>誠徵版位贊助<br>意者請於回饋欄留下聯繫方式</p></div>`
+      // 廣告 1 號
+      `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+         <img src="banner_320x80x1-01.jpg" alt="廣告版位" class="img-fluid rounded shadow-sm" style="max-width: 100%; border: 1px solid #eaeaea;">
+       </a>`,
+       
+      // 廣告 2 號
+      `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+         <img src="banner_320x80x1-02.jpg" alt="廣告版位" class="img-fluid rounded shadow-sm" style="max-width: 100%; border: 1px solid #eaeaea;">
+       </a>`
     ];
 
     const taiwanData = {
