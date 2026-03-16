@@ -21,7 +21,7 @@
   <meta name="keywords" content="i郵箱, ｉ郵箱, ibox, iBox, i郵箱查詢, ｉ郵箱查詢, ibox查詢, i郵箱據點, i郵箱導航, 機車導航, 寄件, 取件, 蝦皮取件, 中華郵政, 24小時取件, 郵局, ezPost">
   <link rel="canonical" href="https://goibox.tw/" />
   
-  <!-- 【JSON-LD 結構化資料 - 應用程式】 -->
+  <!-- 【JSON-LD 結構化資料】 -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -36,49 +36,13 @@
   }
   </script>
 
-  <!-- 【新增：JSON-LD 結構化資料 - 常見問題 FAQ (提升 Google 排版)】 -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [{
-      "@type": "Question",
-      "name": "i 郵箱可以放多久？",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "包裹送達後，提供 3 天 (72 小時) 內免費取件。超過時間會被退回原寄件局喔！"
-      }
-    }, {
-      "@type": "Question",
-      "name": "蝦皮可以寄到 i 郵箱嗎？",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "可以！結帳時物流選擇「i郵箱」，並利用本站搜尋距離您最近的據點，選擇該據點即可輕鬆取件。"
-      }
-    }, {
-      "@type": "Question",
-      "name": "如何知道包裹到了沒？",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "包裹送達時，系統會發送含有「取件碼」的簡訊到收件人手機，憑簡訊即可輕鬆取件。"
-      }
-    }]
-  }
-  </script>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
   
   <style>
     body { background-color: #f4f6f9; font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #333; }
-    
-    /* 修改：將最大寬度從 600px 放寬到 1000px 以容納雙欄 */
-    .container { max-width: 1000px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; }
-    
+    .container { max-width: 600px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; }
     .result-card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; }
-    .ad-banner { background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 16px; padding: 12px 15px; text-align: center; margin-bottom: 16px; color: #6c757d; }
-    .ad-banner h6 { font-weight: 700; color: #495057; margin-bottom: 4px; }
-    .ad-banner p { font-size: 0.9rem; margin-bottom: 0; line-height: 1.4; }
     .box-status { background-color: #f8f9fc; border: 1px solid #e3e6f0; border-radius: 10px; padding: 10px; min-width: 145px; }
     .box-status-title { font-size: 0.75rem; color: #4e73df; font-weight: 700; margin-bottom: 8px; text-align: center; }
     .box-table { width: 100%; font-size: 0.75rem; text-align: center; border-collapse: collapse; }
@@ -100,13 +64,6 @@
     .rating-circle { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-weight: bold; }
     .survey-btn-check:checked + .rating-circle { border-color: #0d6efd; background-color: #0d6efd; color: white; }
     .footer-copy { text-align: center; margin-top: 40px; font-size: 0.85rem; color: #888; }
-    
-    /* 新增：右側面板樣式 */
-    .side-card { background: white; border-radius: 16px; padding: 22px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; }
-    .accordion-button:focus { box-shadow: none; border-color: rgba(0,0,0,.125); }
-    .accordion-button:not(.collapsed) { background-color: #eef5ff; color: #0d6efd; font-weight: bold; box-shadow: inset 0 -1px 0 rgba(0,0,0,.125); }
-    .accordion-item { border-radius: 12px !important; overflow: hidden; margin-bottom: 8px; border: 1px solid #eaeaea; }
-    .accordion-button { padding: 12px 16px; font-size: 0.9rem; font-weight: 500; }
   </style>
 </head>
 <body>
@@ -119,121 +76,47 @@
       </span>
     </div>
 
-    <!-- 【核心修改】：加入 justify-content-center，這樣當右側側邊欄隱藏時，左側的搜尋器就會自動置中！ -->
-    <div class="row g-lg-4 justify-content-center">
-      
-      <!-- 左欄：搜尋功能與結果 (電腦版佔 7 欄，手機版佔 12 欄) -->
-      <div class="col-lg-7">
-        <div class="row g-2 mb-3">
-          <div class="col-6">
-            <select id="cityInput" class="form-select filter-input" onchange="updateDistricts()">
-              <option value="">選擇縣市</option>
-            </select>
-          </div>
-          <div class="col-6">
-            <!-- 【防呆機制】將預設改為全區不指定 -->
-            <select id="districtInput" class="form-select filter-input">
-              <option value="">全區 / 不指定 (推薦)</option>
-            </select>
-          </div>
-          <div class="col-12">
-            <div class="input-group search-group">
-              <input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)">
-              <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn">搜尋</button>
-            </div>
-          </div>
+    <div class="row g-2 mb-3">
+      <div class="col-6">
+        <select id="cityInput" class="form-select filter-input" onchange="updateDistricts()">
+          <option value="">選擇縣市</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <select id="districtInput" class="form-select filter-input">
+          <option value="">全區 / 不指定 (推薦)</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <div class="input-group search-group">
+          <input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)">
+          <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn">搜尋</button>
         </div>
+      </div>
+    </div>
 
-        <button class="btn-gps shadow-sm" onclick="startSearchGPS()" id="gpsBtn">
-          📍 自動定位並搜尋附近
-        </button>
+    <button class="btn-gps shadow-sm" onclick="startSearchGPS()" id="gpsBtn">
+      📍 自動定位並搜尋附近
+    </button>
 
-        <div id="loader" class="text-center loading" style="margin-bottom: 25px;">
-          <div class="progress shadow-sm mb-2">
-            <div id="fakeProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
-                 role="progressbar" style="width: 0%; transition: width 0.3s ease-out;">
-            </div>
-          </div>
-          <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;">🚀 正在火速規劃最佳機車路徑...</p>
+    <div id="loader" class="text-center loading" style="margin-bottom: 25px;">
+      <div class="progress shadow-sm mb-2">
+        <div id="fakeProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+             role="progressbar" style="width: 0%; transition: width 0.3s ease-out;">
         </div>
+      </div>
+      <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;">🚀 正在火速規劃最佳機車路徑...</p>
+    </div>
 
-        <div id="results"></div>
-        <div id="bottomAd" class="mt-4 mb-2"></div>
+    <div id="results"></div>
+    <!-- 廣告版位容器 -->
+    <div id="bottomAd" class="mt-4 mb-2"></div>
 
-        <div class="text-center mt-3 mb-4">
-          <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">
-            💡 錯誤回報 / 意見回饋
-          </button>
-        </div>
-      </div> <!-- 左欄結束 -->
-
-      <!-- 右欄：實用指南與 FAQ (電腦版佔 5 欄，手機版疊在下方) -->
-      <!-- 💡【隱藏開關】在這裡加上 style="display: none;" 讓這整欄直接消失。未來想打開側邊欄時，把這句刪掉即可！ -->
-      <div class="col-lg-5" style="display: none;">
-        
-        <!-- 面板一：實用指南與尺寸表 -->
-        <div class="side-card">
-          <h5 class="fw-bold mb-3 text-dark">📦 i 郵箱實用指南</h5>
-          <!-- 這裡呼叫您上傳的 original.webp -->
-          <img src="original.webp" alt="i郵箱格位圖解" class="img-fluid rounded mb-3 w-100" style="border: 1px solid #f0f0f0;">
-          <h6 class="fw-bold text-success mb-2" style="font-size: 0.9rem;">📏 常見格位尺寸與基本資費</h6>
-          <ul class="list-unstyled small text-secondary lh-lg mb-0">
-            <li><span class="badge bg-light text-dark border me-2">大格</span> 47 x 34 x 31 cm <span class="float-end">NT$ 70</span></li>
-            <li><span class="badge bg-light text-dark border me-2">中格</span> 47 x 34 x 17 cm <span class="float-end">NT$ 65</span></li>
-            <li><span class="badge bg-light text-dark border me-2">小格</span> 47 x 14 x 17 cm <span class="float-end">NT$ 60</span></li>
-            <li class="mt-2 text-muted" style="font-size: 0.75rem; line-height: 1.4;">* 尺寸長寬高限重 20 公斤。<br>* 實際可用格位與收費標準依中華郵政官方公告為準。</li>
-          </ul>
-        </div>
-
-        <!-- 面板二：常見問題 FAQ -->
-        <div class="side-card">
-          <h5 class="fw-bold mb-3 text-dark">❓ 常見問題 FAQ</h5>
-          <div class="accordion accordion-flush" id="faqAccordion">
-            
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                  包裹可以在 i 郵箱放多久？
-                </button>
-              </h2>
-              <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body small text-secondary" style="line-height: 1.6;">
-                  包裹送達後，系統會提供 <strong>3 天 (72 小時)</strong> 內的免費取件時間。如果超過時間未取，包裹就會被退回原寄件局喔！
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                  蝦皮、MOMO 可以寄到 i 郵箱嗎？
-                </button>
-              </h2>
-              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body small text-secondary" style="line-height: 1.6;">
-                  沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，直接複製地址或據點名稱填入即可輕鬆取件。
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                  取件時忘記帶手機怎麼辦？
-                </button>
-              </h2>
-              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body small text-secondary" style="line-height: 1.6;">
-                  免擔心！只要您記得自己的<strong>「手機號碼」</strong>以及簡訊內收到的<strong>「6 位數取件碼」</strong>，直接在機台螢幕上輸入就可以把包裹領回家了。
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div> <!-- 右欄結束 -->
-    </div> <!-- Row 結束 -->
+    <div class="text-center mt-3 mb-4">
+      <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+        💡 錯誤回報 / 意見回饋
+      </button>
+    </div>
 
     <!-- 意見回饋 Modal -->
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
@@ -323,14 +206,11 @@
 
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
-    // 【修改】：將原本的純文字區塊，換成您上傳的圖片與超連結，並加上 w-100 強制滿版
+    // 【修改】：將廣告換成您上傳的 Banner，並加入 w-100 強制滿版對齊按鈕
     const adBanners = [
-      // 廣告 1 號
       `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
          <img src="banner_320x80x1-01.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
        </a>`,
-       
-      // 廣告 2 號
       `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
          <img src="banner_320x80x1-02.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
        </a>`
@@ -403,7 +283,6 @@
     function updateDistricts() {
       const city = document.getElementById('cityInput').value;
       const districtSelect = document.getElementById('districtInput');
-      // 【防呆機制】切換縣市時，鄉鎮市區的預設選項也改為全區不指定
       districtSelect.innerHTML = '<option value="">全區 / 不指定 (推薦)</option>';
       if (taiwanData[city]) {
         taiwanData[city].forEach(district => {
@@ -438,33 +317,26 @@
         const response = await fetch(cleanSearchUrl, { method: 'POST', body: JSON.stringify({ inputData: inputData }) });
         const result = await response.json();
         if (result.status === 'success') {
-          
-          // 💡 【核心修正】：在 showResults 把陣列順序對調前，先備份真正的「第 1 近地址」
+          // 備份真正的「第 1 近地址」
           const trueClosestAddress = result.data.length > 0 ? result.data[0].address : '';
-
-          // 【防呆機制】將 userAddressStr 傳遞給 showResults 顯示提示
           showResults(result.data, userAddressStr);
           
           if (result.data.length > 0) {
             const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
-            
-            // 處理使用者輸入的地址（去除門牌號碼及以後的部分，達到去識別化）
             let maskedUserAddress = '';
             if (searchType === '文字搜尋' && userAddressStr) {
-                // 【優化】精準去除門牌號碼 (如：37-3號、37之3號、777號)，完美保留前面的 123巷、8弄
                 maskedUserAddress = userAddressStr.replace(/\d+[-之]?\d*號.*$/, "");
             } else {
                 maskedUserAddress = 'GPS定位(無地址)';
             }
 
-            // 將參考地址與搜尋地址打包，一次發送給後端
             fetch(cleanLogUrl, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
                     action: 'logSearch', 
-                    address: trueClosestAddress,        // 【修改】使用備份的真實第 1 近地址，不受排序影響
+                    address: trueClosestAddress,
                     searchType: searchType, 
-                    userAddress: maskedUserAddress      // F 欄：儲存搜尋地址 (去識別化的使用者地址)
+                    userAddress: maskedUserAddress
                 }) 
             }).catch(err => console.log('背景寫入日誌失敗:', err));
           }
@@ -479,36 +351,30 @@
 
     function startSearchText() {
       const city = document.getElementById('cityInput').value, district = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
-      // 【防呆機制】放寬限制，不再強制要求區，只要有縣市和地址即可
       if (!city || !detail) return alert('請至少選擇縣市並填寫詳細地址喔！');
       if (!detail.includes('號')) return alert('詳細地址請務必包含門牌號碼 (例如：ＯＯ路ＸＸ號)！');
       
       const fullAddress = city + district + detail;
       toggleUI(true); 
-      // 把 fullAddress 傳兩次，第二次是用來當作 userAddressStr 做去識別化
       callBackendAPI(fullAddress, fullAddress); 
     }
 
-    // 【修復：補回被切斷的 startSearchGPS 函式下半部與大括號】
     function startSearchGPS() {
       if (isLineApp) return alert('【功能受限】請切換至 Chrome/Safari 瀏覽器。');
       if (navigator.geolocation) {
         toggleUI(true);
         navigator.geolocation.getCurrentPosition(
-          // GPS 定位時，第二個參數傳空字串即可
           (pos) => callBackendAPI({ lat: pos.coords.latitude, lng: pos.coords.longitude }, ''),
-          (err) => { toggleUI(false); document.getElementById('bottomAd').style.display = 'block'; alert('無法取得定位，請改用手手動輸入。'); },
+          (err) => { toggleUI(false); document.getElementById('bottomAd').style.display = 'block'; alert('無法取得定位，請改用手動輸入。'); },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
       } else { alert("您的裝置不支援定位功能。"); }
     }
 
-    // 【防呆機制】接收 userAddressStr 參數來呈現提示
     function showResults(data, userAddressStr) {
       toggleUI(false);
       let html = '';
 
-      // 【防呆機制】新增：提示當前搜尋基準，並給予防呆建議
       if (userAddressStr) {
          html += `<div class="alert alert-info border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #eef5ff; color: #0d6efd; font-size: 0.85rem; padding: 12px 16px;">
              <strong>📍 搜尋中心：</strong>${userAddressStr}<br>
@@ -521,7 +387,7 @@
       }
 
       const countSpan = document.getElementById('totalSearchCount');
-      if (countSpan.innerText !== '...') {
+      if (countSpan && countSpan.innerText !== '...') {
          const currentCount = parseInt(countSpan.innerText.replace(/,/g, ''));
          countSpan.innerText = (currentCount + 1).toLocaleString();
       }
@@ -529,7 +395,7 @@
       const targetAttr = isMobile ? '' : 'target="_blank"';
       data.forEach((item, index) => item.originalRank = index + 1);
       
-      // 💡 【還原商業邏輯】：將第 1 名與第 2 名對調，強迫使用者下滑以增加廣告曝光度
+      // 商業邏輯：1, 2 名對調
       if (data.length >= 2) { const temp = data[0]; data[0] = data[1]; data[1] = temp; }
 
       data.forEach((item, loopIndex) => {
@@ -598,7 +464,19 @@
       observer.observe(target);
     }
 
-    function copyText(text) { navigator.clipboard.writeText(text).then(() => alert('地址已複製！')); }
+    function copyText(text) { 
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert('地址已複製！');
+      } catch (err) {
+        console.error('複製失敗', err);
+      }
+      document.body.removeChild(textArea);
+    }
 
     async function submitFeedback() {
       const name = document.getElementById('feedbackName').value.trim() || '匿名使用者', message = document.getElementById('feedbackMessage').value.trim(), btn = document.getElementById('submitFeedbackBtn');
