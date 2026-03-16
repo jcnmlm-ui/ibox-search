@@ -4,11 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   
-  <!-- 網頁小圖示 (Favicon) 設定 -->
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="favicon.png">
 
-  <!-- SEO 與社群分享 (LINE/FB) 預覽設定 -->
   <title>i 郵箱查找大師 | 一鍵尋找最近的 i 郵箱 (iBox)</title>
   <meta name="description" content="全台首創！自動定位尋找距離您最近的 i 郵箱 (iBox)，提供精準機車導航與即時大中小格位狀態，寄件收件超方便！">
   <meta property="og:title" content="🛵 i 郵箱查找大師">
@@ -17,11 +15,9 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://goibox.tw/favicon.png"> 
   
-  <!-- SEO 強化標籤 -->
   <meta name="keywords" content="i郵箱, ｉ郵箱, ibox, iBox, i郵箱查詢, i郵箱據點, i郵箱導航, 機車導航, 寄件, 取件, 中華郵政, 24小時取件, 郵局, ezPost">
   <link rel="canonical" href="https://goibox.tw/" />
   
-  <!-- JSON-LD 結構化資料 -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -42,8 +38,8 @@
   <style>
     body { background-color: #f4f6f9; font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #333; }
     .container { max-width: 600px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; }
-    .result-card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; }
-    .ad-banner { background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 16px; padding: 0; text-align: center; margin-bottom: 16px; color: #6c757d; overflow: hidden; }
+    .result-card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; position: relative; overflow: hidden; }
+    .ad-banner { background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 16px; padding: 0; text-align: center; margin-bottom: 16px; overflow: hidden; }
     .box-status { background-color: #f8f9fc; border: 1px solid #e3e6f0; border-radius: 10px; padding: 10px; min-width: 145px; }
     .box-status-title { font-size: 0.75rem; color: #4e73df; font-weight: 700; margin-bottom: 8px; text-align: center; }
     .box-table { width: 100%; font-size: 0.75rem; text-align: center; border-collapse: collapse; }
@@ -56,8 +52,7 @@
     .search-group input { border-radius: 12px 0 0 12px; padding: 12px; }
     .search-group button { border-radius: 0 12px 12px 0; padding: 12px 20px; }
     .loading { display: none; margin-top: 20px; }
-    .progress { height: 12px; border-radius: 6px; background-color: #e9ecef; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
-    .progress-bar-animated { animation: progress-bar-stripes 0.4s linear infinite !important; }
+    .progress { height: 12px; border-radius: 6px; background-color: #e9ecef; overflow: hidden; }
     .survey-options { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
     .survey-btn-check { display: none; }
     .survey-btn-label { padding: 8px 16px; border-radius: 20px; border: 2px solid #eee; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; flex: 1; text-align: center; min-width: 80px; }
@@ -215,14 +210,14 @@
        </a>`
     ];
 
-    // 【全台灣 22 縣市完整地址篩選資料庫】
+    // 【全台灣 22 縣市完整行政區資料庫 - 全數回歸】
     const taiwanData = {
       "台北市": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區", "北投區", "內湖區", "南港區", "文山區"],
       "新北市": ["萬里區", "金山區", "板橋區", "汐止區", "深坑區", "石碇區", "瑞芳區", "平溪區", "雙溪區", "貢寮區", "新店區", "坪林區", "烏來區", "永和區", "中和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "新莊區", "泰山區", "林口區", "蘆洲區", "五股區", "八里區", "淡水區", "三芝區", "石門區"],
       "桃園市": ["中壢區", "平鎮區", "龍潭區", "楊梅區", "新屋區", "觀音區", "桃園區", "龜山區", "八德區", "大溪區", "復興區", "大園區", "蘆竹區"],
       "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
       "台南市": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "歸仁區", "新化區", "左鎮區", "玉井區", "楠西區", "南化區", "仁德區", "關廟區", "龍崎區", "官田區", "麻豆區", "佳里區", "西港區", "七股區", "將軍區", "學甲區", "北門區", "新營區", "後壁區", "白河區", "東山區", "六甲區", "下營區", "柳營區", "鹽水區", "善化區", "大內區", "山上區", "新市區", "安定區"],
-      "高雄市": ["新興區", "前金區", "苓雅區", "鹽埕區", "鼓山區", "旗津區", "前鎮區", "三民區", "楠梓區", "小港區", "左營區", "仁武區", "大社區", "東沙群島", "南沙群島", "岡山區", "路竹區", "阿蓮區", "田寮區", "燕巢區", "橋頭區", "梓官區", "彌陀區", "永安區", "湖內區", "鳳山區", "大寮區", "林園區", "鳥松區", "大樹區", "旗山區", "美濃區", "六龜區", "內門區", "杉林區", "甲仙區", "桃源區", "那瑪夏區", "茂林區"],
+      "高雄市": ["新興區", "前金區", "苓雅區", "鹽埕區", "鼓山區", "旗津區", "前鎮區", "三民區", "楠梓區", "小港區", "左營區", "仁武區", "大社區", "岡山區", "路竹區", "阿蓮區", "田寮區", "燕巢區", "橋頭區", "梓官區", "彌陀區", "永安區", "湖內區", "鳳山區", "大寮區", "林園區", "鳥松區", "大樹區", "旗山區", "美濃區", "六龜區", "內門區", "杉林區", "甲仙區", "桃源區", "那瑪夏區", "茂林區"],
       "基隆市": ["仁愛區", "信義區", "中正區", "中山區", "安樂區", "暖暖區", "七堵區"],
       "新竹市": ["東區", "北區", "香山區"],
       "嘉義市": ["東區", "西區"],
@@ -251,13 +246,18 @@
       loadTotalSearches();
       const randomAdIndex = Math.floor(Math.random() * adBanners.length);
       document.getElementById('bottomAd').innerHTML = adBanners[randomAdIndex];
-      document.getElementById('bottomAd').style.display = 'block';
-
       const citySelect = document.getElementById('cityInput');
       for (let city in taiwanData) {
         let option = document.createElement('option');
         option.value = city; option.text = city;
         citySelect.appendChild(option);
+      }
+      if (isLineApp) {
+        const warning = document.createElement('div');
+        warning.className = 'alert alert-danger text-center mb-3 shadow-sm';
+        warning.style.borderRadius = '12px';
+        warning.innerHTML = '<strong>⚠️ 偵測到 LINE 內建瀏覽器</strong><br>請點擊選單選擇<strong>「以預設瀏覽器開啟」</strong>以獲得定位功能！';
+        document.querySelector('h1').insertAdjacentElement('afterend', warning);
       }
     };
 
@@ -265,10 +265,8 @@
       try {
         const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'getStats' }) });
         const result = await response.json();
-        if (result.status === 'success' && result.totalSearches > 0) {
-          document.getElementById('totalSearchCount').innerText = result.totalSearches.toLocaleString();
-        }
-      } catch (err) { console.log('統計數據失敗', err); }
+        if (result.status === 'success') document.getElementById('totalSearchCount').innerText = result.totalSearches.toLocaleString();
+      } catch (err) {}
     }
 
     function updateDistricts() {
@@ -291,10 +289,9 @@
       if(isProcessing) {
         loader.style.display = 'block';
         document.getElementById('results').innerHTML = '';
-        document.getElementById('bottomAd').style.display = 'none'; 
         let currentWidth = 0; updateProgressBar(0);
         setTimeout(() => { currentWidth = 70; updateProgressBar(currentWidth); }, 100);
-        progressInterval = setInterval(() => { if (currentWidth < 95) { currentWidth += Math.random() * 2; updateProgressBar(currentWidth); } }, 500);
+        progressInterval = setInterval(() => { if (currentWidth < 95) { currentWidth += 1; updateProgressBar(currentWidth); } }, 500);
       } else {
         clearInterval(progressInterval); updateProgressBar(100);
         setTimeout(() => { loader.style.display = 'none'; }, 300);
@@ -307,106 +304,75 @@
         const response = await fetch(GAS_API_URL_SEARCH.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ inputData: inputData }) });
         const result = await response.json();
         if (result.status === 'success') {
-          const trueClosestAddress = result.data.length > 0 ? result.data[0].address : '';
           showResults(result.data, userAddressStr);
-          
           if (result.data.length > 0) {
-            const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
-            let maskedUserAddress = (searchType === '文字搜尋' && userAddressStr) 
-                ? userAddressStr.replace(/\d+[-之]?\d*號.*$/, "") 
-                : 'GPS定位(無地址)';
-
+            const masked = userAddressStr ? userAddressStr.replace(/\d+[-之]?\d*號.*$/, "") : 'GPS定位';
             fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { 
-                method: 'POST', 
-                body: JSON.stringify({ 
-                    action: 'logSearch', 
-                    address: trueClosestAddress,
-                    searchType: searchType, 
-                    userAddress: maskedUserAddress
-                }) 
-            }).catch(err => console.log('日誌失敗', err));
+                method: 'POST', body: JSON.stringify({ action: 'logSearch', address: result.data[0].address, searchType: userAddressStr ? 'Text' : 'GPS', userAddress: masked }) 
+            });
           }
         } else { throw new Error(result.message); }
       } catch (err) {
         toggleUI(false);
-        document.getElementById('results').innerHTML = `<div class="alert alert-warning text-center shadow-sm" style="border-radius: 16px; padding: 30px;"><div style="font-size: 3rem; margin-bottom: 10px;">🤔</div><h5 class="fw-bold">連線失敗</h5><p class="text-secondary small mb-0">${err.message}</p></div>`;
-        document.getElementById('bottomAd').style.display = 'block'; 
+        document.getElementById('results').innerHTML = `<div class="alert alert-warning text-center">搜尋失敗：${err.message}</div>`;
       }
     }
 
     function startSearchText() {
-      const city = document.getElementById('cityInput').value, district = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
-      if (!city || !detail) return alert('請選擇縣市並輸入地址喔！');
-      if (!detail.includes('號')) return alert('詳細地址請包含門牌號碼！');
-      callBackendAPI(city + district + detail, city + district + detail); 
+      const city = document.getElementById('cityInput').value, dist = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
+      if (!city || !detail) return alert('請輸入完整地址！');
+      if (!detail.includes('號')) return alert('請包含門牌號碼！');
+      callBackendAPI(city + dist + detail, city + dist + detail); 
     }
 
     function startSearchGPS() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => callBackendAPI({ lat: pos.coords.latitude, lng: pos.coords.longitude }, ''),
-          (err) => { alert('定位失敗，請改用手動輸入。'); },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-      } else { alert("裝置不支援定位功能。"); }
+        navigator.geolocation.getCurrentPosition(p => callBackendAPI({ lat: p.coords.latitude, lng: p.coords.longitude }, ''), e => alert('定位失敗'));
+      }
     }
 
-    function showResults(data, userAddressStr) {
+    function showResults(data, userAddr) {
       toggleUI(false);
       let html = '';
+      if (userAddr) html += `<div class="alert alert-info small mb-3">📍 搜尋中心：${userAddr}</div>`;
 
-      if (userAddressStr) {
-         html += `<div class="alert alert-info border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #eef5ff; color: #0d6efd; font-size: 0.85rem; padding: 12px 16px;">
-             <strong>📍 搜尋中心：</strong>${userAddressStr}<br>
-             <span class="text-secondary" style="font-size: 0.8rem; display: block; margin-top: 4px;">💡 若結果過遠，可能是路段跨區，建議鄉鎮市區改選「全區 / 不指定」再試一次！</span>
-           </div>`;
-      }
-
+      // 1, 2 名對調邏輯
       data.forEach((item, index) => item.originalRank = index + 1);
       if (data.length >= 2) { const temp = data[0]; data[0] = data[1]; data[1] = temp; }
 
-      data.forEach((item, loopIndex) => {
+      data.forEach((item, idx) => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
         let boxesHtml = ''; let hasBoxes = false;
         
-        if (item.boxes && Object.keys(item.boxes).length > 0) {
-          for (const [size, rawValue] of Object.entries(item.boxes)) {
-            let total = 0, used = 0, remain = 0;
-            // 解析後端傳來的格式（可能為 "已使用/總數"）
-            if (typeof rawValue === 'string' && rawValue.includes('/')) {
-              const parts = rawValue.split('/'); 
-              used = parseInt(parts[0], 10) || 0; 
-              total = parseInt(parts[1], 10) || 0; 
-              remain = Math.max(0, total - used);
-            } else {
-              total = parseInt(rawValue, 10) || 0;
-              remain = total; // 備援邏輯
-            }
+        if (item.boxes) {
+          for (const [size, val] of Object.entries(item.boxes)) {
+            let total = 0, remain = 0;
+            if (typeof val === 'string' && val.includes('/')) {
+              const p = val.split('/'); total = parseInt(p[1]) || 0; remain = total - (parseInt(p[0]) || 0);
+            } else { total = parseInt(val) || 0; remain = total; }
             if (total > 0) {
               hasBoxes = true;
-              let displaySize = size;
-              const sizeParts = size.split('x');
-              if (sizeParts.length === 2) { displaySize = `47x${parseInt(sizeParts[0], 10) / 10}x${parseInt(sizeParts[1], 10) / 10}`; }
+              let displaySize = size.split('x').length === 2 ? `47x${parseInt(size.split('x')[0])/10}x${parseInt(size.split('x')[1])/10}` : size;
               boxesHtml += `<tr><td class="size-col">${displaySize}</td><td class="fw-bold">${total}</td><td class="fw-bold ${remain === 0 ? 'text-danger' : 'text-success'}">${remain}</td></tr>`;
             }
           }
         }
-        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">尺寸(cm)</th><th>總數</th><th>剩餘</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : '<div class="small text-muted text-center mt-2">暫無資料</div>';
-        
+
         html += `
           <div class="result-card" ${item.originalRank === 1 ? 'id="rank1Card"' : ''}>
             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1 pe-2 d-flex flex-column">
-                <div>
-                  <span class="badge ${item.originalRank === 1 ? 'bg-danger' : 'bg-success'} mb-2">距離第 ${item.originalRank} 近</span>
-                  <h5 style="font-weight: 700;">${item.name}</h5>
-                  <p class="mb-1">🛵 路程：<span class="text-danger fw-bold">${item.distanceText}</span> (約 ${item.duration})</p>
-                  <p class="small text-secondary mb-2">${item.address}</p>
-                  ${item.locationDesc ? `<p class="small mb-0 mt-2" style="color: #2e7d32; background-color: #e8f5e9; padding: 5px 8px; border-radius: 6px; display: inline-block;">💡 <b>位置：</b>${item.locationDesc}</p>` : ''}
-                </div>
-                <div class="mt-auto pt-3 text-secondary" style="font-size: 0.75rem;">🕒 更新時間：${item.updateTime || '無資料'}</div>
+              <div class="flex-grow-1 pe-2">
+                <span class="badge ${item.originalRank === 1 ? 'bg-danger' : 'bg-success'} mb-2">距離第 ${item.originalRank} 近</span>
+                <h5 class="fw-bold">${item.name}</h5>
+                <p class="mb-1 text-danger fw-bold">🛵 路程：${item.distanceText} (${item.duration})</p>
+                <p class="small text-secondary mb-2">${item.address}</p>
+                ${item.locationDesc ? `<p class="small mb-0" style="color:#2e7d32;background:#e8f5e9;padding:4px 8px;border-radius:6px;display:inline-block;">💡 ${item.locationDesc}</p>` : ''}
+                <div class="mt-3 text-secondary" style="font-size:0.75rem;">🕒 更新時間：${item.updateTime}</div>
               </div>
-              <div class="box-status flex-shrink-0 shadow-sm align-self-start"><div class="box-status-title">格位狀態</div>${tableHtml}</div>
+              <div class="box-status shadow-sm align-self-start">
+                <div class="box-status-title">格位狀態</div>
+                <table class="box-table">${hasBoxes ? `<thead><tr><th>尺寸</th><th>總數</th><th>剩餘</th></tr></thead><tbody>${boxesHtml}</tbody>` : '<tr><td colspan="3">暫無資料</td></tr>'}</table>
+              </div>
             </div>
             <div class="row g-2 mt-3">
               <div class="col-6"><button class="btn btn-outline-secondary w-100" onclick="copyText('${item.address}')">複製地址</button></div>
@@ -414,61 +380,50 @@
             </div>
           </div>
         `;
-        if (loopIndex === 0) html += adBanners[0];
-        else if (loopIndex === 1) html += adBanners[1];
+        if (idx === 0) html += adBanners[0];
+        else if (idx === 1) html += adBanners[1];
       });
       document.getElementById('results').innerHTML = html;
       initSurveyObserver();
     }
 
-    let surveyShownThisSearch = false;
+    let surveyShown = false;
     function initSurveyObserver() {
-      surveyShownThisSearch = false;
       const target = document.getElementById('rank1Card');
-      if (!target) return;
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !surveyShownThisSearch) {
-            surveyShownThisSearch = true;
-            setTimeout(() => { new bootstrap.Modal(document.getElementById('surveyModal')).show(); }, 1000);
-            observer.unobserve(target);
-          }
-        });
+      if (!target || surveyShown) return;
+      const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          surveyShown = true;
+          setTimeout(() => { new bootstrap.Modal(document.getElementById('surveyModal')).show(); }, 1500);
+          observer.unobserve(target);
+        }
       }, { threshold: 0.5 });
       observer.observe(target);
     }
 
-    function copyText(text) { 
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        alert('✅ 地址已複製！');
-      } catch (err) { console.error('失敗', err); }
-      document.body.removeChild(textArea);
+    function copyText(t) {
+      const el = document.createElement('textarea'); el.value = t; document.body.appendChild(el); el.select();
+      try { document.execCommand('copy'); alert('✅ 地址已複製！'); } catch (err) {}
+      document.body.removeChild(el);
     }
 
     async function submitFeedback() {
-      const message = document.getElementById('feedbackMessage').value.trim();
-      if (!message) return alert('請輸入內容喔！');
-      const btn = document.getElementById('submitFeedbackBtn');
-      btn.disabled = true;
+      const msg = document.getElementById('feedbackMessage').value.trim();
+      if (!msg) return alert('請輸入內容');
+      const btn = document.getElementById('submitFeedbackBtn'); btn.disabled = true;
       try {
-        await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'feedback', message: message }) });
-        alert('感謝您的回饋！');
-        bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
-      } catch (err) { alert('失敗'); } finally { btn.disabled = false; }
+        await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'feedback', message: msg }) });
+        alert('感謝您的回饋！'); bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
+      } catch (err) {} finally { btn.disabled = false; }
     }
 
     function markSurveyDone() {}
 
     function submitSurvey() {
       const role = document.querySelector('input[name="surveyRole"]:checked'), ux = document.querySelector('input[name="surveyUX"]:checked'), acc = document.querySelector('input[name="surveyAccuracy"]:checked');
-      if (!role || !ux || !acc) return alert('請幫我們填寫完整問卷喔！');
+      if (!role || !ux || !acc) return alert('請填寫完整問卷喔！');
       bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
-      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) }).catch(e => console.log(e));
+      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) });
     }
   </script>
 </body>
