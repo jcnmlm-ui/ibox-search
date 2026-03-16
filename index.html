@@ -3,161 +3,458 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  
+  <!-- 網頁小圖示 (Favicon) 設定 -->
   <link rel="icon" href="favicon.png" type="image/png">
-  <title>i 郵箱查找大師</title>
+  <link rel="apple-touch-icon" href="favicon.png">
+
+  <!-- SEO 與社群分享 (LINE/FB) 預覽設定 -->
+  <title>i 郵箱查找大師 | 一鍵尋找最近的 i 郵箱 (iBox)</title>
+  <meta name="description" content="全台首創！自動定位尋找距離您最近的 i 郵箱 (iBox)，提供精準機車導航與即時大中小格位狀態，寄件收件超方便！">
+  <meta property="og:title" content="🛵 i 郵箱查找大師">
+  <meta property="og:description" content="一鍵尋找距離您最近的 i 郵箱，提供精準機車路徑與即時格位狀態！">
+  <meta property="og:url" content="https://goibox.tw/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://goibox.tw/favicon.png"> 
+  
+  <!-- SEO 強化標籤 -->
+  <meta name="keywords" content="i郵箱, ｉ郵箱, ibox, iBox, i郵箱查詢, i郵箱據點, i郵箱導航, 機車導航, 寄件, 取件, 中華郵政, 24小時取件, 郵局, ezPost">
+  <link rel="canonical" href="https://goibox.tw/" />
+  
+  <!-- JSON-LD 結構化資料 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "i 郵箱查找大師",
+    "url": "https://goibox.tw/",
+    "description": "提供全台 i 郵箱 (iBox) 即時格位查詢與機車導航服務。",
+    "applicationCategory": "NavigationApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" },
+    "creator": { "@type": "Person", "name": "Chiahsien" }
+  }
+  </script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
-    body { background-color: #f4f6f9; font-family: 'Noto Sans TC', sans-serif; color: #333; }
+    body { background-color: #f4f6f9; font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #333; }
     .container { max-width: 600px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; }
     .result-card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; }
+    .ad-banner { background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 16px; padding: 12px 15px; text-align: center; margin-bottom: 16px; color: #6c757d; overflow: hidden; }
     .box-status { background-color: #f8f9fc; border: 1px solid #e3e6f0; border-radius: 10px; padding: 10px; min-width: 145px; }
     .box-status-title { font-size: 0.75rem; color: #4e73df; font-weight: 700; margin-bottom: 8px; text-align: center; }
     .box-table { width: 100%; font-size: 0.75rem; text-align: center; border-collapse: collapse; }
     .box-table th { color: #858796; font-weight: 600; border-bottom: 1px solid #eaecf4; padding-bottom: 4px; }
     .box-table td { padding: 5px 2px; border-bottom: 1px dashed #eaecf4; }
+    .box-table .size-col { text-align: left; color: #5a5c69; font-size: 0.7rem; }
     .btn-gps { width: 100%; border-radius: 12px; padding: 12px; font-weight: 500; margin-bottom: 20px; background-color: #28a745; color: white; border: none; }
+    .btn-gps:hover { background-color: #218838; }
     .filter-input { border-radius: 12px; padding: 12px; }
     .search-group input { border-radius: 12px 0 0 12px; padding: 12px; }
     .search-group button { border-radius: 0 12px 12px 0; padding: 12px 20px; }
     .loading { display: none; margin-top: 20px; }
-    .progress { height: 12px; border-radius: 6px; }
-    .survey-options { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .progress { height: 12px; border-radius: 6px; background-color: #e9ecef; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
+    .progress-bar-animated { animation: progress-bar-stripes 0.4s linear infinite !important; }
+    .survey-options { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
     .survey-btn-check { display: none; }
-    .survey-btn-label { padding: 8px 16px; border-radius: 20px; border: 2px solid #eee; background: white; cursor: pointer; font-size: 0.9rem; flex: 1; text-align: center; }
+    .survey-btn-label { padding: 8px 16px; border-radius: 20px; border: 2px solid #eee; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; flex: 1; text-align: center; min-width: 80px; }
     .survey-btn-check:checked + .survey-btn-label { border-color: #0d6efd; background-color: #eef5ff; color: #0d6efd; font-weight: bold; }
+    .rating-circle { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-weight: bold; }
+    .survey-btn-check:checked + .rating-circle { border-color: #0d6efd; background-color: #0d6efd; color: white; }
     .footer-copy { text-align: center; margin-top: 40px; font-size: 0.85rem; color: #888; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1 class="text-center mb-2" style="font-weight: 700; font-size: 1.8rem;">🛵 i 郵箱查找大師</h1>
+    
     <div id="statsContainer" class="text-center mb-4">
       <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
-        🎉 累積已提供 <span id="totalSearchCount" class="text-primary fw-bold">...</span> 次最佳機車路徑
+        🎉 累積已提供 <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> 次最佳機車路徑
       </span>
     </div>
+
     <div class="row g-2 mb-3">
-      <div class="col-6"><select id="cityInput" class="form-select filter-input" onchange="updateDistricts()"><option value="">選擇縣市</option></select></div>
-      <div class="col-6"><select id="districtInput" class="form-select filter-input"><option value="">全區 / 不指定 (推薦)</option></select></div>
-      <div class="col-12"><div class="input-group search-group"><input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)"><button class="btn btn-primary" onclick="startSearchText()" id="searchBtn">搜尋</button></div></div>
+      <div class="col-6">
+        <select id="cityInput" class="form-select filter-input" onchange="updateDistricts()">
+          <option value="">選擇縣市</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <select id="districtInput" class="form-select filter-input">
+          <option value="">全區 / 不指定 (推薦)</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <div class="input-group search-group">
+          <input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)">
+          <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn">搜尋</button>
+        </div>
+      </div>
     </div>
-    <button class="btn-gps shadow-sm" onclick="startSearchGPS()" id="gpsBtn">📍 自動定位並搜尋附近</button>
-    <div id="loader" class="text-center loading"><div class="progress mb-2"><div id="fakeProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 0%;"></div></div><p class="text-secondary small">🚀 正在火速規劃最佳機車路徑...</p></div>
+
+    <button class="btn-gps shadow-sm" onclick="startSearchGPS()" id="gpsBtn">
+      📍 自動定位並搜尋附近
+    </button>
+
+    <div id="loader" class="text-center loading" style="margin-bottom: 25px;">
+      <div class="progress shadow-sm mb-2">
+        <div id="fakeProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+             role="progressbar" style="width: 0%; transition: width 0.3s ease-out;">
+        </div>
+      </div>
+      <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;">🚀 正在火速規劃最佳機車路徑...</p>
+    </div>
+
     <div id="results"></div>
     <div id="bottomAd" class="mt-4 mb-2"></div>
-    <div class="text-center mt-3"><button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#feedbackModal">💡 錯誤回報 / 意見回饋</button></div>
-    <div class="footer-copy mt-4">&copy; Design by Chiahsien | i 郵箱查找大師 v1.0</div>
+
+    <div class="text-center mt-3 mb-4">
+      <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+        💡 錯誤回報 / 意見回饋
+      </button>
+    </div>
+
+    <!-- 意見回饋 Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">意見回饋</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-start">
+            <div class="mb-3">
+              <label for="feedbackName" class="form-label text-secondary small">您的姓名/暱稱</label>
+              <input type="text" class="form-control" id="feedbackName" placeholder="例如：王大明 (選填)">
+            </div>
+            <div class="mb-3">
+              <label for="feedbackMessage" class="form-label text-secondary small">回饋內容 <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="feedbackMessage" rows="4" placeholder="請描述您遇到的問題或給我們的建議..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary px-4" onclick="submitFeedback()" id="submitFeedbackBtn">送出回饋</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 問卷調查 Modal -->
+    <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+          <div class="modal-header bg-light" style="border-radius: 20px 20px 0 0;">
+            <h5 class="modal-title fw-bold">📝 幫助我們變得更好</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button>
+          </div>
+          <div class="modal-body text-start p-4">
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label>
+              <div class="survey-options">
+                <input type="radio" name="surveyRole" id="role1" value="寄件" class="survey-btn-check"><label for="role1" class="survey-btn-label">📦 我要寄件</label>
+                <input type="radio" name="surveyRole" id="role2" value="取件" class="survey-btn-check"><label for="role2" class="survey-btn-label">🛍️ 我要取件</label>
+                <input type="radio" name="surveyRole" id="role3" value="測試" class="survey-btn-check"><label for="role3" class="survey-btn-label">🤔 純粹測試</label>
+              </div>
+            </div>
+            <div class="mb-4 text-center">
+              <label class="form-label fw-bold text-dark d-block text-start">2. 使用體驗？ (1很差 → 5很棒)</label>
+              <div class="survey-options mt-2">
+                <input type="radio" name="surveyUX" id="ux1" value="1" class="survey-btn-check"><label for="ux1" class="rating-circle">1</label>
+                <input type="radio" name="surveyUX" id="ux2" value="2" class="survey-btn-check"><label for="ux2" class="rating-circle">2</label>
+                <input type="radio" name="surveyUX" id="ux3" value="3" class="survey-btn-check"><label for="ux3" class="rating-circle">3</label>
+                <input type="radio" name="surveyUX" id="ux4" value="4" class="survey-btn-check"><label for="ux4" class="rating-circle">4</label>
+                <input type="radio" name="surveyUX" id="ux5" value="5" class="survey-btn-check"><label for="ux5" class="rating-circle">5</label>
+              </div>
+            </div>
+            <div class="mb-4 text-center">
+              <label class="form-label fw-bold text-dark d-block text-start">3. 格位準確度？ (1不準 → 5很準)</label>
+              <div class="survey-options mt-2">
+                <input type="radio" name="surveyAccuracy" id="acc1" value="1" class="survey-btn-check"><label for="acc1" class="rating-circle">1</label>
+                <input type="radio" name="surveyAccuracy" id="acc2" value="2" class="survey-btn-check"><label for="acc2" class="rating-circle">2</label>
+                <input type="radio" name="surveyAccuracy" id="acc3" value="3" class="survey-btn-check"><label for="acc3" class="rating-circle">3</label>
+                <input type="radio" name="surveyAccuracy" id="acc4" value="4" class="survey-btn-check"><label for="acc4" class="rating-circle">4</label>
+                <input type="radio" name="surveyAccuracy" id="acc5" value="5" class="survey-btn-check"><label for="acc5" class="rating-circle">5</label>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-pill" onclick="submitSurvey()" id="submitSurveyBtn">送出問卷</button>
+            <div class="text-center mt-3"><a href="#" class="text-muted small text-decoration-none" data-bs-dismiss="modal" onclick="markSurveyDone()">先不要，略過</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-copy mt-4">
+      <div class="text-start text-muted mb-3 p-3 rounded" style="background-color: #eef2f7; font-size: 0.8rem; line-height: 1.6;">
+        <strong>💡 關於 i 郵箱查找大師：</strong><br>
+        提供全台 24 小時 <strong>i 郵箱 (iBox) 據點查詢</strong>、即時空格狀態（大、中、小格位），以及獨家的<strong>機車導航</strong>路線規劃。無論是在PChome、MOMO、東森購物等等網購取件，或是中華郵政國內包裹寄件、取件、ezPost 郵寄便，只要一鍵定位，就能馬上為您找到距離最近的 i 郵箱，省時又便利！
+      </div>
+      &copy; Design by Chiahsien <br>
+      i 郵箱查找大師 v1.0 (研究使用，非官方網站)
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
   <script>
     const GAS_API_URL_SEARCH = 'https://script.google.com/macros/s/AKfycbwXO-oMiYRG4RuqenL4lBtBKuIY2S3U_QSnDxMGQ_kEpwgXzW8Q7wvWObBL_wHPpe2A6Q/exec';
     const GAS_API_URL_LOG = 'https://script.google.com/macros/s/AKfycbxVGuaW1uBynyiQdrzTlUO3g5WQ9lD3aI1bJnYVkcDreDJk7kgLMjKB4jHTiP-oCrU_dQ/exec';
-    const isLineApp = /Line/i.test(navigator.userAgent);
+
+    const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
+
+    // 【修復】：Banner 圖片，並加上 w-100 強制滿版切齊
     const adBanners = [
-      `<a href="https://goibox.tw/" target="_blank" class="d-block mb-3"><img src="banner_320x80x1-01.jpg" class="img-fluid w-100 rounded shadow-sm border"></a>`,
-      `<a href="https://goibox.tw/" target="_blank" class="d-block mb-3"><img src="banner_320x80x1-02.jpg" class="img-fluid w-100 rounded shadow-sm border"></a>`
+      `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;">
+         <img src="banner_320x80x1-01.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
+       </a>`,
+      `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;">
+         <img src="banner_320x80x1-02.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
+       </a>`
     ];
 
-    const taiwanData = {"台北市":["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"],"新北市":["板橋區","三重區","中和區","永和區","新莊區","新店區","土城區","蘆洲區","樹林區","汐止區","三峽區","淡水區"],"高雄市":["新興區","前金區","苓雅區","鹽埕區","鼓山區","旗津區","前鎮區","三民區","楠梓區","小港區","左營區","仁武區","鳳山區","大寮區"]}; // 簡略版測試
+    const taiwanData = {
+      "台北市": ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區", "北投區", "內湖區", "南港區", "文山區"],
+      "新北市": ["板橋區", "汐止區", "新店區", "永和區", "中和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "新莊區", "泰山區", "林口區", "蘆洲區", "五股區", "八里區", "淡水區"],
+      "桃園市": ["中壢區", "平鎮區", "龍潭區", "楊梅區", "桃園區", "龜山區", "八德區", "大溪區", "蘆竹區"],
+      "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "豐原區"],
+      "台南市": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "新營區"],
+      "高雄市": ["新興區", "前金區", "苓雅區", "鹽埕區", "鼓山區", "旗津區", "前鎮區", "三民區", "楠梓區", "小港區", "左營區", "仁武區", "鳳山區", "大寮區"]
+    };
+
+    let progressInterval;
+    function updateProgressBar(targetWidth) {
+      const bar = document.getElementById('fakeProgressBar');
+      if (bar) bar.style.width = targetWidth + '%';
+    }
 
     window.onload = function() {
       loadTotalSearches();
-      document.getElementById('bottomAd').innerHTML = adBanners[Math.floor(Math.random() * adBanners.length)];
+      const randomAdIndex = Math.floor(Math.random() * adBanners.length);
+      document.getElementById('bottomAd').innerHTML = adBanners[randomAdIndex];
+      document.getElementById('bottomAd').style.display = 'block';
+
       const citySelect = document.getElementById('cityInput');
-      for (let city in taiwanData) { citySelect.options.add(new Option(city, city)); }
+      for (let city in taiwanData) {
+        let option = document.createElement('option');
+        option.value = city; option.text = city;
+        citySelect.appendChild(option);
+      }
     };
 
     async function loadTotalSearches() {
       try {
         const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'getStats' }) });
         const result = await response.json();
-        if (result.status === 'success') document.getElementById('totalSearchCount').innerText = result.totalSearches.toLocaleString();
-      } catch (err) {}
+        if (result.status === 'success' && result.totalSearches > 0) {
+          document.getElementById('totalSearchCount').innerText = result.totalSearches.toLocaleString();
+        }
+      } catch (err) { console.log('統計數據讀取失敗', err); }
     }
 
     function updateDistricts() {
       const city = document.getElementById('cityInput').value;
-      const distSelect = document.getElementById('districtInput');
-      distSelect.innerHTML = '<option value="">全區 / 不指定 (推薦)</option>';
-      if (taiwanData[city]) taiwanData[city].forEach(d => distSelect.options.add(new Option(d, d)));
-    }
-
-    async function callBackendAPI(inputData, userAddressStr = '') {
-      document.getElementById('loader').style.display = 'block';
-      document.getElementById('results').innerHTML = '';
-      try {
-        const response = await fetch(GAS_API_URL_SEARCH.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ inputData: inputData }) });
-        const result = await response.json();
-        showResults(result.data, userAddressStr);
-        if (result.data.length > 0) {
-          fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'logSearch', address: result.data[0].address, searchType: inputData.lat ? 'GPS' : 'Text', userAddress: userAddressStr.replace(/\d+號.*$/, "") }) });
-        }
-      } catch (err) {
-        document.getElementById('results').innerHTML = `<div class="alert alert-warning">發生錯誤：${err.message}</div>`;
-      } finally { document.getElementById('loader').style.display = 'none'; }
-    }
-
-    function startSearchText() {
-      const city = document.getElementById('cityInput').value, dist = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
-      if (!city || !detail) return alert('請填寫完整地址');
-      callBackendAPI(city + dist + detail, city + dist + detail);
-    }
-
-    function startSearchGPS() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(p => callBackendAPI({ lat: p.coords.latitude, lng: p.coords.longitude }), e => alert('定位失敗'));
+      const districtSelect = document.getElementById('districtInput');
+      districtSelect.innerHTML = '<option value="">全區 / 不指定 (推薦)</option>';
+      if (taiwanData[city]) {
+        taiwanData[city].forEach(district => {
+          let option = document.createElement('option');
+          option.value = district; option.text = district;
+          districtSelect.appendChild(option);
+        });
       }
     }
 
-    function showResults(data, userAddr) {
+    function toggleUI(isProcessing) {
+      document.getElementById('searchBtn').disabled = isProcessing;
+      document.getElementById('gpsBtn').disabled = isProcessing;
+      const loader = document.getElementById('loader');
+      if(isProcessing) {
+        loader.style.display = 'block';
+        document.getElementById('results').innerHTML = '';
+        document.getElementById('bottomAd').style.display = 'none'; 
+        let currentWidth = 0; updateProgressBar(0);
+        setTimeout(() => { currentWidth = 70; updateProgressBar(currentWidth); }, 100);
+        progressInterval = setInterval(() => { if (currentWidth < 95) { currentWidth += Math.random() * 2; updateProgressBar(currentWidth); } }, 500);
+      } else {
+        clearInterval(progressInterval); updateProgressBar(100);
+        setTimeout(() => { loader.style.display = 'none'; }, 300);
+      }
+    }
+
+    async function callBackendAPI(inputData, userAddressStr = '') {
+      toggleUI(true);
+      try {
+        const cleanSearchUrl = GAS_API_URL_SEARCH.replace(/\s+/g, '');
+        const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
+        const response = await fetch(cleanSearchUrl, { method: 'POST', body: JSON.stringify({ inputData: inputData }) });
+        const result = await response.json();
+        if (result.status === 'success') {
+          const trueClosestAddress = result.data.length > 0 ? result.data[0].address : '';
+          showResults(result.data, userAddressStr);
+          
+          if (result.data.length > 0) {
+            const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
+            let maskedUserAddress = (searchType === '文字搜尋' && userAddressStr) 
+                ? userAddressStr.replace(/\d+[-之]?\d*號.*$/, "") 
+                : 'GPS定位(無地址)';
+
+            fetch(cleanLogUrl, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    action: 'logSearch', 
+                    address: trueClosestAddress,
+                    searchType: searchType, 
+                    userAddress: maskedUserAddress
+                }) 
+            }).catch(err => console.log('背景寫入日誌失敗:', err));
+          }
+        } else { throw new Error(result.message); }
+      } catch (err) {
+        toggleUI(false);
+        document.getElementById('results').innerHTML = `<div class="alert alert-warning text-center shadow-sm" style="border-radius: 16px; padding: 30px;"><div style="font-size: 3rem; margin-bottom: 10px;">🤔</div><h5 class="fw-bold">搜尋失敗</h5><p class="text-secondary small mb-0">${err.message}</p></div>`;
+        document.getElementById('bottomAd').style.display = 'block'; 
+      }
+    }
+
+    function startSearchText() {
+      const city = document.getElementById('cityInput').value, district = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
+      if (!city || !detail) return alert('請選擇縣市並輸入詳細地址喔！');
+      if (!detail.includes('號')) return alert('詳細地址請務必包含門牌號碼！');
+      const fullAddress = city + district + detail;
+      callBackendAPI(fullAddress, fullAddress); 
+    }
+
+    function startSearchGPS() {
+      if (isLineApp) return alert('請切換至 Chrome/Safari 以使用定位。');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => callBackendAPI({ lat: pos.coords.latitude, lng: pos.coords.longitude }, ''),
+          (err) => { alert('無法定位，請手動輸入。'); },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      } else { alert("您的裝置不支援定位功能。"); }
+    }
+
+    function showResults(data, userAddressStr) {
+      toggleUI(false);
       let html = '';
-      if (data.length >= 2) { const t = data[0]; data[0] = data[1]; data[1] = t; }
-      data.forEach((item, idx) => {
-        item.originalRank = idx + (idx < 2 ? (idx === 0 ? 2 : 1) : 1);
+
+      if (userAddressStr) {
+         html += `<div class="alert alert-info border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #eef5ff; color: #0d6efd; font-size: 0.85rem; padding: 12px 16px;">
+             <strong>📍 搜尋中心：</strong>${userAddressStr}<br>
+             <span class="text-secondary" style="font-size: 0.8rem; display: block; margin-top: 4px;">💡 若結果過遠，可能是路段跨區，建議區域改選「全區 / 不指定」。</span>
+           </div>`;
+      }
+
+      // 商業邏輯：第 1 名與第 2 名對調，增加廣告曝光
+      data.forEach((item, index) => item.originalRank = index + 1);
+      if (data.length >= 2) { const temp = data[0]; data[0] = data[1]; data[1] = temp; }
+
+      data.forEach((item, loopIndex) => {
+        const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
         let boxesHtml = ''; let hasBoxes = false;
-        if (item.boxes) {
-          for (const [size, val] of Object.entries(item.boxes)) {
-            let total = 0, remain = 0;
-            if (typeof val === 'string' && val.includes('/')) {
-              const p = val.split('/'); total = parseInt(p[1]); remain = total - parseInt(p[0]);
-            } else { total = parseInt(val); remain = total; }
+        
+        // 【修復】：解析後端傳來的格位狀態
+        if (item.boxes && Object.keys(item.boxes).length > 0) {
+          for (const [size, rawValue] of Object.entries(item.boxes)) {
+            let total = 0, used = 0, remain = 0;
+            if (typeof rawValue === 'string' && rawValue.includes('/')) {
+              const parts = rawValue.split('/'); 
+              used = parseInt(parts[0], 10) || 0; 
+              total = parseInt(parts[1], 10) || 0; 
+              remain = Math.max(0, total - used);
+            } else {
+              total = parseInt(rawValue, 10) || 0;
+              remain = total; // 若無解析則假設全部剩餘
+            }
             if (total > 0) {
               hasBoxes = true;
-              boxesHtml += `<tr><td>${size}</td><td>${total}</td><td class="${remain === 0 ? 'text-danger' : 'text-success'}">${remain}</td></tr>`;
+              let displaySize = size;
+              const sizeParts = size.split('x');
+              if (sizeParts.length === 2) { displaySize = `47x${parseInt(sizeParts[0], 10) / 10}x${parseInt(sizeParts[1], 10) / 10}`; }
+              boxesHtml += `<tr><td class="size-col">${displaySize}</td><td class="fw-bold">${total}</td><td class="fw-bold ${remain === 0 ? 'text-danger' : 'text-success'}">${remain}</td></tr>`;
             }
           }
         }
+        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">尺寸(cm)</th><th>總數</th><th>剩餘</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : '<div class="small text-muted text-center mt-2">暫無資料</div>';
+        
         html += `
-          <div class="result-card" ${idx === 1 ? 'id="rank1Card"' : ''}>
+          <div class="result-card" ${item.originalRank === 1 ? 'id="rank1Card"' : ''}>
             <div class="d-flex justify-content-between">
-              <div class="flex-grow-1">
-                <span class="badge ${idx === 1 ? 'bg-danger' : 'bg-success'} mb-2">距離第 ${idx === 1 ? 1 : 2} 近</span>
-                <h5 class="fw-bold">${item.name}</h5>
-                <p class="mb-1 text-danger fw-bold">🛵 路程：${item.distanceText} (${item.duration})</p>
-                <p class="small text-secondary">${item.address}</p>
-                <div class="text-muted extra-small" style="font-size:0.7rem;">🕒 更新時間：${item.updateTime}</div>
+              <div class="flex-grow-1 pe-2">
+                <span class="badge ${item.originalRank === 1 ? 'bg-danger' : 'bg-success'} mb-2">距離第 ${item.originalRank} 近</span>
+                <h5 style="font-weight: 700;">${item.name}</h5>
+                <p class="mb-1">🛵 路程：<span class="text-danger fw-bold">${item.distanceText}</span> (約 ${item.duration})</p>
+                <p class="small text-secondary mb-2">${item.address}</p>
+                ${item.locationDesc ? `<p class="small mb-0" style="color: #2e7d32; background: #e8f5e9; padding: 4px 8px; border-radius: 6px; display: inline-block;">💡 <b>位置：</b>${item.locationDesc}</p>` : ''}
+                <div class="mt-3 text-secondary" style="font-size: 0.75rem;">🕒 更新時間：${item.updateTime || '無資料'}</div>
               </div>
-              <div class="box-status shadow-sm">
-                <div class="box-status-title">格位狀態</div>
-                <table class="box-table">${hasBoxes ? `<thead><tr><th>尺寸</th><th>總數</th><th>剩餘</th></tr></thead><tbody>${boxesHtml}</tbody>` : '<tr><td>暫無資料</td></tr>'}</table>
-              </div>
+              <div class="box-status flex-shrink-0 shadow-sm align-self-start"><div class="box-status-title">格位狀態</div>${tableHtml}</div>
             </div>
-            <div class="row g-2 mt-2">
-              <div class="col-6"><button class="btn btn-outline-secondary w-100 btn-sm" onclick="copyText('${item.address}')">複製地址</button></div>
-              <div class="col-6"><a href="https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle" target="_blank" class="btn btn-primary w-100 btn-sm">導航</a></div>
+            <div class="row g-2 mt-3">
+              <div class="col-6"><button class="btn btn-outline-secondary w-100" onclick="copyText('${item.address}')">複製地址</button></div>
+              <div class="col-6"><a href="${mapUrl}" target="_blank" class="btn btn-primary w-100">開啟導航</a></div>
             </div>
           </div>
         `;
-        if (idx === 0) html += adBanners[0];
-        else if (idx === 1) html += adBanners[1];
+        if (loopIndex === 0) html += adBanners[0];
+        else if (loopIndex === 1) html += adBanners[1];
       });
       document.getElementById('results').innerHTML = html;
+      initSurveyObserver();
     }
 
-    function copyText(t) {
-      const el = document.createElement('textarea'); el.value = t; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); alert('已複製');
+    let surveyShownThisSearch = false;
+    function initSurveyObserver() {
+      surveyShownThisSearch = false;
+      const target = document.getElementById('rank1Card');
+      if (!target) return;
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !surveyShownThisSearch) {
+            surveyShownThisSearch = true;
+            setTimeout(() => { new bootstrap.Modal(document.getElementById('surveyModal')).show(); }, 1000);
+            observer.unobserve(target);
+          }
+        });
+      }, { threshold: 0.5 });
+      observer.observe(target);
+    }
+
+    function copyText(text) { 
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert('✅ 地址已複製！');
+      } catch (err) { console.error('複製失敗', err); }
+      document.body.removeChild(textArea);
+    }
+
+    async function submitFeedback() {
+      const name = document.getElementById('feedbackName').value.trim() || '匿名使用者', message = document.getElementById('feedbackMessage').value.trim(), btn = document.getElementById('submitFeedbackBtn');
+      if (!message) return alert('請輸入回饋內容喔！');
+      btn.disabled = true;
+      try {
+        const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'feedback', name: name, message: message }) });
+        const result = await response.json();
+        if (result.status === 'success') { alert('感謝您的回饋！'); bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide(); }
+      } catch (err) { alert('傳送失敗'); } finally { btn.disabled = false; }
+    }
+
+    function markSurveyDone() {}
+
+    function submitSurvey() {
+      const role = document.querySelector('input[name="surveyRole"]:checked'), ux = document.querySelector('input[name="surveyUX"]:checked'), acc = document.querySelector('input[name="surveyAccuracy"]:checked');
+      if (!role || !ux || !acc) return alert('請幫我們填寫完整問卷喔！');
+      bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
+      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) }).catch(e => console.log(e));
     }
   </script>
 </body>
