@@ -323,16 +323,16 @@
 
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
-    // 【修改】：將原本的純文字區塊，換成您上傳的圖片與超連結
+    // 【修改】：將原本的純文字區塊，換成您上傳的圖片與超連結，並加上 w-100 強制滿版
     const adBanners = [
       // 廣告 1 號
       `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-         <img src="banner_320x80x1-01.jpg" alt="廣告版位" class="img-fluid rounded shadow-sm" style="max-width: 100%; border: 1px solid #eaeaea;">
+         <img src="banner_320x80x1-01.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
        </a>`,
        
       // 廣告 2 號
       `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-         <img src="banner_320x80x1-02.jpg" alt="廣告版位" class="img-fluid rounded shadow-sm" style="max-width: 100%; border: 1px solid #eaeaea;">
+         <img src="banner_320x80x1-02.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
        </a>`
     ];
 
