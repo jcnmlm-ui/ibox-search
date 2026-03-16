@@ -18,10 +18,10 @@
   <meta property="og:image" content="https://goibox.tw/favicon.png"> 
   
   <!-- 【新增 SEO 強化標籤】 -->
-  <meta name="keywords" content="i郵箱, ｉ郵箱, ibox, iBox, i郵箱查詢, ｉ郵箱查詢, ibox查詢, i郵箱據點, i郵箱導航, 機車導航, 寄件, 取件, , 中華郵政, 24小時取件, 郵局, ezPost">
+  <meta name="keywords" content="i郵箱, ｉ郵箱, ibox, iBox, i郵箱查詢, ｉ郵箱查詢, ibox查詢, i郵箱據點, i郵箱導航, 機車導航, 寄件, 取件, 蝦皮取件, 中華郵政, 24小時取件, 郵局, ezPost">
   <link rel="canonical" href="https://goibox.tw/" />
   
-  <!-- 【新增 JSON-LD 結構化資料】 -->
+  <!-- 【JSON-LD 結構化資料 - 應用程式】 -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -36,6 +36,36 @@
   }
   </script>
 
+  <!-- 【JSON-LD 結構化資料 - 常見問題 FAQ】 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "i 郵箱可以放多久？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "包裹送達後，提供 3 天 (72 小時) 內免費取件。超過時間會被退回原寄件局喔！"
+      }
+    }, {
+      "@type": "Question",
+      "name": "蝦皮可以寄到 i 郵箱嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以！結帳時物流選擇「i郵箱」，並利用本站搜尋距離您最近的據點，選擇該據點即可輕鬆取件。"
+      }
+    }, {
+      "@type": "Question",
+      "name": "如何知道包裹到了沒？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "包裹送達時，系統會發送含有「取件碼」的簡訊到收件人手機，憑簡訊即可輕鬆取件。"
+      }
+    }]
+  }
+  </script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
   
@@ -43,9 +73,6 @@
     body { background-color: #f4f6f9; font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #333; }
     .container { max-width: 600px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; }
     .result-card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; }
-    .ad-banner { background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 16px; padding: 12px 15px; text-align: center; margin-bottom: 16px; color: #6c757d; }
-    .ad-banner h6 { font-weight: 700; color: #495057; margin-bottom: 4px; }
-    .ad-banner p { font-size: 0.9rem; margin-bottom: 0; line-height: 1.4; }
     .box-status { background-color: #f8f9fc; border: 1px solid #e3e6f0; border-radius: 10px; padding: 10px; min-width: 145px; }
     .box-status-title { font-size: 0.75rem; color: #4e73df; font-weight: 700; margin-bottom: 8px; text-align: center; }
     .box-table { width: 100%; font-size: 0.75rem; text-align: center; border-collapse: collapse; }
@@ -86,7 +113,6 @@
         </select>
       </div>
       <div class="col-6">
-        <!-- 【防呆機制修改】預設改為全區不指定 -->
         <select id="districtInput" class="form-select filter-input">
           <option value="">全區 / 不指定 (推薦)</option>
         </select>
@@ -209,9 +235,14 @@
 
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
+    // 【修改】：將廣告換成您上傳的 Banner，並加入滿版切齊設定
     const adBanners = [
-      `<div class="ad-banner shadow-sm" style="background: #fff; border-left: 5px solid #4e73df;"><h6 style="color: #4e73df;">廣告版位 1 號 (展示尺寸: 320 x 80)</h6><p>誠徵版位贊助<br>意者請於回饋欄留下聯繫方式</p></div>`,
-      `<div class="ad-banner shadow-sm" style="background: #fff; border-left: 5px solid #1cc88a;"><h6 style="color: #1cc88a;">廣告版位 2 號 (展示尺寸: 320 x 80)</h6><p>誠徵版位贊助<br>意者請於回饋欄留下聯繫方式</p></div>`
+      `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+         <img src="banner_320x80x1-01.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
+       </a>`,
+      `<a href="https://goibox.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+         <img src="banner_320x80x1-02.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
+       </a>`
     ];
 
     const taiwanData = {
@@ -219,7 +250,7 @@
       "新北市": ["萬里區", "金山區", "板橋區", "汐止區", "深坑區", "石碇區", "瑞芳區", "平溪區", "雙溪區", "貢寮區", "新店區", "坪林區", "烏來區", "永和區", "中和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "新莊區", "泰山區", "林口區", "蘆洲區", "五股區", "八里區", "淡水區", "三芝區", "石門區"],
       "桃園市": ["中壢區", "平鎮區", "龍潭區", "楊梅區", "新屋區", "觀音區", "桃園區", "龜山區", "八德區", "大溪區", "復興區", "大園區", "蘆竹區"],
       "台中市": ["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "石岡區", "東勢區", "和平區", "新社區", "潭子區", "大雅區", "神岡區", "大肚區", "沙鹿區", "龍井區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"],
-      "台南市": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "歸仁區", "新化區", "左鎮區", "玉 primary", "楠西區", "南化區", "仁德區", "關廟區", "龍崎區", "官田區", "麻豆區", "佳里區", "西港區", "七股區", "將軍區", "學甲區", "北門區", "新營區", "後壁區", "白河區", "東山區", "六甲區", "下營區", "柳營區", "鹽水區", "善化區", "大內區", "山上區", "新市區", "安定區"],
+      "台南市": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "歸仁區", "新化區", "左鎮區", "玉井區", "楠西區", "南化區", "仁德區", "關廟區", "龍崎區", "官田區", "麻豆區", "佳里區", "西港區", "七股區", "將軍區", "學甲區", "北門區", "新營區", "後壁區", "白河區", "東山區", "六甲區", "下營區", "柳營區", "鹽水區", "善化區", "大內區", "山上區", "新市區", "安定區"],
       "高雄市": ["新興區", "前金區", "苓雅區", "鹽埕區", "鼓山區", "旗津區", "前鎮區", "三民區", "楠梓區", "小港區", "左營區", "仁武區", "大社區", "東沙群島", "南沙群島", "岡山區", "路竹區", "阿蓮區", "田寮區", "燕巢區", "橋頭區", "梓官區", "彌陀區", "永安區", "湖內區", "鳳山區", "大寮區", "林園區", "鳥松區", "大樹區", "旗山區", "美濃區", "六龜區", "內門區", "杉林區", "甲仙區", "桃源區", "那瑪夏區", "茂林區"],
       "基隆市": ["仁愛區", "信義區", "中正區", "中山區", "安樂區", "暖暖區", "七堵區"],
       "新竹市": ["東區", "北區", "香山區"],
@@ -281,7 +312,6 @@
     function updateDistricts() {
       const city = document.getElementById('cityInput').value;
       const districtSelect = document.getElementById('districtInput');
-      // 【防呆機制修改】切換縣市時，鄉鎮市區的預設選項也改為全區不指定
       districtSelect.innerHTML = '<option value="">全區 / 不指定 (推薦)</option>';
       if (taiwanData[city]) {
         taiwanData[city].forEach(district => {
@@ -316,29 +346,25 @@
         const response = await fetch(cleanSearchUrl, { method: 'POST', body: JSON.stringify({ inputData: inputData }) });
         const result = await response.json();
         if (result.status === 'success') {
-          // 【防呆機制修改】將 userAddressStr 傳遞給 showResults 顯示提示
+          const trueClosestAddress = result.data.length > 0 ? result.data[0].address : '';
           showResults(result.data, userAddressStr);
           
           if (result.data.length > 0) {
             const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
-            
-            // 處理使用者輸入的地址（去除門牌號碼及以後的部分，達到去識別化）
             let maskedUserAddress = '';
             if (searchType === '文字搜尋' && userAddressStr) {
-                // 【優化】精準去除門牌號碼 (如：37-3號、37之3號、777號)，完美保留前面的 123巷、8弄
                 maskedUserAddress = userAddressStr.replace(/\d+[-之]?\d*號.*$/, "");
             } else {
                 maskedUserAddress = 'GPS定位(無地址)';
             }
 
-            // 將參考地址與搜尋地址打包，一次發送給後端
             fetch(cleanLogUrl, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
                     action: 'logSearch', 
-                    address: result.data[0].address,    // E 欄：參考地址 (距離最近的 i郵箱地址)
+                    address: trueClosestAddress,
                     searchType: searchType, 
-                    userAddress: maskedUserAddress      // F 欄：儲存搜尋地址 (去識別化的使用者地址)
+                    userAddress: maskedUserAddress
                 }) 
             }).catch(err => console.log('背景寫入日誌失敗:', err));
           }
@@ -353,13 +379,11 @@
 
     function startSearchText() {
       const city = document.getElementById('cityInput').value, district = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
-      // 【防呆機制修改】放寬限制，不再強制要求區，只要有縣市和地址即可
       if (!city || !detail) return alert('請至少選擇縣市並填寫詳細地址喔！');
       if (!detail.includes('號')) return alert('詳細地址請務必包含門牌號碼 (例如：ＯＯ路ＸＸ號)！');
       
       const fullAddress = city + district + detail;
       toggleUI(true); 
-      // 把 fullAddress 傳兩次，第二次是用來當作 userAddressStr 做去識別化
       callBackendAPI(fullAddress, fullAddress); 
     }
 
@@ -368,7 +392,6 @@
       if (navigator.geolocation) {
         toggleUI(true);
         navigator.geolocation.getCurrentPosition(
-          // GPS 定位時，第二個參數傳空字串即可
           (pos) => callBackendAPI({ lat: pos.coords.latitude, lng: pos.coords.longitude }, ''),
           (err) => { toggleUI(false); document.getElementById('bottomAd').style.display = 'block'; alert('無法取得定位，請改用手動輸入。'); },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -376,12 +399,10 @@
       } else { alert("您的裝置不支援定位功能。"); }
     }
 
-    // 【防呆機制修改】接收 userAddressStr 參數來呈現提示
     function showResults(data, userAddressStr) {
       toggleUI(false);
       let html = '';
 
-      // 【防呆機制修改】新增：提示當前搜尋基準，並給予防呆建議
       if (userAddressStr) {
          html += `<div class="alert alert-info border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #eef5ff; color: #0d6efd; font-size: 0.85rem; padding: 12px 16px;">
              <strong>📍 搜尋中心：</strong>${userAddressStr}<br>
@@ -394,13 +415,14 @@
       }
 
       const countSpan = document.getElementById('totalSearchCount');
-      if (countSpan.innerText !== '...') {
+      if (countSpan && countSpan.innerText !== '...') {
          const currentCount = parseInt(countSpan.innerText.replace(/,/g, ''));
          countSpan.innerText = (currentCount + 1).toLocaleString();
       }
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const targetAttr = isMobile ? '' : 'target="_blank"';
       data.forEach((item, index) => item.originalRank = index + 1);
+      
       if (data.length >= 2) { const temp = data[0]; data[0] = data[1]; data[1] = temp; }
 
       data.forEach((item, loopIndex) => {
