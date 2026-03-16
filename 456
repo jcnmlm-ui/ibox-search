@@ -1,0 +1,95 @@
+/**
+ * i郵箱外部資料庫 - 智能輪詢更新版 (加入防撞車機制)
+ * 目標試算表：1nwCY8ButjSkFdR4TnehHU_Aw-E_2XrwHMBOSj16usbc
+ */
+
+function updateExistingIBoxExternal() {
+  // 【新增防護1】建立防撞車鎖 (LockService)
+  // 確保同一時間只有一支程式在修改試算表
+  var lock = LockService.getScriptLock();
+  // 嘗試等待 10 秒，如果等不到鎖，代表上一分鐘的程式還卡著，就直接結束這次任務
+  if (!lock.tryLock(10000)) {
+    console.log("上一分鐘的腳本尚未結束，為避免衝突，本次跳過執行。");
+    return;
+  }
+
+  try {
+    const startTime = Date.now(); // 記錄開始時間
+    const sheetId = "1nwCY8ButjSkFdR4TnehHU_Aw-E_2XrwHMBOSj16usbc";
+    const sheetName = "ibox資料庫new";
+    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(sheetName);
+    
+    if (!sheet) return;
+
+    const url = "https://ezpost.post.gov.tw/ibox/E_MAP/filterMapData";
+    const MAX_BATCH = 15;
+
+    const fullRange = sheet.getDataRange();
+    const values = fullRange.getValues();
+    let headers = values[0];
+
+    // 篩選 B 欄為「成功」的資料
+    let validRows = [];
+    for (let i = 1; i < values.length; i++) {
+      if (values[i][1] === "成功") {
+        let timeVal = values[i][9] ? new Date(values[i][9]).getTime() : 0;
+        validRows.push({ rowIndex: i + 1, updateTime: timeVal, admid: values[i][0] });
+      }
+    }
+
+    // 由舊到新排序
+    validRows.sort((a, b) => a.updateTime - b.updateTime);
+    let rowsToProcess = validRows.slice(0, MAX_BATCH);
+    if (rowsToProcess.length === 0) return;
+
+    // 開始抓取
+    for (let item of rowsToProcess) {
+      // 【新增防護2】超時安全閥：如果這趟執行已經超過 4.5 分鐘 (270秒)，立刻強制提早下班
+      if (Date.now() - startTime > 270000) {
+        console.log("快要超時了，提早結束本次任務。");
+        break; 
+      }
+
+      let rowNum = item.rowIndex; 
+      let admid = item.admid.toString().trim();
+
+      try {
+        const payload = { "ADMID": admid };
+        const options = { "method": "post", "contentType": "application/json", "payload": JSON.stringify(payload), "muteHttpExceptions": true };
+        const response = UrlFetchApp.fetch(url, options);
+        const data = JSON.parse(response.getContentText());
+
+        if (data && data.AdmssInfo) {
+          sheet.getRange(rowNum, 10).setValue(new Date());
+
+          let lastCol = Math.max(sheet.getLastColumn(), 11);
+          if (lastCol >= 11) {
+             sheet.getRange(rowNum, 11, 1, lastCol - 10).clearContent();
+          }
+
+          data.AdmssInfo.forEach(info => {
+            let specName = `${info.Width}x${info.High}`;
+            let colIndex = headers.indexOf(specName) + 1;
+
+            if (colIndex === 0) {
+              lastCol++;
+              sheet.getRange(1, lastCol).setValue(specName).setBackground("#CFE2F3").setFontWeight("bold");
+              headers.push(specName);
+              colIndex = lastCol;
+            }
+
+            let filledCount = info.TotalCount - info.FreeCount;
+            sheet.getRange(rowNum, colIndex).setValue(`${filledCount}/${info.TotalCount}`);
+          });
+        }
+      } catch (e) {
+        // 出錯就默默跳過，不寫入任何錯誤訊息，保持版面乾淨
+      }
+      
+      Utilities.sleep(2000); // 休息 2 秒
+    }
+  } finally {
+    // 【必須步驟】不管腳本是順利跑完還是出錯，最後一定要把鎖解開，讓下一班車可以走
+    lock.releaseLock();
+  }
+}
