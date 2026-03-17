@@ -1,0 +1,21 @@
+{
+  "name": "i 郵箱查找大師",
+  "short_name": "i 郵箱查詢",
+  "description": "一鍵尋找距離您最近的 i 郵箱，提供精準機車路徑與即時格位狀態！",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#28a745",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
