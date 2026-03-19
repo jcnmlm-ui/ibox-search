@@ -298,46 +298,85 @@
       </div> 
     </div> 
 
-    <!-- 意見回饋 Modal (Keep structure, text handled by i18n where needed, mostly Chinese for simplicity since feedbacks are usually local) -->
+    <!-- 意見回饋 Modal (完美還原原本格式與 placeholder) -->
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px;">
           <div class="modal-header">
-            <h5 class="modal-title fw-bold" data-i18n="fbTitle">意見回饋</h5>
+            <h5 class="modal-title fw-bold">意見回饋</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-start">
-            <div class="mb-3"><label class="form-label text-secondary small" data-i18n="fbName">您的姓名/暱稱</label><input type="text" class="form-control" id="feedbackName"></div>
-            <div class="mb-3"><label class="form-label text-secondary small" data-i18n="fbMsg">回饋內容 <span class="text-danger">*</span></label><textarea class="form-control" id="feedbackMessage" rows="4"></textarea></div>
+            <div class="mb-3">
+              <label for="feedbackName" class="form-label text-secondary small">您的姓名/暱稱</label>
+              <input type="text" class="form-control" id="feedbackName" placeholder="例如：王大明 (選填)">
+            </div>
+            <div class="mb-3">
+              <label for="feedbackMessage" class="form-label text-secondary small">回饋內容 <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="feedbackMessage" rows="4" placeholder="請描述您遇到的問題或給我們的建議..."></textarea>
+            </div>
           </div>
-          <div class="modal-footer border-0"><button type="button" class="btn btn-light" data-bs-dismiss="modal" data-i18n="fbCancel">取消</button><button type="button" class="btn btn-primary px-4" onclick="submitFeedback()" id="submitFeedbackBtn" data-i18n="fbSubmit">送出回饋</button></div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary px-4" onclick="submitFeedback()" id="submitFeedbackBtn">送出回饋</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Survey Modal (Simplified for display) -->
+    <!-- 問卷調查 Modal (完美還原原本格式) -->
     <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-          <div class="modal-header bg-light" style="border-radius: 20px 20px 0 0;"><h5 class="modal-title fw-bold">📝 幫助我們變得更好 (Help us improve)</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button></div>
+          <div class="modal-header bg-light" style="border-radius: 20px 20px 0 0;">
+            <h5 class="modal-title fw-bold">📝 幫助我們變得更好</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button>
+          </div>
           <div class="modal-body text-start p-4">
-             <div class="mb-4 text-center"><label class="form-label fw-bold text-dark d-block text-start">使用體驗？ User Experience (1 Poor → 5 Excellent)</label><div class="survey-options mt-2"><input type="radio" name="surveyUX" id="ux1" value="1" class="survey-btn-check"><label for="ux1" class="rating-circle">1</label><input type="radio" name="surveyUX" id="ux2" value="2" class="survey-btn-check"><label for="ux2" class="rating-circle">2</label><input type="radio" name="surveyUX" id="ux3" value="3" class="survey-btn-check"><label for="ux3" class="rating-circle">3</label><input type="radio" name="surveyUX" id="ux4" value="4" class="survey-btn-check"><label for="ux4" class="rating-circle">4</label><input type="radio" name="surveyUX" id="ux5" value="5" class="survey-btn-check"><label for="ux5" class="rating-circle">5</label></div></div>
-            <button type="button" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-pill" onclick="submitSurvey()" id="submitSurveyBtn">送出 Submit</button>
-            <div class="text-center mt-3"><a href="#" class="text-muted small text-decoration-none" data-bs-dismiss="modal" onclick="markSurveyDone()">略過 Skip</a></div>
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label>
+              <div class="survey-options">
+                <input type="radio" name="surveyRole" id="role1" value="寄件" class="survey-btn-check"><label for="role1" class="survey-btn-label">📦 我要寄件</label>
+                <input type="radio" name="surveyRole" id="role2" value="取件" class="survey-btn-check"><label for="role2" class="survey-btn-label">🛍️ 我要取件</label>
+                <input type="radio" name="surveyRole" id="role3" value="測試" class="survey-btn-check"><label for="role3" class="survey-btn-label">🤔 純粹測試</label>
+              </div>
+            </div>
+            <div class="mb-4 text-center">
+              <label class="form-label fw-bold text-dark d-block text-start">2. 使用體驗？ (1很差 → 5很棒)</label>
+              <div class="survey-options mt-2">
+                <input type="radio" name="surveyUX" id="ux1" value="1" class="survey-btn-check"><label for="ux1" class="rating-circle">1</label>
+                <input type="radio" name="surveyUX" id="ux2" value="2" class="survey-btn-check"><label for="ux2" class="rating-circle">2</label>
+                <input type="radio" name="surveyUX" id="ux3" value="3" class="survey-btn-check"><label for="ux3" class="rating-circle">3</label>
+                <input type="radio" name="surveyUX" id="ux4" value="4" class="survey-btn-check"><label for="ux4" class="rating-circle">4</label>
+                <input type="radio" name="surveyUX" id="ux5" value="5" class="survey-btn-check"><label for="ux5" class="rating-circle">5</label>
+              </div>
+            </div>
+            <div class="mb-4 text-center">
+              <label class="form-label fw-bold text-dark d-block text-start">3. 格位準確度？ (1不準 → 5很準)</label>
+              <div class="survey-options mt-2">
+                <input type="radio" name="surveyAccuracy" id="acc1" value="1" class="survey-btn-check"><label for="acc1" class="rating-circle">1</label>
+                <input type="radio" name="surveyAccuracy" id="acc2" value="2" class="survey-btn-check"><label for="acc2" class="rating-circle">2</label>
+                <input type="radio" name="surveyAccuracy" id="acc3" value="3" class="survey-btn-check"><label for="acc3" class="rating-circle">3</label>
+                <input type="radio" name="surveyAccuracy" id="acc4" value="4" class="survey-btn-check"><label for="acc4" class="rating-circle">4</label>
+                <input type="radio" name="surveyAccuracy" id="acc5" value="5" class="survey-btn-check"><label for="acc5" class="rating-circle">5</label>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-pill" onclick="submitSurvey()" id="submitSurveyBtn">送出問卷</button>
+            <div class="text-center mt-3"><a href="#" class="text-muted small text-decoration-none" data-bs-dismiss="modal" onclick="markSurveyDone()">先不要，略過</a></div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- 頁尾宣告與資料來源 (完美還原原本文字) -->
     <div class="footer-copy mt-4">
       <div class="text-start text-muted mb-3 p-3 rounded" style="background-color: #eef2f7; font-size: 0.8rem; line-height: 1.6;">
-        <strong data-i18n="footer1">💡 關於 i 郵箱查找大師：</strong><br>
-        <span class="zh-only">提供全台 24 小時 <strong>i 郵箱 (iBox) 據點查詢</strong>、即時空格狀態，以及獨家的<strong>機車導航</strong>路線規劃。一鍵定位，就能馬上為您找到距離最近的 i 郵箱！</span>
-        <span class="en-only">Providing 24/7 <strong>iBox locator</strong> services across Taiwan with real-time locker availability and exclusive <strong>motorcycle navigation</strong> routes. Find your nearest iBox in one click!</span><br>
-        <span class="text-success fw-bold d-inline-block mt-2" data-i18n="footer2">✅ 資料來源：中華郵政 Open Data</span>
+        <strong>💡 關於 i 郵箱查找大師：</strong><br>
+        提供全台 24 小時 <strong>i 郵箱 (iBox) 據點查詢</strong>、即時空格狀態（大、中、小格位），以及獨家的<strong>機車導航</strong>路線規劃。無論是在PChome、MOMO、東森購物等等網購取件，或是中華郵政國內包裹寄件、取件、ezPost 郵寄便，一鍵定位，就能馬上為您找到距離最近的 i 郵箱，省時又便利！<br>
+        <span class="text-success fw-bold d-inline-block mt-2">✅ 資料來源：中華郵政 Open Data</span>
       </div>
-      © Design by Chiahsien <br>
-      <span data-i18n="footer3">i 郵箱查找大師 v1.0 (本站非官方網站，位置資訊僅用於距離計算，不作他用)</span>
+      &copy; Design by Chiahsien <br>
+      i 郵箱查找大師 v1.0 (本站非官方網站，位置資訊僅用於距離計算，不作他用)
     </div>
   </div>
 
@@ -712,24 +751,26 @@
       document.body.removeChild(textArea);
     }
 
+    // (完美還原原本的 JS 傳送動作與中文提示)
     async function submitFeedback() {
-      const name = document.getElementById('feedbackName').value.trim() || '匿名', message = document.getElementById('feedbackMessage').value.trim(), btn = document.getElementById('submitFeedbackBtn');
-      if (!message) return alert('內容不能為空 / Message cannot be empty!');
-      btn.disabled = true; btn.innerHTML = '...';
+      const name = document.getElementById('feedbackName').value.trim() || '匿名使用者', message = document.getElementById('feedbackMessage').value.trim(), btn = document.getElementById('submitFeedbackBtn');
+      if (!message) return alert('請輸入回饋內容喔！');
+      btn.disabled = true; btn.innerHTML = '傳送中...';
       try {
         const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'feedback', name: name, message: message }) });
         const result = await response.json();
-        if (result.status === 'success') { alert('Thank you!'); bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide(); }
-      } catch (err) { alert('Failed'); } finally { btn.disabled = false; btn.innerText = i18n[currentLang].fbSubmit; }
+        if (result.status === 'success') { alert('感謝您的回饋！'); bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide(); }
+        else throw new Error(result.message);
+      } catch (err) { alert('傳送失敗：' + err.message); } finally { btn.disabled = false; btn.innerText = '送出回饋'; }
     }
 
     function markSurveyDone() {}
 
     function submitSurvey() {
       const role = document.querySelector('input[name="surveyRole"]:checked'), ux = document.querySelector('input[name="surveyUX"]:checked'), acc = document.querySelector('input[name="surveyAccuracy"]:checked');
-      if (!role || !ux || !acc) return alert('請填寫完整問卷 / Please complete the survey!');
+      if (!role || !ux || !acc) return alert('請幫我們填寫完整問卷喔！');
       bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
-      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) });
+      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) }).catch(e => console.log(e));
     }
   </script>
 </body>
