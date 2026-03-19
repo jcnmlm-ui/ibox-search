@@ -324,7 +324,7 @@
       </div>
     </div>
 
-    <!-- 問卷調查 Modal (完美還原原本格式) -->
+    <!-- 🌟 全新大按鈕版：問卷調查 Modal -->
     <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
@@ -333,34 +333,64 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button>
           </div>
           <div class="modal-body text-start p-4">
+            
+            <!-- Q1：選項變成長條膠囊按鈕 -->
             <div class="mb-4">
               <label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label>
-              <div class="survey-options">
-                <input type="radio" name="surveyRole" id="role1" value="寄件" class="survey-btn-check"><label for="role1" class="survey-btn-label">📦 我要寄件</label>
-                <input type="radio" name="surveyRole" id="role2" value="取件" class="survey-btn-check"><label for="role2" class="survey-btn-label">🛍️ 我要取件</label>
-                <input type="radio" name="surveyRole" id="role3" value="測試" class="survey-btn-check"><label for="role3" class="survey-btn-label">🤔 純粹測試</label>
+              <div class="d-flex flex-wrap gap-2 justify-content-center mt-2">
+                <input type="radio" class="btn-check" name="surveyRole" id="role1" value="寄件" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold shadow-sm" for="role1">📦 我要寄件</label>
+                
+                <input type="radio" class="btn-check" name="surveyRole" id="role2" value="取件" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold shadow-sm" for="role2">🛍️ 我要取件</label>
+                
+                <input type="radio" class="btn-check" name="surveyRole" id="role3" value="測試" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold shadow-sm" for="role3">🤔 純粹測試</label>
               </div>
             </div>
-            <div class="mb-4 text-center">
-              <label class="form-label fw-bold text-dark d-block text-start">2. 使用體驗？ (1很差 → 5很棒)</label>
-              <div class="survey-options mt-2">
-                <input type="radio" name="surveyUX" id="ux1" value="1" class="survey-btn-check"><label for="ux1" class="rating-circle">1</label>
-                <input type="radio" name="surveyUX" id="ux2" value="2" class="survey-btn-check"><label for="ux2" class="rating-circle">2</label>
-                <input type="radio" name="surveyUX" id="ux3" value="3" class="survey-btn-check"><label for="ux3" class="rating-circle">3</label>
-                <input type="radio" name="surveyUX" id="ux4" value="4" class="survey-btn-check"><label for="ux4" class="rating-circle">4</label>
-                <input type="radio" name="surveyUX" id="ux5" value="5" class="survey-btn-check"><label for="ux5" class="rating-circle">5</label>
+
+            <!-- Q2：選項變成大圓形按鈕，等距散開 -->
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">2. 使用體驗？ (1很差 → 5很棒)</label>
+              <div class="d-flex justify-content-between gap-2 mt-2 px-2">
+                <input type="radio" class="btn-check" name="surveyUX" id="ux1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux1">1</label>
+                
+                <input type="radio" class="btn-check" name="surveyUX" id="ux2" value="2" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux2">2</label>
+                
+                <input type="radio" class="btn-check" name="surveyUX" id="ux3" value="3" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux3">3</label>
+                
+                <input type="radio" class="btn-check" name="surveyUX" id="ux4" value="4" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux4">4</label>
+                
+                <input type="radio" class="btn-check" name="surveyUX" id="ux5" value="5" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux5">5</label>
               </div>
             </div>
-            <div class="mb-4 text-center">
-              <label class="form-label fw-bold text-dark d-block text-start">3. 格位準確度？ (1不準 → 5很準)</label>
-              <div class="survey-options mt-2">
-                <input type="radio" name="surveyAccuracy" id="acc1" value="1" class="survey-btn-check"><label for="acc1" class="rating-circle">1</label>
-                <input type="radio" name="surveyAccuracy" id="acc2" value="2" class="survey-btn-check"><label for="acc2" class="rating-circle">2</label>
-                <input type="radio" name="surveyAccuracy" id="acc3" value="3" class="survey-btn-check"><label for="acc3" class="rating-circle">3</label>
-                <input type="radio" name="surveyAccuracy" id="acc4" value="4" class="survey-btn-check"><label for="acc4" class="rating-circle">4</label>
-                <input type="radio" name="surveyAccuracy" id="acc5" value="5" class="survey-btn-check"><label for="acc5" class="rating-circle">5</label>
+
+            <!-- Q3：選項變成大圓形按鈕，等距散開 -->
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">3. 格位準確度？ (1不準 → 5很準)</label>
+              <div class="d-flex justify-content-between gap-2 mt-2 px-2">
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc1">1</label>
+                
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc2" value="2" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc2">2</label>
+                
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc3" value="3" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc3">3</label>
+                
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc4" value="4" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc4">4</label>
+                
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc5" value="5" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc5">5</label>
               </div>
             </div>
+
             <button type="button" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-pill" onclick="submitSurvey()" id="submitSurveyBtn">送出問卷</button>
             <div class="text-center mt-3"><a href="#" class="text-muted small text-decoration-none" data-bs-dismiss="modal" onclick="markSurveyDone()">先不要，略過</a></div>
           </div>
