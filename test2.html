@@ -540,7 +540,7 @@
         }
         
         // 🌟 把原本的 "尺寸(cm)" 標題，改成 "寬*高*深"
-        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">寬*高*深</th><th>總數</th><th>剩餘</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : '<div class="small text-muted text-center mt-2">暫無資料</div>';
+        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">寬*高*深(cm)</th><th>總數</th><th>剩餘</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : '<div class="small text-muted text-center mt-2">暫無資料</div>';
         const cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
 
         html += `
