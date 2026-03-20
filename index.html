@@ -17,7 +17,7 @@
   <meta property="og:url" content="https://goibox.tw/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="i 郵箱查找大師">
-  <meta property="og:image" content="https://goibox.tw/og-image.jpg"> 
+  <meta property="og:image" content="https://goibox.tw/og-image.png"> 
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="i 郵箱查找大師 - 最佳機車導航路線">
@@ -635,10 +635,15 @@
                 : 'GPS定位(無地址)';
 
             // 🌟 2. 送給 Google Sheet 的，是剛剛鎖定的「真正的第一名地址」，完全不受版面排序影響！
+            // 【局部修正】：在 body 裡面加上 `dims: dims`，把包裹長寬高資料一併傳給日誌後台
             fetch(cleanLogUrl, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
-                    action: 'logSearch', address: trueTop1Address, searchType: searchType, userAddress: maskedUserAddress
+                    action: 'logSearch', 
+                    address: trueTop1Address, 
+                    searchType: searchType, 
+                    userAddress: maskedUserAddress,
+                    dims: dims 
                 }) 
             }).catch(err => console.log(err));
           }
