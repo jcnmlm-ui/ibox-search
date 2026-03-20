@@ -27,7 +27,6 @@
   <meta name="twitter:description" content="一鍵尋找距離您最近的 i 郵箱，提供精準機車路徑與即時格位狀態！">
   <meta name="twitter:image" content="https://goibox.tw/og-image.png">
   
-  <!-- SEO 擴充外國人常用關鍵字 -->
   <meta name="keywords" content="i郵箱, ｉ郵箱, ibox, iBox, i郵箱查詢, i郵箱據點, 機車導航, 中華郵政, 24小時取件, ezPost, Taiwan iBox, Post locker Taiwan, send parcel 24/7, Chunghwa Post tracking, iBox Locator">
   <link rel="canonical" href="https://goibox.tw/" />
   
@@ -87,7 +86,7 @@
   <style>
     body { background-color: #f4f6f9; font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #333; }
     .container { max-width: 1000px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; position: relative; }
-    .lang-toggle { position: absolute; top: -10px; right: 20px; border-radius: 20px; z-index: 100; font-weight: 500; background: white; border: 1px solid #ced4da; padding: 5px 12px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; color: #495057; }
+    .lang-toggle { border-radius: 20px; font-weight: 500; background: white; border: 1px solid #ced4da; padding: 5px 12px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; color: #495057; }
     .lang-toggle:hover { background: #f8f9fa; border-color: #adb5bd; }
     .result-card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; position: relative; overflow: hidden; }
     .box-status { background-color: #f8f9fc; border: 1px solid #e3e6f0; border-radius: 10px; padding: 10px; min-width: 145px; }
@@ -150,7 +149,6 @@
             </select>
           </div>
           
-          <!-- 📦 寄件包裹預先測量 -->
           <div class="col-12 mt-2">
             <div class="card border-0 shadow-sm rounded-3 mb-1" style="background-color: #fff9e6;">
               <div class="card-body p-2 px-3">
@@ -172,7 +170,6 @@
               </div>
             </div>
           </div>
-          <!-- 測量區塊結束 -->
 
           <div class="col-12">
             <div class="input-group search-group">
@@ -298,7 +295,7 @@
       </div> 
     </div> 
 
-    <!-- 意見回饋 Modal (完美還原原本格式與 placeholder) -->
+    <!-- 意見回饋 Modal -->
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px;">
@@ -324,7 +321,7 @@
       </div>
     </div>
 
-    <!-- 🌟 全新大按鈕版：問卷調查 Modal -->
+    <!-- 🌟 大按鈕版：問卷調查 Modal -->
     <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
@@ -334,7 +331,6 @@
           </div>
           <div class="modal-body text-start p-4">
             
-            <!-- Q1：選項變成長條膠囊按鈕 -->
             <div class="mb-4">
               <label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label>
               <div class="d-flex flex-wrap gap-2 justify-content-center mt-2">
@@ -349,7 +345,6 @@
               </div>
             </div>
 
-            <!-- Q2：選項變成大圓形按鈕，等距散開 -->
             <div class="mb-4">
               <label class="form-label fw-bold text-dark">2. 使用體驗？ (1很差 → 5很棒)</label>
               <div class="d-flex justify-content-between gap-2 mt-2 px-2">
@@ -370,7 +365,6 @@
               </div>
             </div>
 
-            <!-- Q3：選項變成大圓形按鈕，等距散開 -->
             <div class="mb-4">
               <label class="form-label fw-bold text-dark">3. 格位準確度？ (1不準 → 5很準)</label>
               <div class="d-flex justify-content-between gap-2 mt-2 px-2">
@@ -398,18 +392,19 @@
       </div>
     </div>
 
-    <!-- 頁尾宣告與資料來源 (完美還原原本文字) -->
+    <!-- 頁尾宣告與資料來源 -->
     <div class="footer-copy mt-4 mb-4">
       <div class="text-start text-muted mb-3 p-3 rounded" style="background-color: #eef2f7; font-size: 0.8rem; line-height: 1.6;">
-        <strong>💡 關於 i 郵箱查找大師：</strong><br>
-        提供全台 24 小時 <strong>i 郵箱 (iBox) 據點查詢</strong>、即時空格狀態（大、中、小格位），以及獨家的<strong>機車導航</strong>路線規劃。無論是在PChome、MOMO、東森購物等等網購取件，或是中華郵政國內包裹寄件、取件、ezPost 郵寄便，一鍵定位，就能馬上為您找到距離最近的 i 郵箱，省時又便利！<br>
-        <span class="text-success fw-bold d-inline-block mt-2">✅ 資料來源：中華郵政 Open Data</span>
+        <strong data-i18n="footer1">💡 關於 i 郵箱查找大師：</strong><br>
+        <span class="zh-only">提供全台 24 小時 <strong>i 郵箱 (iBox) 據點查詢</strong>、即時空格狀態，以及獨家的<strong>機車導航</strong>路線規劃。一鍵定位，就能馬上為您找到距離最近的 i 郵箱！</span>
+        <span class="en-only">Providing 24/7 <strong>iBox locator</strong> services across Taiwan with real-time locker availability and exclusive <strong>motorcycle navigation</strong> routes. Find your nearest iBox in one click!</span><br>
+        <span class="text-success fw-bold d-inline-block mt-2" data-i18n="footer2">✅ 資料來源：中華郵政 Open Data</span>
       </div>
       
-      <!-- 👇 獨立控制的版權文字區塊，字體變小且強制置中 -->
-      <div class="text-center w-100 mx-auto" style="font-size: 0.8rem; color: #a0a0a0; max-width: 600px; line-height: 1.6;">
-         i 郵箱查找大師 v1.0 &copy; Design by Chiahsien <br>
-         (本站非官方網站，位置資訊僅用於距離計算，不作他用)
+      <div class="text-center w-100 mx-auto" style="font-size: 0.7rem; color: #a0a0a0; max-width: 400px; line-height: 1.6;">
+        &copy; Design by Chiahsien <br>
+        i 郵箱查找大師 v1.0 <br>
+        (本站非官方網站，位置資訊僅用於距離計算，不作他用)
       </div>
     </div>
   </div>
@@ -475,7 +470,6 @@
         fbTitle: "意見回饋", fbName: "您的姓名/暱稱", fbMsg: "回饋內容 *", fbCancel: "取消", fbSubmit: "送出回饋",
         footer1: "💡 關於 i 郵箱查找大師：", footer2: "✅ 資料來源：中華郵政 Open Data", footer3: "i 郵箱查找大師 v1.0 (本站非官方網站，位置資訊僅用於距離計算，不作他用)",
         
-        // JS 內部動態文字
         jsAlertAddress: "請至少選擇縣市並填寫詳細地址喔！\n詳細地址請務必包含門牌號碼 (例如：ＯＯ路ＸＸ號)！",
         jsAlertGPS: "無法取得定位，請改用手動輸入。",
         jsSearchCenter: "📍 搜尋中心：",
@@ -503,7 +497,6 @@
         fbTitle: "Feedback", fbName: "Name / Nickname", fbMsg: "Message *", fbCancel: "Cancel", fbSubmit: "Submit",
         footer1: "💡 About Taiwan iBox Locator:", footer2: "✅ Data Source: Chunghwa Post Open Data", footer3: "Taiwan iBox Locator v1.0 (Unofficial site. Location data is used for distance calculation only.)",
         
-        // JS 內部動態文字
         jsAlertAddress: "Please select a city and enter a detailed street address (including building number)!",
         jsAlertGPS: "Failed to get location. Please type your address manually.",
         jsSearchCenter: "📍 Search Center: ",
@@ -522,7 +515,6 @@
       currentLang = currentLang === 'zh' ? 'en' : 'zh';
       document.getElementById('htmlTag').lang = currentLang === 'zh' ? 'zh-TW' : 'en';
       
-      // Update static text via data-i18n attributes
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (i18n[currentLang][key]) {
@@ -530,17 +522,16 @@
         }
       });
       
-      // Update placeholders
       document.getElementById('detailInput').placeholder = currentLang === 'zh' ? '詳細地址 (必填，如：中正路1號)' : 'Detailed Address (e.g., No.1 Zhongzheng Rd.)';
       
-      // Re-render results if they exist
       if(lastSearchData) {
-        showResults(lastSearchData.data, lastSearchData.userAddressStr, lastSearchData.dims);
+        // 使用原始資料的全新拷貝重新渲染，避免切換語言時二次調換順序
+        showResults(JSON.parse(JSON.stringify(lastSearchData.data)), lastSearchData.userAddressStr, lastSearchData.dims);
       }
     }
 
     let progressInterval;
-    let lastSearchData = null; // Store for re-rendering during language switch
+    let lastSearchData = null; 
 
     function updateProgressBar(targetWidth) {
       const bar = document.getElementById('fakeProgressBar');
@@ -556,7 +547,7 @@
       const citySelect = document.getElementById('cityInput');
       for (let city in taiwanData) {
         let option = document.createElement('option');
-        option.value = city; option.text = city; // Keep Chinese for backend processing
+        option.value = city; option.text = city; 
         citySelect.appendChild(option);
       }
 
@@ -587,7 +578,7 @@
       if (taiwanData[city]) {
         taiwanData[city].forEach(district => {
           let option = document.createElement('option');
-          option.value = district; option.text = district; // Keep Chinese
+          option.value = district; option.text = district; 
           districtSelect.appendChild(option);
         });
       }
@@ -629,19 +620,25 @@
         const result = await response.json();
         
         if (result.status === 'success') {
-          lastSearchData = { data: result.data, userAddressStr: userAddressStr, dims: dims };
+          // 🌟 1. 在陣列被前端打亂順序之前，先「鎖定」真正的第一名地址
+          const trueTop1Address = result.data.length > 0 ? result.data[0].address : '';
+          
+          // 將原始(未互換)的資料備份起來，供切換語言時使用
+          lastSearchData = { data: JSON.parse(JSON.stringify(result.data)), userAddressStr: userAddressStr, dims: dims };
+
           showResults(result.data, userAddressStr, dims);
           
-          if (result.data.length > 0) {
+          if (trueTop1Address) {
             const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
             let maskedUserAddress = (searchType === '文字搜尋' && userAddressStr) 
                 ? userAddressStr.replace(/\d+[-之]?\d*號.*$/, "") 
                 : 'GPS定位(無地址)';
 
+            // 🌟 2. 送給 Google Sheet 的，是剛剛鎖定的「真正的第一名地址」，完全不受版面排序影響！
             fetch(cleanLogUrl, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
-                    action: 'logSearch', address: result.data[0].address, searchType: searchType, userAddress: maskedUserAddress
+                    action: 'logSearch', address: trueTop1Address, searchType: searchType, userAddress: maskedUserAddress
                 }) 
             }).catch(err => console.log(err));
           }
@@ -671,10 +668,13 @@
       } else { alert("GPS Not Supported"); }
     }
 
-    function showResults(data, userAddressStr, dims) {
+    function showResults(originalData, userAddressStr, dims) {
       toggleUI(false);
       let html = '';
       const t = i18n[currentLang];
+      
+      // 使用淺拷貝，避免直接改動到 originalData 造成語言切換時順序錯亂
+      let data = [...originalData];
 
       if (userAddressStr) {
          html += `<div class="alert alert-info border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #eef5ff; color: #0d6efd; font-size: 0.85rem; padding: 12px 16px;">
@@ -693,7 +693,10 @@
            </div>`;
       }
 
+      // 🌟 3. 先乖乖記錄真實排名 (1, 2, 3...)
       data.forEach((item, index) => item.originalRank = index + 1);
+      
+      // 🌟 4. 恢復「視覺互換」魔法：讓第 2 名排在最上面，變成 2, 1, 3, 4, 5
       if (data.length >= 2) { const temp = data[0]; data[0] = data[1]; data[1] = temp; }
 
       data.forEach((item, loopIndex) => {
@@ -726,7 +729,6 @@
         let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">${t.jsSizeTh}</th><th>${t.jsTotalTh}</th><th>${t.jsRemainTh}</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : `<div class="small text-muted text-center mt-2">${t.jsNoData}</div>`;
         const cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
 
-        // Handle English text replacements in dynamic data
         let distText = item.distanceText.replace('公里', 'km');
         let durText = item.duration.replace('分鐘', t.jsMin);
         let updatedText = (item.updateTime || t.jsNoData).replace('(絕對即時)', t.jsLive);
@@ -752,6 +754,7 @@
             </div>
           </div>
         `;
+        // 因為又互換了，廣告可以完美塞在「第 2 名(loop0)」與「第 1 名(loop1)」的下方
         if (loopIndex === 0) html += adBanners[0];
         else if (loopIndex === 1) html += adBanners[1];
       });
@@ -785,7 +788,6 @@
       document.body.removeChild(textArea);
     }
 
-    // (完美還原原本的 JS 傳送動作與中文提示)
     async function submitFeedback() {
       const name = document.getElementById('feedbackName').value.trim() || '匿名使用者', message = document.getElementById('feedbackMessage').value.trim(), btn = document.getElementById('submitFeedbackBtn');
       if (!message) return alert('請輸入回饋內容喔！');
