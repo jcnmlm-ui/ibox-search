@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" id="htmlTag">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -9,11 +9,11 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#28a745">
 
-  <title>i 郵箱查找大師 | 一鍵尋找最近的 i 郵箱 (iBox)</title>
-  <meta name="description" content="自動定位尋找距離您最近的 i 郵箱 (iBox)，提供精準機車導航與即時大中小格位狀態，寄件收件超方便！">
+  <title>i 郵箱查找大師 | Taiwan iBox Locator | 一鍵尋找最近的 i 郵箱</title>
+  <meta name="description" content="自動定位尋找距離您最近的 i 郵箱 (iBox Locator)，提供精準機車導航與即時大中小格位狀態，寄件收件超方便！Find the nearest Chunghwa Post iBox locker in Taiwan 24/7.">
   
-  <meta property="og:title" content="🛵 i 郵箱查找大師">
-  <meta property="og:description" content="一鍵尋找距離您最近的 i 郵箱，提供精準機車路徑與即時格位狀態！">
+  <meta property="og:title" content="🛵 i 郵箱查找大師 | Taiwan iBox Locator">
+  <meta property="og:description" content="一鍵尋找距離您最近的 i 郵箱，提供精準機車路徑與即時格位狀態！Find the nearest iBox with real-time locker availability!">
   <meta property="og:url" content="https://goibox.tw/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="i 郵箱查找大師">
@@ -23,11 +23,11 @@
   <meta property="og:image:alt" content="i 郵箱查找大師 - 最佳機車導航路線">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="🛵 i 郵箱查找大師">
+  <meta name="twitter:title" content="🛵 i 郵箱查找大師 | Taiwan iBox Locator">
   <meta name="twitter:description" content="一鍵尋找距離您最近的 i 郵箱，提供精準機車路徑與即時格位狀態！">
   <meta name="twitter:image" content="https://goibox.tw/og-image.png">
   
-  <meta name="keywords" content="i郵箱, ｉ郵箱, ibox, iBox, i郵箱查詢, i郵箱據點, i郵箱導航, 機車導航, 寄件, 取件, 中華郵政, 24小時取件, 郵局, ezPost">
+  <meta name="keywords" content="i郵箱, ｉ郵箱, ibox, iBox, i郵箱查詢, i郵箱據點, 機車導航, 中華郵政, 24小時取件, ezPost, Taiwan iBox, Post locker Taiwan, send parcel 24/7, Chunghwa Post tracking, iBox Locator">
   <link rel="canonical" href="https://goibox.tw/" />
   
   <meta name="geo.region" content="TW" />
@@ -40,8 +40,9 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "i 郵箱查找大師",
+    "alternateName": "Taiwan iBox Locator",
     "url": "https://goibox.tw/",
-    "description": "提供全台 i 郵箱 (iBox) 即時格位查詢與機車導航服務。",
+    "description": "提供全台 i 郵箱 (iBox) 即時格位查詢與機車導航服務。 Find the nearest Chunghwa Post iBox locker in Taiwan with real-time status.",
     "applicationCategory": "NavigationApplication",
     "operatingSystem": "All",
     "areaServed": "TW",
@@ -56,24 +57,24 @@
     "@type": "FAQPage",
     "mainEntity": [{
       "@type": "Question",
-      "name": "i 郵箱可以放多久？",
+      "name": "i 郵箱可以放多久？ How long can a parcel stay in iBox?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "包裹送達後，提供 3 天 (72 小時) 內免費取件。超過時間會被退回原寄件局喔！"
+        "text": "包裹送達後，提供 3 天 (72 小時) 內免費取件。超過時間會被退回原寄件局喔！ Parcels must be picked up within 3 days (72 hours)."
       }
     }, {
       "@type": "Question",
-      "name": "蝦皮可以寄到 i 郵箱嗎？",
+      "name": "什麼是ｉ郵箱？ What is iBox?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "可以！結帳時物流選擇「i郵箱」，並利用本站搜尋距離您最近的據點，選擇該據點即可輕鬆取件。"
+        "text": "ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。 iBox provides 24/7 self-service for picking up, sending, and returning parcels."
       }
     }, {
       "@type": "Question",
-      "name": "如何知道包裹到了沒？",
+      "name": "如何支付寄件郵資？ How can I pay for postage?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "包裹送達時，系統會發送含有「取件碼」的簡訊到收件人手機，憑簡訊即可輕鬆取件。"
+        "text": "提供郵政金融卡、悠遊卡、一卡通、icash 2.0及多種行動支付(街口、悠遊付等)。 Accepts Chunghwa Post ATM cards, EasyCard, iPASS, icash 2.0, and various mobile payments."
       }
     }]
   }
@@ -84,7 +85,9 @@
   
   <style>
     body { background-color: #f4f6f9; font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #333; }
-    .container { max-width: 1000px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; }
+    .container { max-width: 1000px; margin-top: 25px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; position: relative; }
+    .lang-toggle { border-radius: 20px; font-weight: 500; background: white; border: 1px solid #ced4da; padding: 5px 12px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; color: #495057; }
+    .lang-toggle:hover { background: #f8f9fa; border-color: #adb5bd; }
     .result-card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; position: relative; overflow: hidden; }
     .box-status { background-color: #f8f9fc; border: 1px solid #e3e6f0; border-radius: 10px; padding: 10px; min-width: 145px; }
     .box-status-title { font-size: 0.75rem; color: #4e73df; font-weight: 700; margin-bottom: 8px; text-align: center; }
@@ -100,33 +103,34 @@
     .loading { display: none; margin-top: 20px; }
     .progress { height: 12px; border-radius: 6px; background-color: #e9ecef; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
     .progress-bar-animated { animation: progress-bar-stripes 0.4s linear infinite !important; }
-    .survey-options { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
-    .survey-btn-check { display: none; }
-    .survey-btn-label { padding: 8px 16px; border-radius: 20px; border: 2px solid #eee; background: white; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; flex: 1; text-align: center; min-width: 80px; }
-    .survey-btn-check:checked + .survey-btn-label { border-color: #0d6efd; background-color: #eef5ff; color: #0d6efd; font-weight: bold; }
-    .rating-circle { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-weight: bold; }
-    .survey-btn-check:checked + .rating-circle { border-color: #0d6efd; background-color: #0d6efd; color: white; }
-    .footer-copy { text-align: center; margin-top: 40px; font-size: 0.85rem; color: #888; }
-    
     .side-card { background: white; border-radius: 16px; padding: 22px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; }
     .accordion-button:focus { box-shadow: none; border-color: rgba(0,0,0,.125); }
     .accordion-button:not(.collapsed) { background-color: #eef5ff; color: #0d6efd; font-weight: bold; box-shadow: inset 0 -1px 0 rgba(0,0,0,.125); }
     .accordion-item { border-radius: 12px !important; overflow: hidden; margin-bottom: 8px; border: 1px solid #eaeaea; }
     .accordion-button { padding: 12px 16px; font-size: 0.9rem; font-weight: 500; }
-
     .seo-table-wrapper::-webkit-scrollbar { width: 6px; }
     .seo-table-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; }
     .seo-table-wrapper::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 8px; }
     .seo-table-wrapper::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+    
+    /* Hide specific language elements */
+    :lang(en) .zh-only { display: none !important; }
+    :lang(zh-TW) .en-only { display: none !important; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="text-center mb-2" style="font-weight: 700; font-size: 1.8rem;">🛵 i 郵箱查找大師</h1>
+    <div class="d-flex justify-content-end mb-2 mt-2">
+      <button class="lang-toggle shadow-sm" onclick="toggleLanguage()">🌐 EN / 中文</button>
+    </div>
+
+    <h1 class="text-center mb-2" style="font-weight: 700; font-size: 1.8rem;">
+      <span data-i18n="mainTitle">🛵 i 郵箱查找大師</span>
+    </h1>
     
     <div id="statsContainer" class="text-center mb-4">
       <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
-        🎉 累積已提供 <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> 次最佳機車路徑
+        <span data-i18n="statsPrefix">🎉 累積已提供</span> <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> <span data-i18n="statsSuffix">次最佳機車路徑</span>
       </span>
     </div>
 
@@ -136,49 +140,47 @@
         <div class="row g-2 mb-3">
           <div class="col-6">
             <select id="cityInput" class="form-select filter-input" onchange="updateDistricts()">
-              <option value="">選擇縣市</option>
+              <option value="" data-i18n="selectCity">選擇縣市</option>
             </select>
           </div>
           <div class="col-6">
             <select id="districtInput" class="form-select filter-input">
-              <option value="">全區 / 不指定 (推薦)</option>
+              <option value="" data-i18n="selectDistrict">全區 / 不指定 (推薦)</option>
             </select>
           </div>
           
-          <!-- 📦 寄件包裹預先測量 (新增區塊) -->
           <div class="col-12 mt-2">
             <div class="card border-0 shadow-sm rounded-3 mb-1" style="background-color: #fff9e6;">
               <div class="card-body p-2 px-3">
                 <div class="d-flex align-items-center mb-2">
                   <span style="font-size: 1rem; margin-right: 5px;">📦</span>
-                  <h6 class="card-title fw-bold mb-0 text-primary" style="font-size: 0.85rem;">寄件包裹預先測量 (選填)</h6>
+                  <h6 class="card-title fw-bold mb-0 text-primary" style="font-size: 0.85rem;" data-i18n="measureTitle">寄件包裹預先測量 (選填)</h6>
                 </div>
                 <div class="input-group input-group-sm">
-                  <span class="input-group-text bg-white text-secondary border-end-0">長</span>
+                  <span class="input-group-text bg-white text-secondary border-end-0" data-i18n="dimL">長</span>
                   <input type="number" id="dimL" class="form-control border-start-0 text-center px-1" placeholder="cm">
-                  <span class="input-group-text bg-white text-secondary border-end-0 border-start-0">寬</span>
+                  <span class="input-group-text bg-white text-secondary border-end-0 border-start-0" data-i18n="dimW">寬</span>
                   <input type="number" id="dimW" class="form-control border-start-0 border-end-0 text-center px-1" placeholder="cm">
-                  <span class="input-group-text bg-white text-secondary border-end-0 border-start-0">高</span>
+                  <span class="input-group-text bg-white text-secondary border-end-0 border-start-0" data-i18n="dimH">高</span>
                   <input type="number" id="dimH" class="form-control border-start-0 text-center px-1" placeholder="cm">
                 </div>
-                <div class="form-text mt-1 text-muted" style="font-size: 0.7rem;">
+                <div class="form-text mt-1 text-muted" style="font-size: 0.7rem;" data-i18n="measureDesc">
                   輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。
                 </div>
               </div>
             </div>
           </div>
-          <!-- 測量區塊結束 -->
 
           <div class="col-12">
             <div class="input-group search-group">
               <input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)">
-              <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn">搜尋</button>
+              <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn" data-i18n="searchBtn">搜尋</button>
             </div>
           </div>
         </div>
 
         <button class="btn-gps shadow-sm" onclick="startSearchGPS()" id="gpsBtn">
-          📍 自動定位並搜尋附近
+          <span data-i18n="gpsBtn">📍 自動定位並搜尋附近</span>
         </button>
 
         <div id="loader" class="text-center loading" style="margin-bottom: 25px;">
@@ -187,7 +189,7 @@
                  role="progressbar" style="width: 0%; transition: width 0.3s ease-out;">
             </div>
           </div>
-          <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;">🚀 正在火速規劃最佳機車路徑...</p>
+          <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;" data-i18n="loadingText">🚀 正在火速規劃最佳機車路徑...</p>
         </div>
 
         <div id="results"></div>
@@ -195,26 +197,26 @@
 
         <div class="text-center mt-3 mb-4">
           <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">
-            💡 錯誤回報 / 意見回饋
+            <span data-i18n="feedbackBtn">💡 錯誤回報 / 意見回饋</span>
           </button>
         </div>
       </div> 
       
       <div class="col-lg-5">
         <div class="side-card">
-          <h5 class="fw-bold mb-3 text-dark">📦 i 郵箱資費與尺寸總表</h5>
+          <h5 class="fw-bold mb-3 text-dark" data-i18n="tableTitle">📦 i 郵箱資費與尺寸總表</h5>
           <div class="seo-table-wrapper table-responsive border rounded mb-3">
             <table class="table table-sm table-hover text-center align-middle mb-0" style="font-size: 0.75rem; white-space: nowrap;">
               <thead style="position: sticky; top: 0; z-index: 1;">
                 <tr style="background-color: #eef5ff;">
-                  <th class="text-primary py-2 border-bottom">櫃代</th>
-                  <th class="text-primary py-2 border-bottom">格型</th>
-                  <th class="text-primary py-2 border-bottom">尺寸(寬*高*深)</th>
-                  <th class="text-primary py-2 border-bottom">箱到宅</th>
-                  <th class="text-primary py-2 border-bottom">箱到箱</th>
+                  <th class="text-primary py-2 border-bottom" data-i18n="thGen">櫃代</th>
+                  <th class="text-primary py-2 border-bottom" data-i18n="thType">格型</th>
+                  <th class="text-primary py-2 border-bottom" data-i18n="thSize">尺寸(寬*高*深)</th>
+                  <th class="text-primary py-2 border-bottom" data-i18n="thHome">箱到宅</th>
+                  <th class="text-primary py-2 border-bottom" data-i18n="thBox">箱到箱</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="zh-only">
                 <tr><td rowspan="3" class="fw-bold text-secondary bg-light border-end">四代</td><td>小方格</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
                 <tr><td>中格</td><td>34*17*47 cm</td><td>65</td><td>60</td></tr>
                 <tr class="border-bottom-0"><td>大格</td><td>34*27*47 cm</td><td>70</td><td>60</td></tr>
@@ -231,42 +233,69 @@
                 <tr><td>中格</td><td>34*20*47 cm</td><td>70</td><td>60</td></tr>
                 <tr><td>大格</td><td>34*24*47 cm</td><td>70</td><td>60</td></tr>
               </tbody>
+              <tbody class="en-only">
+                <tr><td rowspan="3" class="fw-bold text-secondary bg-light border-end">Gen 4</td><td>S-Square</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
+                <tr><td>Medium</td><td>34*17*47 cm</td><td>65</td><td>60</td></tr>
+                <tr class="border-bottom-0"><td>Large</td><td>34*27*47 cm</td><td>70</td><td>60</td></tr>
+                <tr style="border-top: 2px solid #eaeaea;"><td colspan="5" class="p-0"></td></tr>
+                <tr><td rowspan="5" class="fw-bold text-secondary bg-light border-end">Gen 3</td><td>S-Square</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
+                <tr><td>L-Square</td><td>34*31*47 cm</td><td>70</td><td>60</td></tr>
+                <tr><td>Small</td><td>34*12*47 cm</td><td>65</td><td>60</td></tr>
+                <tr><td>Medium</td><td>34*17*47 cm</td><td>65</td><td>60</td></tr>
+                <tr class="border-bottom-0"><td>Large</td><td>34*24*47 cm</td><td>70</td><td>60</td></tr>
+                <tr style="border-top: 2px solid #eaeaea;"><td colspan="5" class="p-0"></td></tr>
+                <tr><td rowspan="5" class="fw-bold text-secondary bg-light border-end">Gen 2</td><td>S-Square</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
+                <tr><td>L-Square</td><td>18*22*47 cm</td><td>65</td><td>60</td></tr>
+                <tr><td>Small</td><td>34*11*47 cm</td><td>65</td><td>60</td></tr>
+                <tr><td>Medium</td><td>34*20*47 cm</td><td>70</td><td>60</td></tr>
+                <tr><td>Large</td><td>34*24*47 cm</td><td>70</td><td>60</td></tr>
+              </tbody>
             </table>
           </div>
           <div class="alert alert-info border-0 shadow-sm p-3 mb-0 rounded-3" style="background-color: #f8fbff;">
-            <div class="fw-bold text-primary mb-2" style="font-size: 0.85rem;">⚠️ 寄件限制與注意事項</div>
-            <ul class="mb-0 ps-3 text-secondary" style="font-size: 0.75rem; line-height: 1.6;">
+            <div class="fw-bold text-primary mb-2" style="font-size: 0.85rem;" data-i18n="ruleTitle">⚠️ 寄件限制與注意事項</div>
+            <ul class="mb-0 ps-3 text-secondary zh-only" style="font-size: 0.75rem; line-height: 1.6;">
               <li><strong>重量限制：</strong>國內包裹、快捷郵件限重 <strong>20 公斤</strong>。</li>
               <li><strong>尺寸限制：</strong>單邊最大不逾 <strong>45 公分</strong>，長寬高合計不逾 <strong>105 公分</strong>。請預留約 5 公分空間方便拿取。</li>
               <li><strong>代收貨款：</strong>金額不逾新臺幣 <strong>6,000 元</strong>。</li>
+            </ul>
+            <ul class="mb-0 ps-3 text-secondary en-only" style="font-size: 0.75rem; line-height: 1.6;">
+              <li><strong>Max Weight:</strong> 20 kg per parcel.</li>
+              <li><strong>Max Dimensions:</strong> Longest side ≤ 45 cm, total L+W+H ≤ 105 cm. Reserve ~5cm for easy pickup.</li>
+              <li><strong>Cash on Delivery:</strong> Under NT$ 6,000.</li>
             </ul>
           </div>
         </div>
 
         <div class="side-card">
-          <h5 class="fw-bold mb-3 text-dark">❓ 常見問題 FAQ</h5>
+          <h5 class="fw-bold mb-3 text-dark" data-i18n="faqTitle">❓ 常見問題 FAQ</h5>
           <div class="accordion accordion-flush" id="faqAccordion">
             <div class="accordion-item">
-              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">包裹可以在 i 郵箱放多久？</button></h2>
-              <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;">包裹送達後，會提供存放 <strong>3 天 (72 小時)</strong>(含例假日)的待領期間。將於第4天早上8點前由郵局人員取出後轉郵局招領。</div></div>
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" data-i18n="faq1Q">包裹可以在 i 郵箱放多久？</button></h2>
+              <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq1A">包裹送達後，會提供存放 <strong>3 天 (72 小時)</strong>(含例假日)的待領期間。將於第4天早上8點前由郵局人員取出後轉郵局招領。</div></div>
             </div>
             <div class="accordion-item">
-              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">蝦皮、MOMO 可以寄到 i 郵箱嗎？</button></h2>
-              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;">沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。</div></div>
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" data-i18n="faq2Q">蝦皮、MOMO 可以寄到 i 郵箱嗎？</button></h2>
+              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq2A">沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。</div></div>
             </div>
             <div class="accordion-item">
-              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">如何使用ｉ郵箱取件？</button></h2>
-              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;">郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。</div></div>
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" data-i18n="faq3Q">如何使用ｉ郵箱取件？</button></h2>
+              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq3A">郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。</div></div>
             </div>
             <div class="accordion-item">
-              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">如何支付寄件郵資？</button></h2>
-              <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;">提供郵政金融卡、儲值卡（悠遊卡、一卡通及icash 2.0）、iPASS MONEY、悠遊付、街口支付、全盈+PAY、icash Pay、全支付。</div></div>
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" data-i18n="faq4Q">什麼是ｉ郵箱？</button></h2>
+              <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq4A">ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。可於郵局各據點（或ｉ郵箱）交寄郵件或於網路購物後，直接遞送至「ｉ郵箱」，在領件時間內至指定ｉ郵箱取件。</div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" data-i18n="faq5Q">如何支付寄件郵資？</button></h2>
+              <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq5A">ｉ郵箱目前提供郵政金融卡、儲值卡（悠備卡、一卡通及icash 2.0）、iPASS MONEY、悠遊付、街口支付、全盈+PAY、icash Pay、全支付。</div></div>
             </div>
           </div>
         </div>
       </div> 
     </div> 
-    
+
+    <!-- 意見回饋 Modal -->
     <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px;">
@@ -275,22 +304,87 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-start">
-            <div class="mb-3"><label for="feedbackName" class="form-label text-secondary small">您的姓名/暱稱</label><input type="text" class="form-control" id="feedbackName" placeholder="例如：王大明 (選填)"></div>
-            <div class="mb-3"><label for="feedbackMessage" class="form-label text-secondary small">回饋內容 <span class="text-danger">*</span></label><textarea class="form-control" id="feedbackMessage" rows="4" placeholder="請描述您遇到的問題或給我們的建議..."></textarea></div>
+            <div class="mb-3">
+              <label for="feedbackName" class="form-label text-secondary small">您的姓名/暱稱</label>
+              <input type="text" class="form-control" id="feedbackName" placeholder="例如：王大明 (選填)">
+            </div>
+            <div class="mb-3">
+              <label for="feedbackMessage" class="form-label text-secondary small">回饋內容 <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="feedbackMessage" rows="4" placeholder="請描述您遇到的問題或給我們的建議..."></textarea>
+            </div>
           </div>
-          <div class="modal-footer border-0"><button type="button" class="btn btn-light" data-bs-dismiss="modal">取消</button><button type="button" class="btn btn-primary px-4" onclick="submitFeedback()" id="submitFeedbackBtn">送出回饋</button></div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary px-4" onclick="submitFeedback()" id="submitFeedbackBtn">送出回饋</button>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- 🌟 大按鈕版：問卷調查 Modal -->
     <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-          <div class="modal-header bg-light" style="border-radius: 20px 20px 0 0;"><h5 class="modal-title fw-bold">📝 幫助我們變得更好</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button></div>
+          <div class="modal-header bg-light" style="border-radius: 20px 20px 0 0;">
+            <h5 class="modal-title fw-bold">📝 幫助我們變得更好</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button>
+          </div>
           <div class="modal-body text-start p-4">
-            <div class="mb-4"><label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label><div class="survey-options"><input type="radio" name="surveyRole" id="role1" value="寄件" class="survey-btn-check"><label for="role1" class="survey-btn-label">📦 我要寄件</label><input type="radio" name="surveyRole" id="role2" value="取件" class="survey-btn-check"><label for="role2" class="survey-btn-label">🛍️ 我要取件</label><input type="radio" name="surveyRole" id="role3" value="測試" class="survey-btn-check"><label for="role3" class="survey-btn-label">🤔 純粹測試</label></div></div>
-            <div class="mb-4 text-center"><label class="form-label fw-bold text-dark d-block text-start">2. 使用體驗？ (1很差 → 5很棒)</label><div class="survey-options mt-2"><input type="radio" name="surveyUX" id="ux1" value="1" class="survey-btn-check"><label for="ux1" class="rating-circle">1</label><input type="radio" name="surveyUX" id="ux2" value="2" class="survey-btn-check"><label for="ux2" class="rating-circle">2</label><input type="radio" name="surveyUX" id="ux3" value="3" class="survey-btn-check"><label for="ux3" class="rating-circle">3</label><input type="radio" name="surveyUX" id="ux4" value="4" class="survey-btn-check"><label for="ux4" class="rating-circle">4</label><input type="radio" name="surveyUX" id="ux5" value="5" class="survey-btn-check"><label for="ux5" class="rating-circle">5</label></div></div>
-            <div class="mb-4 text-center"><label class="form-label fw-bold text-dark d-block text-start">3. 格位準確度？ (1不準 → 5很準)</label><div class="survey-options mt-2"><input type="radio" name="surveyAccuracy" id="acc1" value="1" class="survey-btn-check"><label for="acc1" class="rating-circle">1</label><input type="radio" name="surveyAccuracy" id="acc2" value="2" class="survey-btn-check"><label for="acc2" class="rating-circle">2</label><input type="radio" name="surveyAccuracy" id="acc3" value="3" class="survey-btn-check"><label for="acc3" class="rating-circle">3</label><input type="radio" name="surveyAccuracy" id="acc4" value="4" class="survey-btn-check"><label for="acc4" class="rating-circle">4</label><input type="radio" name="surveyAccuracy" id="acc5" value="5" class="survey-btn-check"><label for="acc5" class="rating-circle">5</label></div></div>
+            
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">1. 請問您這次查詢是為了？</label>
+              <div class="d-flex flex-wrap gap-2 justify-content-center mt-2">
+                <input type="radio" class="btn-check" name="surveyRole" id="role1" value="寄件" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold shadow-sm" for="role1">📦 我要寄件</label>
+                
+                <input type="radio" class="btn-check" name="surveyRole" id="role2" value="取件" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold shadow-sm" for="role2">🛍️ 我要取件</label>
+                
+                <input type="radio" class="btn-check" name="surveyRole" id="role3" value="測試" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold shadow-sm" for="role3">🤔 純粹測試</label>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">2. 使用體驗？ (1很差 → 5很棒)</label>
+              <div class="d-flex justify-content-between gap-2 mt-2 px-2">
+                <input type="radio" class="btn-check" name="surveyUX" id="ux1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux1">1</label>
+                
+                <input type="radio" class="btn-check" name="surveyUX" id="ux2" value="2" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux2">2</label>
+                
+                <input type="radio" class="btn-check" name="surveyUX" id="ux3" value="3" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux3">3</label>
+                
+                <input type="radio" class="btn-check" name="surveyUX" id="ux4" value="4" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux4">4</label>
+                
+                <input type="radio" class="btn-check" name="surveyUX" id="ux5" value="5" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux5">5</label>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark">3. 格位準確度？ (1不準 → 5很準)</label>
+              <div class="d-flex justify-content-between gap-2 mt-2 px-2">
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc1">1</label>
+                
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc2" value="2" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc2">2</label>
+                
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc3" value="3" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc3">3</label>
+                
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc4" value="4" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc4">4</label>
+                
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc5" value="5" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc5">5</label>
+              </div>
+            </div>
+
             <button type="button" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-pill" onclick="submitSurvey()" id="submitSurveyBtn">送出問卷</button>
             <div class="text-center mt-3"><a href="#" class="text-muted small text-decoration-none" data-bs-dismiss="modal" onclick="markSurveyDone()">先不要，略過</a></div>
           </div>
@@ -298,21 +392,78 @@
       </div>
     </div>
 
-    <div class="footer-copy mt-4">
-      <div class="text-start text-muted mb-3 p-3 rounded" style="background-color: #eef2f7; font-size: 0.8rem; line-height: 1.6;">
-        <strong>💡 關於 i 郵箱查找大師：</strong><br>
-        提供全台 24 小時 <strong>i 郵箱 (iBox) 據點查詢</strong>、即時空格狀態（大、中、小格位），以及獨家的<strong>機車導航</strong>路線規劃。無論是在PChome、MOMO、東森購物等等網購取件，或是中華郵政國內包裹寄件、取件、ezPost 郵寄便，一鍵定位，就能馬上為您找到距離最近的 i 郵箱，省時又便利！<br>
-        <span class="text-success fw-bold d-inline-block mt-2">✅ 資料來源：中華郵政 Open Data</span>
+    <!-- 🌟 新增：隱私權聲明 Modal (中英雙語，提升 SEO 與信任度) -->
+    <div class="modal fade" id="privacyModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="border-radius: 16px;">
+          <div class="modal-header bg-light" style="border-radius: 16px 16px 0 0;">
+            <h5 class="modal-title fw-bold zh-only">隱私權聲明</h5>
+            <h5 class="modal-title fw-bold en-only">Privacy Policy</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-start p-4" style="font-size: 0.9rem; line-height: 1.6;">
+            <!-- 中文版隱私權條款 -->
+            <div class="zh-only">
+              <h6 class="fw-bold text-primary">1. 位置資訊使用與保護</h6>
+              <p class="text-secondary mb-3">本網站僅在您的明確授權下，使用裝置的 GPS 定位功能來計算您與附近 i 郵箱的距離，並提供導航路線。我們<strong>絕對不會</strong>記錄、儲存、追蹤或與任何第三方分享您的確切 GPS 座標。</p>
+              
+              <h6 class="fw-bold text-primary">2. 匿名資料收集</h6>
+              <p class="text-secondary mb-3">為了持續優化系統與路徑演算法，我們會匿名記錄使用者輸入的「搜尋地址（將去識別化隱藏門牌）」、「包裹尺寸」及「搜尋結果」。這些數據僅用於內部統計與除錯，完全不包含任何可識別您個人身分的資訊（如姓名、電話等）。</p>
+              
+              <h6 class="fw-bold text-primary">3. 外部服務與 API 規範</h6>
+              <p class="text-secondary mb-0">本站無償串接「中華郵政 Open Data」以取得 i 郵箱即時狀態，並使用「Google Maps API」進行機車路線運算。使用本站服務進行導航即表示您同時同意 Google Maps 的服務條款與隱私權政策。</p>
+            </div>
+            
+            <!-- 英文版隱私權條款 -->
+            <div class="en-only">
+              <h6 class="fw-bold text-primary">1. Location Data Usage</h6>
+              <p class="text-secondary mb-3">This website uses your device's GPS location, only with your explicit permission, to calculate the distance to nearby iBox lockers and provide navigation. We <strong>do not</strong> record, track, or share your exact GPS coordinates with any third parties.</p>
+              
+              <h6 class="fw-bold text-primary">2. Anonymous Data Collection</h6>
+              <p class="text-secondary mb-3">To continuously improve our system and routing algorithms, we anonymously log the "searched address (de-identified)", "parcel dimensions", and "search results". This data is used solely for internal analytics and debugging, and contains no personally identifiable information.</p>
+              
+              <h6 class="fw-bold text-primary">3. External Services & APIs</h6>
+              <p class="text-secondary mb-0">We use Chunghwa Post Open Data for real-time locker status and Google Maps API for routing. By using our service, you also agree to the Google Maps Terms of Service and Privacy Policy.</p>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary w-100 rounded-pill zh-only" data-bs-dismiss="modal">我知道了</button>
+            <button type="button" class="btn btn-secondary w-100 rounded-pill en-only" data-bs-dismiss="modal">I Understand</button>
+          </div>
+        </div>
       </div>
-      © Design by Chiahsien <br>
-      i 郵箱查找大師 v1.0 (本站非官方網站，位置資訊僅用於距離計算，不作他用)
+    </div>
+
+    <!-- 頁尾宣告與資料來源 -->
+    <div class="footer-copy mt-4 mb-5">
+      <div class="text-start text-muted mb-3 p-3 rounded" style="background-color: #eef2f7; font-size: 0.8rem; line-height: 1.6;">
+        <strong data-i18n="footer1">💡 關於 i 郵箱查找大師：</strong><br>
+        <span class="zh-only">提供全台 24 小時 <strong>i 郵箱 (iBox)</strong> 據點查詢、即時空格狀態（大、中、小格位），以及獨家的<strong>機車導航</strong>路線規劃。無論是在PChome、MOMO、東森購物等等網購取件，或是中華郵政國內包裹寄件、取件、ezPost 郵寄便，一鍵定位，就能馬上為您找到距離最近的 i 郵箱，省時又便利！</span>
+        <span class="en-only">Providing 24/7 <strong>iBox locator</strong> services across Taiwan, featuring real-time locker availability (large, medium, and small) and exclusive <strong>motorcycle navigation</strong> routes. Whether you are picking up online orders from PChome, MOMO, or Eastern Shopping, or sending/receiving domestic parcels via Chunghwa Post and ezPost, you can find the nearest iBox in one click—saving you time and hassle!</span><br>
+        
+        <div class="mt-2 pt-2 border-top border-secondary border-opacity-10" style="font-size: 0.75rem;">
+          <span class="text-dark fw-bold me-2">官方連結：</span>
+          <a href="https://postserv.post.gov.tw/pstmail/main_mail.html?targetTxn=EB500100" target="_blank" rel="noopener" class="text-decoration-none text-primary me-2">國內郵件包裹郵件查詢</a> |
+          <a href="https://ezpost.post.gov.tw/" target="_blank" rel="noopener" class="text-decoration-none text-primary me-2">ezPost 郵寄便</a> |
+          <a href="https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=1506568354956" target="_blank" rel="noopener" class="text-decoration-none text-primary mx-2">服務資費說明</a> |
+          <a href="https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348" target="_blank" rel="noopener" class="text-decoration-none text-primary ms-2">禁寄物品查詢</a>
+        </div>
+
+        <span class="text-success fw-bold d-inline-block mt-2" data-i18n="footer2">✅ 資料來源：中華郵政 Open Data</span>
+      </div>
+      
+      <div class="text-center w-100 mx-auto" style="font-size: 0.7rem; color: #a0a0a0; max-width: 400px; line-height: 1.6;">
+        &copy; Design by Chiahsien <br>
+        i 郵箱查找大師 v1.0 <br>
+        <span class="text-secondary">(本站非官方網站，位置資訊僅用於距離計算，不作他用)</span><br>
+        <a href="#" class="text-decoration-none text-muted" style="text-decoration: underline !important;" data-bs-toggle="modal" data-bs-target="#privacyModal">隱私權聲明 / Privacy Policy</a>
+      </div>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // 💡 請確保這裡是您最新正確的 URL
     const GAS_API_URL_SEARCH = 'https://script.google.com/macros/s/AKfycbwXO-oMiYRG4RuqenL4lBtBKuIY2S3U_QSnDxMGQ_kEpwgXzW8Q7wvWObBL_wHPpe2A6Q/exec';
     const GAS_API_URL_LOG = 'https://script.google.com/macros/s/AKfycbxVGuaW1uBynyiQdrzTlUO3g5WQ9lD3aI1bJnYVkcDreDJk7kgLMjKB4jHTiP-oCrU_dQ/exec';
 
@@ -320,10 +471,10 @@
 
     const adBanners = [
       `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;">
-         <img src="banner-960-240-01_0.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
+         <img src="banner-960-240-01_0.jpg" alt="Advertisement" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
        </a>`,
       `<a href="https://lottery.post.gov.tw/post/internet/post_vote115/index.jsp" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;">
-         <img src="banner-960-240-02_0.jpg" alt="廣告版位" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
+         <img src="banner-960-240-02_0.jpg" alt="Advertisement" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;">
        </a>`
     ];
 
@@ -352,7 +503,88 @@
       "連江縣": ["南竿鄉", "北竿鄉", "莒光鄉", "東引鄉"]
     };
 
+    // --- 🌐 i18n 字典設定 ---
+    const i18n = {
+      zh: {
+        mainTitle: "🛵 i 郵箱查找大師", statsPrefix: "🎉 累積已提供", statsSuffix: "次最佳機車路徑",
+        selectCity: "選擇縣市", selectDistrict: "全區 / 不指定 (推薦)",
+        measureTitle: "寄件包裹預先測量 (選填)", measureDesc: "輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。",
+        dimL: "長", dimW: "寬", dimH: "高",
+        searchBtn: "搜尋", gpsBtn: "📍 自動定位並搜尋附近",
+        loadingText: "🚀 正在火速規劃最佳機車路徑...", feedbackBtn: "💡 錯誤回報 / 意見回饋",
+        tableTitle: "📦 i 郵箱資費與尺寸總表", thGen: "櫃代", thType: "格型", thSize: "尺寸(寬*高*深)", thHome: "箱到宅", thBox: "箱到箱",
+        ruleTitle: "⚠️ 寄件限制與注意事項", faqTitle: "❓ 常見問題 FAQ",
+        faq1Q: "包裹可以在 i 郵箱放多久？", faq1A: "包裹送達後，會提供存放 <strong>3 天 (72 小時)</strong>(含例假日)的待領期間。將於第4天早上8點前由郵局人員取出後轉郵局招領。",
+        faq2Q: "蝦皮、MOMO 可以寄到 i 郵箱嗎？", faq2A: "沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。",
+        faq3Q: "如何使用ｉ郵箱取件？", faq3A: "郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。",
+        faq4Q: "什麼是ｉ郵箱？", faq4A: "ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。可於郵局各據點（或ｉ郵箱）交寄郵件或於網路購物後，直接遞送至「ｉ郵箱」，在領件時間內至指定ｉ郵箱取件。",
+        faq5Q: "如何支付寄件郵資？", faq5A: "ｉ郵箱目前提供郵政金融卡、儲值卡（悠遊卡、一卡通及icash 2.0）、iPASS MONEY、悠遊付、街口支付、全盈+PAY、icash Pay、全支付。",
+        fbTitle: "意見回饋", fbName: "您的姓名/暱稱", fbMsg: "回饋內容 *", fbCancel: "取消", fbSubmit: "送出回饋",
+        footer1: "💡 關於 i 郵箱查找大師：", footer2: "✅ 資料來源：中華郵政 Open Data", footer3: "i 郵箱查找大師 v1.0 (本站非官方網站，位置資訊僅用於距離計算，不作他用)",
+        
+        jsAlertAddress: "請至少選擇縣市並填寫詳細地址喔！\n詳細地址請務必包含門牌號碼 (例如：ＯＯ路ＸＸ號)！",
+        jsAlertGPS: "無法取得定位，請改用手動輸入。",
+        jsSearchCenter: "📍 搜尋中心：",
+        jsGpsExact: "您的 GPS 目前精準定位",
+        jsHint: "💡 若結果過遠或不準確，可能是路段跨區，建議鄉鎮市區改選「全區 / 不指定」再試一次！",
+        jsFilterActive: "📦 尺寸過濾啟動：已為您剔除裝不下或目前客滿的機台！",
+        jsTopX: "距離第 {X} 近", jsRoute: "🛵 路程：", jsMin: "分鐘", jsLoc: "💡 位置：", jsUpdated: "🕒 更新時間：",
+        jsLive: "(絕對即時)", jsStatusTitle: "格位狀態", jsSizeTh: "寬*高*深(cm)", jsTotalTh: "總數", jsRemainTh: "剩餘",
+        jsNoData: "暫無資料", jsCopy: "複製地址", jsNav: "開啟導航", jsCopied: "✅ 地址已複製！"
+      },
+      en: {
+        mainTitle: "🛵 Taiwan iBox Locator", statsPrefix: "🎉 Provided", statsSuffix: "best motorcycle routes",
+        selectCity: "Select City", selectDistrict: "All Districts (Recommended)",
+        measureTitle: "Parcel Measurement (Optional)", measureDesc: "Enter L/W/H to filter out lockers that are too small or currently full.",
+        dimL: "L", dimW: "W", dimH: "H",
+        searchBtn: "Search", gpsBtn: "📍 Auto-Locate & Search Nearby",
+        loadingText: "🚀 Planning the best motorcycle route...", feedbackBtn: "💡 Feedback / Report Error",
+        tableTitle: "📦 iBox Size & Pricing", thGen: "Gen", thType: "Type", thSize: "Size(W*H*D)", thHome: "To Home", thBox: "To iBox",
+        ruleTitle: "⚠️ Rules & Restrictions", faqTitle: "❓ FAQ",
+        faq1Q: "How long can a parcel stay in iBox?", faq1A: "Parcels must be picked up within <strong>3 days (72 hours)</strong>. Unclaimed items will be returned to the post office.",
+        faq2Q: "Can I use iBox for Shopee/MOMO orders?", faq2A: "Yes! Select 'iBox' as your shipping method during checkout, and use our site to find the nearest locker address.",
+        faq3Q: "How to pick up my parcel?", faq3A: "You will receive an SMS when it arrives. Go to the locker, select 'Pickup', and enter the last 3 digits of your phone number and the 6-digit pickup code.",
+        faq4Q: "What is iBox?", faq4A: "iBox provides 24/7 self-service for picking up, sending, and returning parcels. You can drop off parcels at any post office or iBox, or have your online shopping orders delivered directly to an iBox for easy pickup.",
+        faq5Q: "How can I pay for postage?", faq5A: "iBox currently accepts Chunghwa Post ATM cards, stored-value cards (EasyCard, iPASS, icash 2.0), and various mobile payments (iPASS MONEY, EasyWallet, JKO Pay, Plus Pay, icash Pay, PxPay).",
+        fbTitle: "Feedback", fbName: "Name / Nickname", fbMsg: "Message *", fbCancel: "Cancel", fbSubmit: "Submit",
+        footer1: "💡 About Taiwan iBox Locator:", footer2: "✅ Data Source: Chunghwa Post Open Data", footer3: "Taiwan iBox Locator v1.0 (Unofficial site. Location data is used for distance calculation only.)",
+        
+        jsAlertAddress: "Please select a city and enter a detailed street address (including building number)!",
+        jsAlertGPS: "Failed to get location. Please type your address manually.",
+        jsSearchCenter: "📍 Search Center: ",
+        jsGpsExact: "Your exact GPS location",
+        jsHint: "💡 If results are inaccurate, try setting the district to 'All Districts'!",
+        jsFilterActive: "📦 Size Filter Active: Lockers too small or full have been excluded!",
+        jsTopX: "Top {X} Closest", jsRoute: "🛵 Route: ", jsMin: "mins", jsLoc: "💡 Location: ", jsUpdated: "🕒 Updated: ",
+        jsLive: "(Live)", jsStatusTitle: "Locker Status", jsSizeTh: "W*H*D(cm)", jsTotalTh: "Total", jsRemainTh: "Free",
+        jsNoData: "No Data", jsCopy: "Copy Address", jsNav: "Navigate", jsCopied: "✅ Address copied!"
+      }
+    };
+
+    let currentLang = 'zh';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'zh' ? 'en' : 'zh';
+      document.getElementById('htmlTag').lang = currentLang === 'zh' ? 'zh-TW' : 'en';
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[currentLang][key]) {
+          el.innerHTML = i18n[currentLang][key];
+        }
+      });
+      
+      document.getElementById('detailInput').placeholder = currentLang === 'zh' ? '詳細地址 (必填，如：中正路1號)' : 'Detailed Address (e.g., No.1 Zhongzheng Rd.)';
+      
+      if(lastSearchData) {
+        // 使用原始資料的全新拷貝重新渲染，避免切換語言時二次調換順序
+        showResults(JSON.parse(JSON.stringify(lastSearchData.data)), lastSearchData.userAddressStr, lastSearchData.dims);
+      }
+    }
+
     let progressInterval;
+    let lastSearchData = null; 
+
     function updateProgressBar(targetWidth) {
       const bar = document.getElementById('fakeProgressBar');
       if (bar) bar.style.width = targetWidth + '%';
@@ -367,7 +599,7 @@
       const citySelect = document.getElementById('cityInput');
       for (let city in taiwanData) {
         let option = document.createElement('option');
-        option.value = city; option.text = city;
+        option.value = city; option.text = city; 
         citySelect.appendChild(option);
       }
 
@@ -375,7 +607,7 @@
         const warning = document.createElement('div');
         warning.className = 'alert alert-danger text-center mb-3 shadow-sm';
         warning.style.borderRadius = '12px';
-        warning.innerHTML = '<strong>⚠️ 偵測到 LINE 內建瀏覽器</strong><br>定位功能將受到限制。請點擊選單選擇<strong>「以預設瀏覽器開啟」</strong>以獲得最佳體驗！';
+        warning.innerHTML = '<strong>⚠️ 偵測到 LINE 內建瀏覽器 (LINE Browser Detected)</strong><br>定位功能將受到限制。請選擇「以預設瀏覽器開啟」 (Open in default browser)！';
         document.querySelector('h1').insertAdjacentElement('afterend', warning);
       }
     };
@@ -394,11 +626,11 @@
     function updateDistricts() {
       const city = document.getElementById('cityInput').value;
       const districtSelect = document.getElementById('districtInput');
-      districtSelect.innerHTML = '<option value="">全區 / 不指定 (推薦)</option>';
+      districtSelect.innerHTML = `<option value="">${i18n[currentLang].selectDistrict}</option>`;
       if (taiwanData[city]) {
         taiwanData[city].forEach(district => {
           let option = document.createElement('option');
-          option.value = district; option.text = district;
+          option.value = district; option.text = district; 
           districtSelect.appendChild(option);
         });
       }
@@ -421,7 +653,6 @@
       }
     }
 
-    // 取得使用者輸入的尺寸
     function getUserDims() {
       const l = parseInt(document.getElementById('dimL').value, 10) || 0;
       const w = parseInt(document.getElementById('dimW').value, 10) || 0;
@@ -436,82 +667,98 @@
         const cleanSearchUrl = GAS_API_URL_SEARCH.replace(/\s+/g, '');
         const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
         
-        // 🌟 攜帶尺寸條件送出
         const payload = { inputData: inputData, dims: dims };
         const response = await fetch(cleanSearchUrl, { method: 'POST', body: JSON.stringify(payload) });
         const result = await response.json();
         
         if (result.status === 'success') {
+          // 🌟 1. 在陣列被前端打亂順序之前，先「鎖定」真正的第一名地址
+          const trueTop1Address = result.data.length > 0 ? result.data[0].address : '';
+          
+          // 將原始(未互換)的資料備份起來，供切換語言時使用
+          lastSearchData = { data: JSON.parse(JSON.stringify(result.data)), userAddressStr: userAddressStr, dims: dims };
+
           showResults(result.data, userAddressStr, dims);
           
-          if (result.data.length > 0) {
+          if (trueTop1Address) {
             const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
             let maskedUserAddress = (searchType === '文字搜尋' && userAddressStr) 
                 ? userAddressStr.replace(/\d+[-之]?\d*號.*$/, "") 
                 : 'GPS定位(無地址)';
 
+            // 🌟 2. 送給 Google Sheet 的，是剛剛鎖定的「真正的第一名地址」，完全不受版面排序影響！
+            // 【局部修正】：在 body 裡面加上 `dims: dims`，把包裹長寬高資料一併傳給日誌後台
             fetch(cleanLogUrl, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
-                    action: 'logSearch', address: result.data[0].address, searchType: searchType, userAddress: maskedUserAddress
+                    action: 'logSearch', 
+                    address: trueTop1Address, 
+                    searchType: searchType, 
+                    userAddress: maskedUserAddress,
+                    dims: dims 
                 }) 
             }).catch(err => console.log(err));
           }
         } else { throw new Error(result.message); }
       } catch (err) {
         toggleUI(false);
-        document.getElementById('results').innerHTML = `<div class="alert alert-warning text-center shadow-sm" style="border-radius: 16px; padding: 30px;"><div style="font-size: 3rem; margin-bottom: 10px;">🤔</div><h5 class="fw-bold">發生錯誤</h5><p class="text-secondary small mb-0">${err.message}</p></div>`;
+        document.getElementById('results').innerHTML = `<div class="alert alert-warning text-center shadow-sm" style="border-radius: 16px; padding: 30px;"><div style="font-size: 3rem; margin-bottom: 10px;">🤔</div><h5 class="fw-bold">Error / 發生錯誤</h5><p class="text-secondary small mb-0">${err.message}</p></div>`;
         document.getElementById('bottomAd').style.display = 'block'; 
       }
     }
 
     function startSearchText() {
       const city = document.getElementById('cityInput').value, district = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
-      if (!city || !detail) return alert('請至少選擇縣市並填寫詳細地址喔！');
-      if (!detail.includes('號')) return alert('詳細地址請務必包含門牌號碼 (例如：ＯＯ路ＸＸ號)！');
+      if (!city || !detail) return alert(i18n[currentLang].jsAlertAddress);
       
       callBackendAPI(city + district + detail, city + district + detail, getUserDims()); 
     }
 
     function startSearchGPS() {
-      if (isLineApp) return alert('【功能受限】請切換至 Chrome/Safari 瀏覽器。');
+      if (isLineApp) return alert('【功能受限】請切換至 Chrome/Safari 瀏覽器。 [Limited] Use Chrome/Safari.');
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (pos) => callBackendAPI({ lat: pos.coords.latitude, lng: pos.coords.longitude }, '', getUserDims()),
-          (err) => { alert('無法取得定位，請改用手動輸入。'); },
+          (err) => { alert(i18n[currentLang].jsAlertGPS); },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
-      } else { alert("您的裝置不支援定位功能。"); }
+      } else { alert("GPS Not Supported"); }
     }
 
-    function showResults(data, userAddressStr, dims) {
+    function showResults(originalData, userAddressStr, dims) {
       toggleUI(false);
       let html = '';
+      const t = i18n[currentLang];
+      
+      // 使用淺拷貝，避免直接改動到 originalData 造成語言切換時順序錯亂
+      let data = [...originalData];
 
       if (userAddressStr) {
          html += `<div class="alert alert-info border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #eef5ff; color: #0d6efd; font-size: 0.85rem; padding: 12px 16px;">
-             <strong>📍 搜尋中心：</strong>${userAddressStr}<br>
-             <span class="text-secondary" style="font-size: 0.8rem; display: block; margin-top: 4px;">💡 若結果過遠或不準確，可能是路段跨區，建議鄉鎮市區改選「全區 / 不指定」再試一次！</span>
+             <strong>${t.jsSearchCenter}</strong>${userAddressStr}<br>
+             <span class="text-secondary" style="font-size: 0.8rem; display: block; margin-top: 4px;">${t.jsHint}</span>
            </div>`;
       } else {
          html += `<div class="alert alert-success border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #e8f5e9; color: #1b5e20; font-size: 0.85rem; padding: 12px 16px;">
-             <strong>📍 搜尋中心：</strong>您的 GPS 目前精準定位
+             <strong>${t.jsSearchCenter}</strong>${t.jsGpsExact}
            </div>`;
       }
 
-      // 如果有過濾尺寸，給予溫馨提示
       if (dims) {
          html += `<div class="alert alert-warning border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #fff8e1; color: #856404; font-size: 0.85rem; padding: 12px 16px;">
-             <strong>📦 尺寸過濾啟動：</strong>已為您剔除裝不下 ${dims.join('x')} cm 的機台，以及目前客滿的據點！
+             <strong>${t.jsFilterActive}</strong>
            </div>`;
       }
 
+      // 🌟 3. 先乖乖記錄真實排名 (1, 2, 3...)
       data.forEach((item, index) => item.originalRank = index + 1);
+      
+      // 🌟 4. 恢復「視覺互換」魔法：讓第 2 名排在最上面，變成 2, 1, 3, 4, 5
       if (data.length >= 2) { const temp = data[0]; data[0] = data[1]; data[1] = temp; }
 
       data.forEach((item, loopIndex) => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
-        const locationHtml = item.locationDesc ? `<p class="small mb-0 mt-2" style="color: #2e7d32; background-color: #e8f5e9; padding: 5px 8px; border-radius: 6px; display: inline-block;">💡 <b>位置：</b>${item.locationDesc}</p>` : '';
+        const locationHtml = item.locationDesc ? `<p class="small mb-0 mt-2" style="color: #2e7d32; background-color: #e8f5e9; padding: 5px 8px; border-radius: 6px; display: inline-block;">${t.jsLoc}${item.locationDesc}</p>` : '';
         let boxesHtml = ''; let hasBoxes = false;
         
         if (item.boxes && Object.keys(item.boxes).length > 0) {
@@ -530,40 +777,41 @@
               hasBoxes = true; 
               const remainColorClass = (remain === 0) ? 'text-danger' : 'text-success';
               let displaySize = size; const sizeParts = size.split('x');
-              
-              // 🌟 將格式從 [47 x 寬 x 高] 改為 [寬 * 高 * 47] 
               if (sizeParts.length === 2) { displaySize = `${parseInt(sizeParts[0], 10) / 10}*${parseInt(sizeParts[1], 10) / 10}*47`; }
-              
               boxesHtml += `<tr><td class="size-col">${displaySize}</td><td class="fw-bold">${total}</td><td class="fw-bold ${remainColorClass}">${remain}</td></tr>`;
             }
           }
         }
         
-        // 🌟 把原本的 "尺寸(cm)" 標題，改成 "寬*高*深"
-        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">寬*高*深(cm)</th><th>總數</th><th>剩餘</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : '<div class="small text-muted text-center mt-2">暫無資料</div>';
+        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">${t.jsSizeTh}</th><th>${t.jsTotalTh}</th><th>${t.jsRemainTh}</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : `<div class="small text-muted text-center mt-2">${t.jsNoData}</div>`;
         const cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
+
+        let distText = item.distanceText.replace('公里', 'km');
+        let durText = item.duration.replace('分鐘', t.jsMin);
+        let updatedText = (item.updateTime || t.jsNoData).replace('(絕對即時)', t.jsLive);
 
         html += `
           <div class="result-card" ${cardId}>
             <div class="d-flex justify-content-between">
               <div class="flex-grow-1 pe-2 d-flex flex-column">
                 <div>
-                  <span class="badge ${item.originalRank === 1 ? 'bg-danger' : 'bg-success'} mb-2">距離第 ${item.originalRank} 近</span>
+                  <span class="badge ${item.originalRank === 1 ? 'bg-danger' : 'bg-success'} mb-2">${t.jsTopX.replace('{X}', item.originalRank)}</span>
                   <h5 style="font-weight: 700;">${item.name}</h5>
-                  <p class="mb-1">🛵 路程：<span class="text-danger fw-bold">${item.distanceText}</span> (約 ${item.duration})</p>
+                  <p class="mb-1">${t.jsRoute}<span class="text-danger fw-bold">${distText}</span> (約 ${durText})</p>
                   <p class="small text-secondary mb-0">${item.address}</p>
                   ${locationHtml}
                 </div>
-                <div class="mt-auto pt-3 text-secondary" style="font-size: 0.75rem;">🕒 更新時間：${item.updateTime || '無資料'}</div>
+                <div class="mt-auto pt-3 text-secondary" style="font-size: 0.75rem;">${t.jsUpdated}${updatedText}</div>
               </div>
-              <div class="box-status flex-shrink-0 shadow-sm align-self-start"><div class="box-status-title">格位狀態</div>${tableHtml}</div>
+              <div class="box-status flex-shrink-0 shadow-sm align-self-start"><div class="box-status-title">${t.jsStatusTitle}</div>${tableHtml}</div>
             </div>
             <div class="row g-2 mt-2">
-              <div class="col-6"><button class="btn btn-outline-secondary w-100" onclick="copyText('${item.address}')">複製地址</button></div>
-              <div class="col-6"><a href="${mapUrl}" target="_blank" class="btn btn-primary w-100">開啟導航</a></div>
+              <div class="col-6"><button class="btn btn-outline-secondary w-100" onclick="copyText('${item.address}')">${t.jsCopy}</button></div>
+              <div class="col-6"><a href="${mapUrl}" target="_blank" class="btn btn-primary w-100">${t.jsNav}</a></div>
             </div>
           </div>
         `;
+        // 因為又互換了，廣告可以完美塞在「第 2 名(loop0)」與「第 1 名(loop1)」的下方
         if (loopIndex === 0) html += adBanners[0];
         else if (loopIndex === 1) html += adBanners[1];
       });
@@ -593,7 +841,7 @@
       textArea.value = text;
       document.body.appendChild(textArea);
       textArea.select();
-      try { document.execCommand('copy'); alert('✅ 地址已複製！'); } catch (err) {}
+      try { document.execCommand('copy'); alert(i18n[currentLang].jsCopied); } catch (err) {}
       document.body.removeChild(textArea);
     }
 
@@ -605,7 +853,8 @@
         const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'feedback', name: name, message: message }) });
         const result = await response.json();
         if (result.status === 'success') { alert('感謝您的回饋！'); bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide(); }
-      } catch (err) { alert('傳送失敗'); } finally { btn.disabled = false; btn.innerText = '送出回饋'; }
+        else throw new Error(result.message);
+      } catch (err) { alert('傳送失敗：' + err.message); } finally { btn.disabled = false; btn.innerText = '送出回饋'; }
     }
 
     function markSurveyDone() {}
@@ -614,7 +863,7 @@
       const role = document.querySelector('input[name="surveyRole"]:checked'), ux = document.querySelector('input[name="surveyUX"]:checked'), acc = document.querySelector('input[name="surveyAccuracy"]:checked');
       if (!role || !ux || !acc) return alert('請幫我們填寫完整問卷喔！');
       bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
-      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) });
+      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) }).catch(e => console.log(e));
     }
   </script>
 </body>
