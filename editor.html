@@ -19,7 +19,7 @@
     <!-- 頂部導覽列 -->
     <nav class="bg-gray-800 p-3 border-b border-gray-700 flex justify-between items-center h-14">
         <div class="flex items-center gap-4">
-            <h1 class="text-lg font-bold text-blue-400 hidden md:block">GAS Pro Editor</h1>
+            <h1 class="text-lg font-bold text-blue-400">GAS Pro Editor</h1>
             <div id="status" class="text-xs font-mono px-2 py-1 rounded bg-black text-gray-400">系統就緒</div>
         </div>
         <div class="flex gap-2">
@@ -30,7 +30,7 @@
 
     <div class="flex h-[calc(100vh-56px)]">
         <!-- 左側：檔案列表 -->
-        <aside class="w-48 bg-gray-800 border-r border-gray-700 flex flex-col">
+        <aside class="w-56 bg-gray-800 border-r border-gray-700 flex flex-col">
             <div class="p-2 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-700">檔案列表</div>
             <div id="fileList" class="flex-1 overflow-y-auto p-1">
                 <div class="text-center py-10 text-gray-600 text-xs">請先讀取專案</div>
@@ -40,7 +40,7 @@
         <!-- 右側：編輯區 -->
         <main class="flex-1 flex flex-col bg-gray-900">
             <div id="editor-tabs" class="bg-gray-800 flex overflow-x-auto text-xs border-b border-gray-700">
-                <!-- 檔案分頁標籤會出現在這 -->
+                <!-- 檔案標籤 -->
             </div>
             <div id="editor"></div>
         </main>
@@ -49,56 +49,50 @@
     <!-- 彈窗：專案管理器 -->
     <div id="projectModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 p-4">
         <div class="bg-gray-800 w-full max-w-2xl rounded-xl border border-gray-700 shadow-2xl overflow-hidden">
-            <div class="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-750">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
                 <h2 class="font-bold">專案管理器</h2>
                 <button onclick="toggleProjectManager()" class="text-gray-400 hover:text-white">✕</button>
             </div>
             <div class="p-4">
-                <!-- 新增專案表單 -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-6 bg-gray-900 p-3 rounded-lg border border-gray-700">
-                    <input type="text" id="newProjName" placeholder="專案名稱 (例: 抓地址系統)" class="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm outline-none">
+                    <input type="text" id="newProjName" placeholder="專案名稱" class="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm outline-none">
                     <input type="text" id="newProjId" placeholder="Script ID" class="bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm outline-none">
                     <button onclick="addProjectToList()" class="bg-blue-600 hover:bg-blue-500 rounded text-sm py-1.5 transition">新增專案</button>
                 </div>
                 
-                <div class="text-xs text-gray-500 mb-2 font-bold uppercase">我的專案清單</div>
-                <div id="projectList" class="max-h-64 overflow-y-auto space-y-2">
-                    <!-- 專案清單 -->
-                </div>
+                <div class="text-xs text-gray-500 mb-2 font-bold uppercase tracking-widest">我的專案清單</div>
+                <div id="projectList" class="max-h-64 overflow-y-auto space-y-2"></div>
 
                 <div class="mt-6 pt-4 border-t border-gray-700">
                     <label class="text-xs text-gray-500 block mb-1">中繼站 Web App 網址</label>
-                    <input type="text" id="backendUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-xs outline-none focus:ring-1 focus:ring-blue-500">
+                    <input type="text" id="backendUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-xs outline-none">
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 初始化變數 ---
         let editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.session.setMode("ace/mode/javascript");
         
-        let currentFiles = []; // 目前專案的所有檔案
-        let activeFileId = null; // 目前正在編輯的檔案 ID
+        let currentFiles = []; 
+        let activeFileId = null; 
         let currentScriptId = "";
         let myProjects = JSON.parse(localStorage.getItem('my_gas_projects') || '[]');
 
-        // 初始化載入
         document.getElementById('backendUrl').value = localStorage.getItem('gas_backend') || '';
         renderProjectList();
 
-        // --- 核心功能 ---
-
         async function loadProject(id, name) {
             const backend = document.getElementById('backendUrl').value.trim();
-            if(!backend) return alert("請先在管理專案中填寫中繼站網址");
+            if(!backend) return alert("請先填寫中繼站網址");
             
             localStorage.setItem('gas_backend', backend);
             currentScriptId = id;
+            currentFiles = []; // 清空舊資料
             toggleProjectManager(false);
-            log(`正在連線專案: ${name}...`, "text-blue-400");
+            log(`連線中: ${name}...`, "text-blue-400");
 
             try {
                 const resp = await fetch(`${backend}?scriptId=${id}`);
@@ -111,12 +105,12 @@
 
                 currentFiles = data.files;
                 renderFileList();
-                // 預設開啟第一個檔案
-                openFile(currentFiles[0].name);
-                log(`已進入專案: ${name}`, "text-green-400");
+                // 優先開啟 Code.gs，否則開第一個
+                const defaultFile = currentFiles.find(f => f.name === 'Code') || currentFiles[0];
+                openFile(defaultFile.name);
+                log(`已載入專案: ${name}`, "text-green-400");
             } catch (err) {
-                log(`通訊失敗`, "text-red-400");
-                alert("無法連線，請檢查中繼站網址或權限設定。");
+                log(`連線失敗`, "text-red-400");
             }
         }
 
@@ -124,7 +118,6 @@
             const file = currentFiles.find(f => f.name === fileName);
             if(!file) return;
 
-            // 儲存當前檔案內容回陣列 (如果是切換的話)
             if(activeFileId) {
                 const oldFile = currentFiles.find(f => f.name === activeFileId);
                 if(oldFile) oldFile.source = editor.getValue();
@@ -133,67 +126,63 @@
             activeFileId = fileName;
             editor.setValue(file.source, -1);
             
-            // 設定語法高亮
-            if (file.type === 'HTML') {
-                editor.session.setMode("ace/mode/html");
-            } else {
-                editor.session.setMode("ace/mode/javascript");
-            }
+            if (file.type === 'HTML') editor.session.setMode("ace/mode/html");
+            else if (file.type === 'JSON') editor.session.setMode("ace/mode/json");
+            else editor.session.setMode("ace/mode/javascript");
 
-            renderFileList(); // 刷新選中狀態
+            renderFileList();
         }
 
         async function saveProject() {
             const backend = document.getElementById('backendUrl').value.trim();
             if(!currentFiles.length) return alert("請先讀取專案");
 
-            // 同步當前編輯器內容到記憶體
             const currentFile = currentFiles.find(f => f.name === activeFileId);
             if(currentFile) currentFile.source = editor.getValue();
 
-            log("正在同步至雲端...", "text-yellow-400");
+            log("儲存中...", "text-yellow-400");
 
             try {
                 await fetch(backend, {
                     method: 'POST',
                     mode: 'no-cors',
-                    body: JSON.stringify({
-                        scriptId: currentScriptId,
-                        files: currentFiles
-                    })
+                    body: JSON.stringify({ scriptId: currentScriptId, files: currentFiles })
                 });
-                log("同步指令已發送", "text-green-400");
-                setTimeout(() => log(`已就緒 (專案: ${currentScriptId.substring(0,8)}...)`, "text-gray-400"), 3000);
+                log("已送出儲存指令", "text-green-400");
             } catch (err) {
-                log("同步失敗", "text-red-400");
+                log("儲存失敗", "text-red-400");
             }
         }
 
-        // --- UI 渲染功能 ---
-
         function renderFileList() {
             const listEl = document.getElementById('fileList');
-            listEl.innerHTML = currentFiles.map(f => `
-                <div onclick="openFile('${f.name}')" class="sidebar-item cursor-pointer px-3 py-2 text-sm flex items-center gap-2 transition ${activeFileId === f.name ? 'active text-blue-400' : 'text-gray-400'}">
-                    <span class="opacity-50">${f.type === 'HTML' ? '🌐' : '📜'}</span>
-                    <span class="truncate">${f.name}${f.type === 'HTML' ? '.html' : '.gs'}</span>
-                </div>
-            `).join('');
+            listEl.innerHTML = currentFiles.map(f => {
+                let ext = ".gs";
+                let icon = "📜";
+                if(f.type === 'HTML') { ext = ".html"; icon = "🌐"; }
+                if(f.type === 'JSON') { ext = ".json"; icon = "⚙️"; }
+                
+                return `
+                <div onclick="openFile('${f.name}')" class="sidebar-item cursor-pointer px-3 py-2 text-sm flex items-center gap-2 transition ${activeFileId === f.name ? 'active text-blue-400 bg-blue-900/20' : 'text-gray-400'}">
+                    <span>${icon}</span>
+                    <span class="truncate">${f.name}${ext}</span>
+                </div>`;
+            }).join('');
         }
 
         function renderProjectList() {
             const listEl = document.getElementById('projectList');
             if(myProjects.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-4 text-gray-600 text-sm italic">尚無儲存專案</div>`;
+                listEl.innerHTML = `<div class="text-center py-4 text-gray-600 text-sm italic">尚無專案</div>`;
                 return;
             }
             listEl.innerHTML = myProjects.map((p, index) => `
-                <div class="flex items-center gap-2 bg-gray-700/50 p-2 rounded group">
+                <div class="flex items-center gap-2 bg-gray-900/50 p-2 rounded border border-gray-700">
                     <div class="flex-1 cursor-pointer" onclick="loadProject('${p.id}', '${p.name}')">
-                        <div class="text-sm font-bold text-blue-300 group-hover:text-blue-100">${p.name}</div>
-                        <div class="text-[10px] text-gray-500 font-mono truncate">${p.id}</div>
+                        <div class="text-sm font-bold text-blue-300">${p.name}</div>
+                        <div class="text-[10px] text-gray-500 font-mono">${p.id}</div>
                     </div>
-                    <button onclick="deleteProject(${index})" class="text-gray-600 hover:text-red-400 px-2 text-lg">✕</button>
+                    <button onclick="deleteProject(${index})" class="text-gray-500 hover:text-red-400 px-2 text-lg">✕</button>
                 </div>
             `).join('');
         }
@@ -201,8 +190,7 @@
         function addProjectToList() {
             const name = document.getElementById('newProjName').value.trim();
             const id = document.getElementById('newProjId').value.trim();
-            if(!name || !id) return alert("請輸入完整資訊");
-            
+            if(!name || !id) return alert("資訊不完整");
             myProjects.push({ name, id });
             localStorage.setItem('my_gas_projects', JSON.stringify(myProjects));
             renderProjectList();
@@ -211,7 +199,7 @@
         }
 
         function deleteProject(index) {
-            if(!confirm("確定要刪除此專案記錄嗎？")) return;
+            if(!confirm("刪除此紀錄？")) return;
             myProjects.splice(index, 1);
             localStorage.setItem('my_gas_projects', JSON.stringify(myProjects));
             renderProjectList();
@@ -221,11 +209,7 @@
             const modal = document.getElementById('projectModal');
             if (show === undefined) modal.classList.toggle('hidden');
             else show ? modal.classList.remove('hidden') : modal.classList.add('hidden');
-            if (!modal.classList.contains('hidden')) {
-                modal.style.display = 'flex';
-            } else {
-                modal.style.display = 'none';
-            }
+            modal.style.display = modal.classList.contains('hidden') ? 'none' : 'flex';
         }
 
         function log(msg, cls) {
