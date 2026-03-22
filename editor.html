@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAS 遠端開發工作站</title>
+    <!-- 引入 Ace Editor 提升開發體驗 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.4/ace.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #editor { width: 100%; height: calc(100vh - 160px); border-radius: 8px; font-size: 14px; }
+        .loading { display: none; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans">
+
+    <nav class="bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-blue-400">GAS 遠端開發站</h1>
+        <div class="flex gap-2">
+            <input type="password" id="apiSecret" placeholder="中繼站密鑰(選填)" class="bg-gray-700 border border-gray-600 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="loadProject()" class="bg-blue-600 hover:bg-blue-500 px-4 py-1 rounded text-sm transition">讀取專案</button>
+            <button onclick="saveProject()" class="bg-green-600 hover:bg-green-500 px-4 py-1 rounded text-sm transition">儲存變更</button>
+        </div>
+    </nav>
+
+    <div class="p-4">
+        <div class="mb-4 flex flex-wrap gap-4 items-center">
+            <div class="flex-1 min-w-[300px]">
+                <label class="text-xs text-gray-400 block mb-1">目標 Script ID</label>
+                <input type="text" id="scriptId" placeholder="請貼上 GAS 專案 ID" class="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 focus:outline-none">
+            </div>
+            <div id="status" class="text-sm text-gray-400">等待操作...</div>
+        </div>
+
+        <div id="editor"></div>
+    </div>
+
+    <script>
+        // --- 設定區 ---
+        // 請將下方網址替換成你在第一步部署得到的 Web App 網址
+        const BACKEND_URL = "你的_GAS_WEB_APP_網址"; 
+        
+        // 初始化編輯器
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/javascript");
+        
+        let currentFiles = [];
+
+        async function loadProject() {
+            const scriptId = document.getElementById('scriptId').value;
+            if(!scriptId) return alert("請輸入 Script ID");
+            
+            setStatus("正在從 Google 讀取代碼...", "text-blue-400");
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}?scriptId=${scriptId}`);
+                const data = await response.json();
+                currentFiles = data.files;
+                
+                // 尋找主要的 Code.gs (名稱通常是 Code)
+                const mainFile = currentFiles.find(f => f.name === 'Code') || currentFiles[0];
+                editor.setValue(mainFile.source, -1);
+                
+                setStatus(`已載入檔案: ${mainFile.name}.gs`, "text-green-400");
+            } catch (err) {
+                setStatus("讀取失敗，請檢查網址或權限", "text-red-400");
+                console.error(err);
+            }
+        }
+
+        async function saveProject() {
+            const scriptId = document.getElementById('scriptId').value;
+            const newCode = editor.getValue();
+            
+            if(!currentFiles.length) return alert("請先讀取專案");
+
+            setStatus("正在同步至雲端...", "text-yellow-400");
+
+            // 更新記憶體中的檔案內容
+            const fileIndex = currentFiles.findIndex(f => f.name === 'Code') || 0;
+            currentFiles[fileIndex].source = newCode;
+
+            try {
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // 由於 GAS 的 CORS 限制，使用 no-cors
+                    body: JSON.stringify({
+                        scriptId: scriptId,
+                        files: currentFiles
+                    })
+                });
+                
+                // 由於 no-cors 無法讀取內容，我們預設它是成功的，或在 2 秒後檢查
+                setStatus("指令已送出！(請於 3 秒後檢查)", "text-green-400");
+            } catch (err) {
+                setStatus("儲存請求發送失敗", "text-red-400");
+            }
+        }
+
+        function setStatus(msg, colorClass) {
+            const statusEl = document.getElementById('status');
+            statusEl.innerText = msg;
+            statusEl.className = `text-sm ${colorClass}`;
+        }
+    </script>
+</body>
+</html>
