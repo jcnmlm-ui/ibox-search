@@ -14,14 +14,22 @@
         .modal-overlay.active { display: flex; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+        .dirty-dot::after { content: ' •'; color: #ef4444; font-weight: bold; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans overflow-hidden">
 
     <nav class="bg-gray-800 p-3 border-b border-gray-700 flex justify-between items-center h-14">
-        <div class="flex items-center gap-4">
-            <h1 class="text-lg font-bold text-blue-400">GAS Pro Editor</h1>
-            <div id="status" class="text-xs font-mono px-2 py-1 rounded bg-black text-gray-400">系統就緒</div>
+        <div class="flex items-center gap-3">
+            <h1 class="text-lg font-bold text-blue-400 mr-2">GAS Pro Editor</h1>
+            <!-- 狀態顯示 -->
+            <div id="status" class="text-[10px] font-mono px-2 py-0.5 rounded bg-black text-gray-400 whitespace-nowrap">系統就緒</div>
+            <!-- 專案名稱顯示區 (新增) -->
+            <div id="project-display" class="hidden flex items-center gap-2 px-3 py-1 bg-gray-700/50 rounded-full border border-gray-600 shadow-inner">
+                <span class="text-blue-300 text-xs">📂</span>
+                <span id="current-project-name" class="text-xs font-bold text-gray-200">未選取專案</span>
+                <span id="unsaved-badge" class="hidden text-[9px] bg-red-900/80 text-red-200 px-1.5 py-0.5 rounded ml-1 animate-pulse">待儲存</span>
+            </div>
         </div>
         <div class="flex gap-2">
             <button onclick="saveProject()" class="bg-green-600 hover:bg-green-500 px-3 py-1.5 rounded text-sm font-bold transition shadow-lg">儲存</button>
@@ -33,9 +41,12 @@
     <div class="flex h-[calc(100vh-56px)]">
         <!-- 左側：檔案列表 -->
         <aside class="w-48 bg-gray-800 border-r border-gray-700 flex flex-col">
-            <div class="p-2 text-xs font-bold text-gray-500 border-b border-gray-700">檔案列表</div>
+            <div class="p-2 text-xs font-bold text-gray-500 border-b border-gray-700 flex justify-between items-center">
+                <span>檔案列表</span>
+                <span id="file-count" class="bg-gray-700 px-1 rounded text-[9px]">0</span>
+            </div>
             <div id="fileList" class="flex-1 overflow-y-auto">
-                <div class="p-4 text-xs text-gray-600 text-center">尚未讀取</div>
+                <div class="p-4 text-xs text-gray-600 text-center italic">等待載入...</div>
             </div>
         </aside>
 
@@ -46,16 +57,19 @@
 
         <!-- 右側：AI 助理 -->
         <aside class="w-80 bg-gray-800 flex flex-col">
-            <div class="p-2 text-xs font-bold text-purple-400 border-b border-gray-700 bg-gray-750">GEMINI AI 助理</div>
+            <div class="p-2 text-xs font-bold text-purple-400 border-b border-gray-700 bg-gray-750 flex justify-between">
+                <span>GEMINI AI 助理</span>
+                <button onclick="document.getElementById('ai-chat').innerHTML=''" class="text-[10px] text-gray-500 hover:text-white">清空對話</button>
+            </div>
             <div id="ai-chat" class="flex-1 overflow-y-auto p-3 space-y-3 text-xs scroll-smooth"></div>
             <div class="p-3 border-t border-gray-700 bg-gray-900">
                 <textarea id="ai-input" placeholder="詢問關於代碼的問題..." class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-xs outline-none focus:ring-1 focus:ring-purple-500 h-20 resize-none"></textarea>
-                <button onclick="askAI()" id="ai-btn" class="w-full mt-2 bg-purple-600 hover:bg-purple-500 py-2 rounded text-xs font-bold transition">詢問 AI</button>
+                <button onclick="askAI()" id="ai-btn" class="w-full mt-2 bg-purple-600 hover:bg-purple-500 py-2 rounded text-xs font-bold transition shadow-md">詢問 AI</button>
             </div>
         </aside>
     </div>
 
-    <!-- 彈窗：專案管理器 (修正版：已補全所有欄位) -->
+    <!-- 彈窗：專案管理器 -->
     <div id="projectModal" class="modal-overlay fixed inset-0 bg-black/80 p-4">
         <div class="bg-gray-800 w-full max-w-lg rounded-xl border border-gray-700 shadow-2xl overflow-hidden">
             <div class="p-4 border-b border-gray-700 flex justify-between items-center">
@@ -63,7 +77,6 @@
                 <button onclick="toggleProjectManager(false)" class="text-gray-400 hover:text-white text-xl">✕</button>
             </div>
             <div class="p-4">
-                <!-- 新增專案表單 -->
                 <div class="grid grid-cols-1 gap-2 mb-6 bg-gray-900 p-3 rounded-lg border border-gray-700">
                     <input type="text" id="newProjName" placeholder="專案顯示名稱" class="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm outline-none">
                     <input type="text" id="newProjId" placeholder="目標專案 Script ID" class="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm outline-none">
@@ -71,9 +84,7 @@
                 </div>
                 
                 <div class="text-xs text-gray-500 mb-2 font-bold uppercase tracking-widest">我的專案清單</div>
-                <div id="projectList" class="max-h-60 overflow-y-auto space-y-2">
-                    <!-- 清單內容由 JS 動態生成 -->
-                </div>
+                <div id="projectList" class="max-h-60 overflow-y-auto space-y-2"></div>
 
                 <div class="mt-6 pt-4 border-t border-gray-700">
                     <label class="text-[10px] text-gray-500 block mb-1">中繼站 Web App 網址 (/exec)</label>
@@ -84,47 +95,64 @@
     </div>
 
     <script>
-        // 初始化編輯器
         let editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.session.setMode("ace/mode/javascript");
         
-        let currentFiles = [], activeFileId = null, currentScriptId = "";
+        let currentFiles = [], activeFileId = null, currentScriptId = "", isDirty = false;
         let myProjects = JSON.parse(localStorage.getItem('my_gas_projects') || '[]');
 
-        // 初始化設定 (解決報錯的關鍵)
         window.onload = function() {
             const backendInput = document.getElementById('backendUrl');
-            if (backendInput) {
-                backendInput.value = localStorage.getItem('gas_backend') || '';
-            }
+            if (backendInput) backendInput.value = localStorage.getItem('gas_backend') || '';
             renderProjectList();
         };
 
+        // 監聽變動以顯示「待儲存」
+        editor.on("input", () => {
+            if (!isDirty) {
+                isDirty = true;
+                document.getElementById('unsaved-badge').classList.remove('hidden');
+            }
+        });
+
         // 讀取專案
         async function loadProject(id, name) {
+            if (isDirty && !confirm("目前的變更尚未儲存，確定要切換專案嗎？")) return;
+
             const backend = document.getElementById('backendUrl').value.trim();
             if(!backend) return alert("請先填寫中繼站網址");
             
             localStorage.setItem('gas_backend', backend);
             currentScriptId = id;
-            log(`連線至: ${name}`, "text-blue-400");
+            
+            // UI 重置
+            log(`讀取中: ${name}`, "text-blue-400");
+            document.getElementById('fileList').innerHTML = `<div class="p-4 text-xs animate-pulse text-blue-400">連線中...</div>`;
+            
+            // 顯示專案名稱 (新增)
+            const projDisplay = document.getElementById('project-display');
+            const projName = document.getElementById('current-project-name');
+            projName.innerText = name;
+            projDisplay.classList.remove('hidden');
+            document.getElementById('unsaved-badge').classList.add('hidden');
+            isDirty = false;
 
             try {
                 const resp = await fetch(`${backend}?action=getFiles&scriptId=${id}`);
                 const data = await resp.json();
-                
                 if (data.error) throw new Error(data.error);
 
                 currentFiles = data.files;
+                document.getElementById('file-count').innerText = currentFiles.length;
                 renderFileList();
                 const defaultFile = currentFiles.find(f => f.name === 'Code') || currentFiles[0];
                 openFile(defaultFile.name);
                 log(`已就緒`, "text-green-400");
                 toggleProjectManager(false);
             } catch (err) {
-                log(`載入失敗: ${err.message}`, "text-red-400");
-                alert("讀取失敗，請確認 API 已啟用且中繼站網址正確。");
+                log(`載入失敗`, "text-red-400");
+                alert("讀取失敗：" + err.message);
             }
         }
 
@@ -157,6 +185,8 @@
                     body: JSON.stringify({ action: "save", scriptId: currentScriptId, files: currentFiles })
                 });
                 log("儲存成功", "text-green-400");
+                isDirty = false;
+                document.getElementById('unsaved-badge').classList.add('hidden');
             } catch (err) {
                 log("儲存失敗", "text-red-400");
             }
@@ -166,12 +196,10 @@
         async function deployNewVersion() {
             if(!currentScriptId) return alert("請先載入專案");
             if(!confirm("確定要將目前的代碼發布為新版本並更新 Web App 嗎？")) return;
-            
             const backend = document.getElementById('backendUrl').value.trim();
-            log("正在發布新版本...", "text-blue-400");
-            
+            log("部署中...", "text-blue-400");
             try {
-                await saveProject(); // 部署前自動存檔
+                await saveProject();
                 const resp = await fetch(backend, {
                     method: 'POST',
                     body: JSON.stringify({ action: "deploy", scriptId: currentScriptId })
@@ -179,49 +207,37 @@
                 const result = await resp.text();
                 log(result, "text-green-400");
                 alert(result);
-            } catch (err) {
-                log("部署失敗", "text-red-400");
-            }
+            } catch (err) { log("部署失敗", "text-red-400"); }
         }
 
-        // AI 助理功能
         async function askAI() {
             const backend = document.getElementById('backendUrl').value.trim();
             const input = document.getElementById('ai-input');
             const prompt = input.value.trim();
-            const chat = document.getElementById('ai-chat');
             if(!prompt || !backend) return;
-            
             const btn = document.getElementById('ai-btn');
             btn.disabled = true; btn.innerText = "思考中...";
-            
             addChatMessage("🙋‍♂️ 你", prompt, "bg-gray-700");
             input.value = "";
-
             try {
                 const resp = await fetch(backend, {
                     method: 'POST',
-                    body: JSON.stringify({ action: "askAI", prompt: prompt + "\n\n現有代碼參考：\n" + editor.getValue() })
+                    body: JSON.stringify({ action: "askAI", prompt: prompt + "\n\n目前的程式碼如下：\n" + editor.getValue() })
                 });
                 const text = await resp.text();
                 addChatMessage("🤖 Gemini", text, "bg-purple-900/30 border border-purple-800");
-            } catch (err) {
-                alert("AI 通訊失敗");
-            } finally {
-                btn.disabled = false; btn.innerText = "詢問 AI";
-            }
+            } catch (err) { alert("AI 通訊失敗"); } finally { btn.disabled = false; btn.innerText = "詢問 AI"; }
         }
 
         function addChatMessage(role, text, cls) {
             const chat = document.getElementById('ai-chat');
             const div = document.createElement('div');
-            div.className = `${cls} p-2 rounded leading-relaxed`;
+            div.className = `${cls} p-2 rounded leading-relaxed border border-gray-700/50`;
             div.innerHTML = `<b>${role}:</b><br>${text.replace(/\n/g, '<br>')}`;
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
         }
 
-        // 管理器與 UI 輔助函式
         function renderFileList() {
             document.getElementById('fileList').innerHTML = currentFiles.map(f => `
                 <div onclick="openFile('${f.name}')" class="sidebar-item cursor-pointer px-4 py-2 text-xs transition ${activeFileId === f.name ? 'active text-blue-400 bg-blue-900/10' : 'text-gray-400'}">
@@ -231,12 +247,12 @@
 
         function renderProjectList() {
             document.getElementById('projectList').innerHTML = myProjects.map((p, i) => `
-                <div class="flex items-center gap-2 bg-gray-900 p-2 rounded border border-gray-700">
+                <div class="flex items-center gap-2 bg-gray-900 p-2 rounded border border-gray-700 hover:border-blue-500/50 transition">
                     <div class="flex-1 cursor-pointer" onclick="loadProject('${p.id}', '${p.name}')">
                         <div class="text-xs font-bold text-blue-300">${p.name}</div>
                         <div class="text-[9px] text-gray-500 font-mono">${p.id}</div>
                     </div>
-                    <button onclick="deleteProject(${i})" class="text-gray-600 hover:text-red-400">✕</button>
+                    <button onclick="deleteProject(${i})" class="text-gray-600 hover:text-red-400 px-1">✕</button>
                 </div>`).join('');
         }
 
@@ -259,14 +275,13 @@
 
         function toggleProjectManager(show) {
             const modal = document.getElementById('projectModal');
-            if (show) modal.classList.add('active');
-            else modal.classList.remove('active');
+            show ? modal.classList.add('active') : modal.classList.remove('active');
         }
 
         function log(msg, cls) {
             const el = document.getElementById('status');
             el.innerText = msg;
-            el.className = `text-xs font-mono px-2 py-1 rounded bg-black ${cls}`;
+            el.className = `text-[10px] font-mono px-2 py-0.5 rounded bg-black ${cls}`;
         }
     </script>
 </body>
