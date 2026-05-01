@@ -38,6 +38,7 @@
   }
   </script>
 
+  <!-- SEO FAQ 優化 -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -62,6 +63,27 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "提供郵政金融卡、悠遊卡、一卡通、icash 2.0及多種行動支付。"
+      }
+    }, {
+      "@type": "Question",
+      "name": "蝦皮、MOMO 可以寄到 i 郵箱嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。"
+      }
+    }, {
+      "@type": "Question",
+      "name": "如何使用ｉ郵箱取件？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。"
+      }
+    }, {
+      "@type": "Question",
+      "name": "重要！寄件注意事項！",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。一個儲格只能放置一個包裹且不可併箱，且不可寄禁止交寄物品。"
       }
     }]
   }
@@ -105,7 +127,7 @@
       position: fixed;
       width: 70px;
       height: 70px;
-      background: rgba(40, 167, 69, 0.85); /* 搭配您網站的綠色主題 */
+      background: rgba(40, 167, 69, 0.85);
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
       border-radius: 50%;
@@ -159,12 +181,11 @@
 
   <!-- 🍏 小白球按鈕 -->
   <div id="assistiveTouch" onmousedown="startDrag(event)" ontouchstart="startDrag(event)">
-    <div class="inner-text">去給個<br>讚👍</div>
+    <div class="inner-text">去給個<br>讚</div>
     <div class="close-touch" onclick="closeAssistiveTouch(event)">✕</div>
   </div>
 
   <div class="container">
-    <!-- 語言切換按鈕 (向右對齊) -->
     <div class="d-flex justify-content-end mb-2">
       <button class="lang-toggle shadow-sm" onclick="toggleLanguage()">🌐 EN / 中文</button>
     </div>
@@ -336,7 +357,7 @@
             </div>
             <div class="accordion-item">
               <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" data-i18n="faq6Q">重要！寄件注意事項！</button></h2>
-              <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq6A">1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href="https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348" target="_blank" rel="noopener" class="text-decoration-none text-primary me-2">(參考網址)</a><br>4. 一個儲格只能放置一個包裹且不可併箱。<br>5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。</div></div>
+              <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq6A">1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href='https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348' target='_blank' rel='noopener' class='text-decoration-none text-primary me-2'>(參考網址)</a><br>4. 一個儲格只能放置一個包裹且不可併箱。<br>5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。</div></div>
             </div>
           </div>
         </div>
@@ -497,7 +518,8 @@
 
     const adBanners = [
       `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-960-240-01_0.jpg" alt="Ads" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`,
-      `<a href="https://lottery.post.gov.tw/post/internet/post_vote115/index.jsp" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-960-240-02_0.jpg" alt="Ads" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`
+      `<a href="https://lottery.post.gov.tw/post/internet/post_vote115/index.jsp" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-960-240-02_0.jpg" alt="Ads" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`,
+      `<a href="https://ezpost.post.gov.tw/" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-960-240-03_0.jpg" alt="Ads" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`
     ];
 
     const taiwanData = {"台北市":["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"],"新北市":["板橋區","三重區","中和區","永和區","新莊區","新店區","樹林區","鶯歌區","三峽區","淡水區","汐止區","瑞芳區","土城區","蘆洲區","五股區","泰山區","林口區","深坑區","石碇區","坪林區","三芝區","石門區","八里區","平溪區","雙溪區","貢寮區","金山區","萬里區","烏來區"],"桃園市":["桃園區","中壢區","大溪區","楊梅區","蘆竹區","大園區","龜山區","八德區","龍潭區","平鎮區","新屋區","觀音區","復興區"],"台中市":["中區","東區","南區","西區","北區","北屯區","西屯區","南屯區","太平區","大里區","霧峰區","烏日區","豐原區","后里區","石岡區","東勢區","和平區","新社區","潭子區","大雅區","神岡區","大肚區","沙鹿區","龍井區","梧棲區","清水區","大甲區","外埔區","大安區"],"台南市":["中西區","東區","南區","北區","安平區","安南區","永康區","歸仁區","新化區","左鎮區","玉井區","楠西區","南化區","仁德區","關廟區","龍崎區","官田區","麻豆區","佳里區","西港區","七股區","將軍區","學甲區","北門區","新營區","後壁區","白河區","東山區","六甲區","下營區","柳營區","鹽水區","善化區","大內區","山上區","新市區","安定區"],"高雄市":["新興區","前金區","苓雅區","鹽埕區","鼓山區","旗津區","前鎮區","三民區","楠梓區","小港區","左營區","仁武區","大社區","岡山區","路竹區","阿蓮區","田寮區","燕巢區","橋頭區","梓官區","彌陀區","永安區","湖內區","鳳山區","大寮區","林園區","鳥松區","大樹區","旗山區","美濃區","六龜區","內門區","杉林區","甲仙區","桃源區","那瑪夏區","茂林區"],"基隆市":["仁愛區","信義區","中正區","中山區","安樂區","暖暖區","七堵區"],"新竹市":["東區","北區","香山區"],"新竹縣":["竹北市","湖口鄉","新豐鄉","新埔鎮","關西鎮","芎林鄉","寶山鄉","竹東鎮","五峰鄉","橫山鄉","尖石鄉","北埔鄉","峨眉鄉"],"苗栗縣":["竹南鎮","頭份市","三灣鄉","南庄鄉","獅潭鄉","後龍鎮","通霄鎮","苑裡鎮","苗栗市","造橋鄉","頭屋鄉","公館鄉","大湖鄉","泰安鄉","銅鑼鄉","三義鄉","西湖鄉","卓蘭鎮"],"彰化縣":["彰化市","鹿港鎮","和美鎮","線西鄉","伸港鄉","福興鄉","秀水鄉","花壇鄉","芬園鄉","員林市","溪湖鎮","田中鎮","大村鄉","埔鹽鄉","埔心鄉","永靖鄉","社頭鄉","二水鄉","田尾鄉","埤頭鄉","芳苑鄉","二林鎮","大城鄉","竹塘鄉","溪州鄉"],"南投縣":["南投市","埔里鎮","草屯鎮","竹山鎮","集集鎮","名間鄉","鹿谷鄉","中寮鄉","魚池鄉","國姓鄉","水里鄉","信義鄉","仁愛鄉"],"雲林縣":["斗六市","斗南鎮","虎尾鎮","西螺鎮","土庫鎮","北港鎮","古坑鄉","大埤鄉","莿桐鄉","林內鄉","二崙鄉","崙背鄉","麥寮鄉","東勢鄉","褒忠鄉","台西鄉","元長鄉","四湖鄉","口湖鄉","水林鄉"],"嘉義市":["東區","西區"],"嘉義縣":["太保市","朴子市","布袋鎮","大林鎮","民雄鄉","溪口鄉","新港鄉","六腳鄉","東石鄉","義竹鄉","鹿草鄉","水上鄉","中埔鄉","竹崎鄉","梅山鄉","番路鄉","大埔鄉","阿里山鄉"],"屏東縣":["屏東市","三地門鄉","霧台鄉","瑪家鄉","九如鄉","里港鄉","高樹鄉","鹽埔鄉","長治鄉","麟洛鄉","竹田鄉","內埔鄉","萬丹鄉","潮州鎮","泰武鄉","來義鄉","萬巒鄉","崁頂鄉","新埤鄉","南州鄉","林邊鄉","東港鎮","琉球鄉","佳冬鄉","新園鄉","枋寮鄉","枋山鄉","春日鄉","獅子鄉","車城鄉","牡丹鄉","恆春鎮","滿州鄉"],"宜蘭縣":["宜蘭市","羅東鎮","蘇澳鎮","頭城鎮","礁溪鄉","壯圍鄉","員山鄉","冬山鄉","五結鄉","三星鄉","大同鄉","南澳鄉"],"花蓮縣":["花蓮市","鳳林鎮","玉里鎮","新城鄉","吉安鄉","壽豐鄉","光復鄉","豐濱鄉","瑞穗鄉","萬榮鄉","卓溪鄉","富里鄉","秀林鄉"],"台東縣":["台東市","成功鎮","關山鎮","卑南鄉","鹿野鄉","池上鄉","東河鄉","長濱鄉","太麻里鄉","大武鄉","綠島鄉","海端鄉","延平鄉","金峰鄉","達仁鄉","蘭嶼鄉"],"澎湖縣":["馬公市","湖西鄉","白沙鄉","西嶼鄉","望安鄉","七美鄉"],"金門縣":["金城鎮","金湖鎮","金沙鎮","金寧鄉","烈嶼鄉","烏坵鄉"],"連江縣":["南竿鄉","北竿鄉","莒光鄉","東引鄉"]};
@@ -517,13 +539,14 @@
         faq3Q: "如何使用ｉ郵箱取件？", faq3A: "郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。",
         faq4Q: "什麼是ｉ郵箱？", faq4A: "ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。可於網路購物後遞送至ｉ郵箱，在領件時間內至指定地點取件。",
         faq5Q: "如何支付寄件郵資？", faq5A: "目前提供郵政金融卡、悠遊卡、一卡通及icash 2.0、iPASS MONEY、悠遊付、街口支付等多種行動支付。",
+        faq6Q: "重要！寄件注意事項！", faq6A: "1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href='https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348' target='_blank' rel='noopener' class='text-decoration-none text-primary me-2'>(參考網址)</a><br>4. 一個儲格只能放置一個包裹且不可併箱。<br>5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。",
         footer1: "💡 關於 i 郵箱查找大師：", footer2: "✅ 資料來源：中華郵政 Open Data",
         jsAlertAddress: "請至少選擇縣市並填寫詳細地址喔！\n詳細地址請務必包含門牌號碼！",
         jsAlertGPS: "無法取得定位，請改用手動輸入。", jsSearchCenter: "📍 搜尋中心：",
         jsGpsExact: "您的 GPS 目前精準定位", jsHint: "💡 若結果過遠或不準確，建議鄉鎮市區改選「全區 / 不指定」再試一次！",
         jsFilterActive: "📦 尺寸過濾啟動：已為您剔除裝不下或目前客滿的機台！",
         jsTopX: "距離第 {X} 近", jsRoute: "🛵 路程：", jsMin: "分鐘", jsLoc: "💡 位置：", jsUpdated: "🕒 更新時間：",
-        jsLive: "(即時)", jsStatusTitle: "格位狀態", jsSizeTh: "寬*高*深(cm)", jsTotalTh: "總數", jsRemainTh: "剩餘",
+        jsLive: "(絕對即時)", jsStatusTitle: "格位狀態", jsSizeTh: "寬*高*深(cm)", jsTotalTh: "總數", jsRemainTh: "剩餘",
         jsNoData: "暫無資料", jsCopy: "複製地址", jsNav: "開啟導航", jsCopied: "✅ 地址已複製！"
       },
       en: {
@@ -540,6 +563,7 @@
         faq3Q: "How to pick up my parcel?", faq3A: "You will receive an SMS when it arrives. Go to the locker, select 'Pickup', and enter the last 3 digits of your phone number and pickup code.",
         faq4Q: "What is iBox?", faq4A: "iBox provides 24/7 self-service for picking up, sending, and returning parcels. You can have online shopping orders delivered directly to an iBox.",
         faq5Q: "How can I pay for postage?", faq5A: "Accepts Chunghwa Post ATM cards, EasyCard, iPASS, icash 2.0, and various mobile payments (JKO Pay, EasyWallet, etc.).",
+        faq6Q: "Important! Sending Precautions!", faq6A: "1. Only standard domestic parcels are allowed. Do not send 'letters' or 'first-time use convenience boxes/bags'.<br>2. iBoxes with 'Smart Mailboxes' accept ordinary/prompt/air mail.<br>3. Prohibited items are strictly forbidden. The sender bears full responsibility, and postage will not be refunded. <a href='https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348' target='_blank' rel='noopener' class='text-decoration-none text-primary me-2'>(Reference)</a><br>4. Only ONE parcel per locker. Combined boxes are not allowed.<br>5. Please read the 'Sending Reminders' carefully on the iBox screen before sending.",
         footer1: "💡 About Taiwan iBox Locator:", footer2: "✅ Data Source: Chunghwa Post Open Data",
         jsAlertAddress: "Please select a city and enter a detailed street address!",
         jsAlertGPS: "Failed to get location. Please type your address manually.", jsSearchCenter: "📍 Search Center: ",
@@ -568,7 +592,7 @@
     window.onload = function() {
       loadTotalSearches();
       const randomAdIndex = Math.floor(Math.random() * adBanners.length);
-      document.getElementById('bottomAd').innerHTML = adBanners[randomAdIndex];
+      document.getElementById('bottomAd').innerHTML = adBanners[randomAdIndex]; // 確保底部廣告還是會隨機出現
       const citySelect = document.getElementById('cityInput');
       for (let city in taiwanData) {
         let option = document.createElement('option');
@@ -688,7 +712,7 @@
       let html = '';
       const t = i18n[currentLang];
       
-      // 🌟 修正點：取前 5 筆並維持原始距離排序
+      // 🌟 取前 5 筆並維持原始距離排序 (不對調)
       let data = [...originalData].slice(0, 5);
 
       if (userAddressStr) {
@@ -728,7 +752,7 @@
 
         let distText = item.distanceText.replace('公里', 'km');
         let durText = item.duration.replace('分鐘', t.jsMin);
-        let updatedText = (item.updateTime || t.jsNoData).replace('(即時)', t.jsLive);
+        let updatedText = (item.updateTime || t.jsNoData).replace('(絕對即時)', t.jsLive);
 
         html += `
           <div class="result-card" ${cardId}>
@@ -751,13 +775,15 @@
             </div>
           </div>
         `;
+        // 🌟 這裡插入三個廣告
         if (loopIndex === 0) html += adBanners[0];
         else if (loopIndex === 1) html += adBanners[1];
+        else if (loopIndex === 2 && adBanners[2]) html += adBanners[2];
       });
       document.getElementById('results').innerHTML = html;
       
-      // 🌟 已將自動彈出的邏輯關閉，改由小白球觸發
-      // initSurveyObserver(); 
+      // 🌟 自動彈出問卷的功能已經關閉，由小白球按鈕來觸發
+      // initSurveyObserver();
     }
 
     let surveyShownThisSearch = false;
