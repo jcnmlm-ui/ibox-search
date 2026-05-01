@@ -100,12 +100,69 @@
     .seo-table-wrapper::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 8px; }
     .seo-table-wrapper::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
     
+    /* 🍏 小白球樣式 (Floating Ball) */
+    #assistiveTouch {
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      background: rgba(40, 167, 69, 0.85); /* 搭配您網站的綠色主題 */
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 50%;
+      right: 15px;
+      top: 75%;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-align: center;
+      line-height: 1.2;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      user-select: none;
+      transition: opacity 0.3s, transform 0.1s;
+      border: 2px solid rgba(255,255,255,0.4);
+    }
+    #assistiveTouch:active {
+      transform: scale(0.9);
+      background: rgba(33, 136, 56, 0.9);
+    }
+    #assistiveTouch .close-touch {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 22px;
+      height: 22px;
+      background: #ff4757;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    #assistiveTouch .inner-text {
+      padding: 5px;
+    }
+
     /* 語言控制樣式 */
     :lang(en) .zh-only { display: none !important; }
     :lang(zh-TW) .en-only { display: none !important; }
   </style>
 </head>
 <body>
+
+  <!-- 🍏 小白球按鈕 -->
+  <div id="assistiveTouch" onmousedown="startDrag(event)" ontouchstart="startDrag(event)">
+    <div class="inner-text">去給個<br>讚👍</div>
+    <div class="close-touch" onclick="closeAssistiveTouch(event)">✕</div>
+  </div>
+
   <div class="container">
     <!-- 語言切換按鈕 (向右對齊) -->
     <div class="d-flex justify-content-end mb-2">
@@ -276,6 +333,10 @@
             <div class="accordion-item">
               <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" data-i18n="faq5Q">如何支付寄件郵資？</button></h2>
               <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq5A">目前提供郵政金融卡、悠遊卡、一卡通及icash 2.0、iPASS MONEY、悠遊付、街口支付等多種行動支付。</div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" data-i18n="faq6Q">重要！寄件注意事項！</button></h2>
+              <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq6A">1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href="https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348" target="_blank" rel="noopener" class="text-decoration-none text-primary me-2">(參考網址)</a><br>4. 一個儲格只能放置一個包裹且不可併箱。<br>5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。</div></div>
             </div>
           </div>
         </div>
@@ -462,7 +523,7 @@
         jsGpsExact: "您的 GPS 目前精準定位", jsHint: "💡 若結果過遠或不準確，建議鄉鎮市區改選「全區 / 不指定」再試一次！",
         jsFilterActive: "📦 尺寸過濾啟動：已為您剔除裝不下或目前客滿的機台！",
         jsTopX: "距離第 {X} 近", jsRoute: "🛵 路程：", jsMin: "分鐘", jsLoc: "💡 位置：", jsUpdated: "🕒 更新時間：",
-        jsLive: "(絕對即時)", jsStatusTitle: "格位狀態", jsSizeTh: "寬*高*深(cm)", jsTotalTh: "總數", jsRemainTh: "剩餘",
+        jsLive: "(即時)", jsStatusTitle: "格位狀態", jsSizeTh: "寬*高*深(cm)", jsTotalTh: "總數", jsRemainTh: "剩餘",
         jsNoData: "暫無資料", jsCopy: "複製地址", jsNav: "開啟導航", jsCopied: "✅ 地址已複製！"
       },
       en: {
@@ -667,7 +728,7 @@
 
         let distText = item.distanceText.replace('公里', 'km');
         let durText = item.duration.replace('分鐘', t.jsMin);
-        let updatedText = (item.updateTime || t.jsNoData).replace('(絕對即時)', t.jsLive);
+        let updatedText = (item.updateTime || t.jsNoData).replace('(即時)', t.jsLive);
 
         html += `
           <div class="result-card" ${cardId}>
@@ -694,7 +755,9 @@
         else if (loopIndex === 1) html += adBanners[1];
       });
       document.getElementById('results').innerHTML = html;
-      initSurveyObserver();
+      
+      // 🌟 已將自動彈出的邏輯關閉，改由小白球觸發
+      // initSurveyObserver(); 
     }
 
     let surveyShownThisSearch = false;
@@ -741,6 +804,84 @@
       if (!role || !ux || !acc) return alert('請填寫完整問卷！');
       bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
       fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) }).catch(e => console.log(e));
+    }
+
+    // 🍏 小白球拖曳與觸發邏輯 (AssistiveTouch Logic)
+    let isDragging = false;
+    let startX, startY, initialX, initialY;
+    let dragDistance = 0;
+
+    function startDrag(e) {
+      let ball = document.getElementById('assistiveTouch');
+      isDragging = true;
+      dragDistance = 0;
+      let clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+      let clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+      startX = clientX;
+      startY = clientY;
+      initialX = ball.offsetLeft;
+      initialY = ball.offsetTop;
+      
+      document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', drag, { passive: false });
+      document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', stopDrag);
+    }
+
+    function drag(e) {
+      if (!isDragging) return;
+      e.preventDefault(); // 防止手機拖拉時背景跟著滾動
+      let ball = document.getElementById('assistiveTouch');
+      let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+      let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+      
+      let dx = clientX - startX;
+      let dy = clientY - startY;
+      dragDistance += Math.abs(dx) + Math.abs(dy);
+
+      let newX = initialX + dx;
+      let newY = initialY + dy;
+
+      // 防止球跑出畫面邊界
+      newX = Math.max(0, Math.min(window.innerWidth - 70, newX));
+      newY = Math.max(0, Math.min(window.innerHeight - 70, newY));
+
+      ball.style.left = newX + 'px';
+      ball.style.top = newY + 'px';
+      ball.style.right = 'auto'; // 取消預設的 right，改用 left 控制位置
+    }
+
+    function stopDrag(e) {
+      isDragging = false;
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('mouseup', stopDrag);
+      document.removeEventListener('touchmove', drag);
+      document.removeEventListener('touchend', stopDrag);
+
+      let ball = document.getElementById('assistiveTouch');
+      let ballX = ball.offsetLeft;
+      let screenWidth = window.innerWidth;
+      
+      // 自動貼邊動畫邏輯
+      if (ballX + 35 < screenWidth / 2) {
+        ball.style.transition = 'left 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
+        ball.style.left = '10px';
+      } else {
+        ball.style.transition = 'left 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
+        ball.style.left = (screenWidth - 80) + 'px';
+      }
+
+      // 如果位移距離很小，判定為「點擊」並開啟問卷面板
+      if (dragDistance < 10) {
+        let myModal = new bootstrap.Modal(document.getElementById('surveyModal'));
+        myModal.show();
+      }
+      
+      // 復原 transition，讓下次拖拉保持流暢
+      setTimeout(() => { ball.style.transition = 'opacity 0.3s, transform 0.1s'; }, 300);
+    }
+
+    function closeAssistiveTouch(e) {
+      e.stopPropagation(); // 阻止事件冒泡觸發點擊問卷
+      document.getElementById('assistiveTouch').style.display = 'none';
     }
   </script>
 </body>
