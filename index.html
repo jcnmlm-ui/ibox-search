@@ -160,7 +160,7 @@
   <!-- 🍏 小白球按鈕 -->
   <div id="assistiveTouch" onmousedown="startDrag(event)" ontouchstart="startDrag(event)">
     <div class="inner-text" data-i18n="assistiveTouchText">去給個<br>讚👍</div>
-    <div class="close-touch" onclick="closeAssistiveTouch(event)">✕</div>
+    <div class="close-touch" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()" onclick="closeAssistiveTouch(event)">✕</div>
   </div>
 
   <div class="container">
@@ -791,7 +791,7 @@
         entries.forEach(entry => {
           if (entry.isIntersecting && !surveyShownThisSearch) {
             surveyShownThisSearch = true;
-            setTimeout(() => { new bootstrap.Modal(document.getElementById('surveyModal')).show(); }, 1000);
+            setTimeout(() => { bootstrap.Modal.getOrCreateInstance(document.getElementById('surveyModal')).show(); }, 1000);
             observer.unobserve(target);
           }
         });
@@ -897,8 +897,7 @@
 
       // 如果位移距離很小，判定為「點擊」並開啟問卷面板
       if (dragDistance < 10) {
-        let myModal = new bootstrap.Modal(document.getElementById('surveyModal'));
-        myModal.show();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('surveyModal')).show();
       }
       
       // 復原 transition，讓下次拖拉保持流暢
