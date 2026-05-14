@@ -150,6 +150,17 @@
       padding: 5px;
     }
 
+    /* 🌟 骨架屏閃爍動畫 (Skeleton Pulse) */
+    .skeleton-pulse {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.5s infinite linear;
+    }
+    @keyframes skeleton-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
     /* 語言控制樣式 */
     :lang(en) .zh-only { display: none !important; }
     :lang(zh-TW) .en-only { display: none !important; }
@@ -200,7 +211,7 @@
                   <span style="font-size: 1rem; margin-right: 5px;">📦</span>
                   <h6 class="card-title fw-bold mb-0 text-primary" style="font-size: 0.85rem;" data-i18n="measureTitle">寄件包裹預先測量 (選填)</h6>
                 </div>
-                <!-- 🌟 防呆機制：改用 onchange，不再強制修改輸入值 -->
+                <!-- 防呆機制：改用 onchange，不再強制修改輸入值 -->
                 <div class="input-group input-group-sm">
                   <span class="input-group-text bg-white text-secondary border-end-0" data-i18n="dimL">長</span>
                   <input type="number" id="dimL" class="form-control border-start-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)">
@@ -234,7 +245,8 @@
                  role="progressbar" style="width: 0%;">
             </div>
           </div>
-          <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;" data-i18n="loadingText">🚀 正在火速規劃最佳機車路徑...</p>
+          <!-- 這裡的文字會透過跑馬燈動態更新 -->
+          <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;" data-i18n="loadingText">🚀 正在火速連線中華郵政主機...</p>
         </div>
 
         <div id="results"></div>
@@ -511,7 +523,7 @@
         measureTitle: "寄件包裹預先測量 (選填)", measureDesc: "輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。",
         dimL: "長", dimW: "寬", dimH: "高", detailPl: "詳細地址 (必填，如：中正路1號)",
         searchBtn: "搜尋", gpsBtn: "📍 自動定位並搜尋附近",
-        loadingText: "🚀 正在火速規劃最佳機車路徑...", feedbackBtn: "💡 錯誤回報 / 意見回饋",
+        loadingText: "🚀 正在火速連線中華郵政主機...", feedbackBtn: "💡 錯誤回報 / 意見回饋",
         tableTitle: "📦 i 郵箱資費與尺寸總表", thGen: "櫃代", thType: "格型", thSize: "尺寸(寬*高*深)", thHome: "箱到宅", thBox: "箱到箱",
         ruleTitle: "⚠️ 寄件限制與注意事項", faqTitle: "❓ 常見問題 FAQ",
         faq1Q: "包裹可以在 i 郵箱放多久？", faq1A: "包裹送達後，提供 <strong>3 天 (72 小時)</strong>(含例假日)的待領期間。將於第4天早上8點前由郵局人員取出後轉郵局招領。",
@@ -531,9 +543,16 @@
         jsTopX: "距離第 {X} 近", jsRoute: "🛵 路程：", jsMin: "分鐘", jsLoc: "💡 位置：", jsUpdated: "🕒 更新時間：",
         jsLive: "(即時)", jsStatusTitle: "格位狀態", jsSizeTh: "寬*高*深(cm)", jsTotalTh: "總數", jsRemainTh: "剩餘",
         jsNoData: "暫無資料", jsCopy: "複製地址", jsNav: "開啟導航", jsCopied: "✅ 地址已複製！",
-        // 🌟 修改：依照要求更新尺寸防呆錯誤訊息
         jsDimMax: "超過單邊最長尺寸45公分",
-        jsDimSum: "長寬高加總不能超過105cm"
+        jsDimSum: "長寬高加總不能超過105cm",
+        // 🌟 新增：幽默跑馬燈文字 (繁體中文)
+        loadingSteps: [
+          "🚀 正在火速連線中華郵政主機...",
+          "📦 正在偷偷看哪些機台還沒客滿...",
+          "📏 拿著量尺比對您的包裹塞不塞得下...",
+          "🛵 正在幫您避開路上的紅綠燈...",
+          "✨ 找到隱藏的空位了！即將為您呈現..."
+        ]
       },
       en: {
         mainTitle: "🛵 Taiwan iBox Locator", statsPrefix: "🎉 Provided", statsSuffix: "best motorcycle routes",
@@ -541,7 +560,7 @@
         measureTitle: "Parcel Measurement (Optional)", measureDesc: "Enter L/W/H to filter out lockers that are too small or currently full.",
         dimL: "L", dimW: "W", dimH: "H", detailPl: "Detailed Address (e.g., No.1 Zhongzheng Rd.)",
         searchBtn: "Search", gpsBtn: "📍 Auto-Locate & Search Nearby",
-        loadingText: "🚀 Planning the best motorcycle route...", feedbackBtn: "💡 Feedback / Report Error",
+        loadingText: "🚀 Connecting to Chunghwa Post servers...", feedbackBtn: "💡 Feedback / Report Error",
         tableTitle: "📦 iBox Size & Pricing", thGen: "Gen", thType: "Type", thSize: "Size(W*H*D)", thHome: "To Home", thBox: "To iBox",
         ruleTitle: "⚠️ Rules & Restrictions", faqTitle: "❓ FAQ",
         faq1Q: "How long can a parcel stay in iBox?", faq1A: "Parcels must be picked up within <strong>3 days (72 hours)</strong>. Unclaimed items will be returned to the post office.",
@@ -561,14 +580,22 @@
         jsTopX: "Top {X} Closest", jsRoute: "🛵 Route: ", jsMin: "mins", jsLoc: "💡 Location: ", jsUpdated: "🕒 Updated: ",
         jsLive: "(Live)", jsStatusTitle: "Locker Status", jsSizeTh: "W*H*D(cm)", jsTotalTh: "Total", jsRemainTh: "Free",
         jsNoData: "No Data", jsCopy: "Copy Address", jsNav: "Navigate", jsCopied: "✅ Address copied!",
-        // 🌟 修改：尺寸防呆錯誤訊息
         jsDimMax: "Exceeds maximum single side length of 45 cm",
-        jsDimSum: "Total dimensions (L+W+H) cannot exceed 105 cm"
+        jsDimSum: "Total dimensions (L+W+H) cannot exceed 105 cm",
+        // 🌟 新增：幽默跑馬燈文字 (英文版)
+        loadingSteps: [
+          "🚀 Connecting to Chunghwa Post servers...",
+          "📦 Peeking at which lockers are not full yet...",
+          "📏 Measuring to make sure your parcel fits...",
+          "🛵 Calculating the best motorcycle routes...",
+          "✨ Hidden spots found! Displaying results shortly..."
+        ]
       }
     };
 
     let currentLang = 'zh';
     let lastSearchData = null;
+    let loadingInterval = null; // 🌟 新增：用來控制跑馬燈時間的變數
 
     function toggleLanguage() {
       currentLang = currentLang === 'zh' ? 'en' : 'zh';
@@ -591,7 +618,6 @@
 
     window.onload = function() {
       loadTotalSearches();
-      // 首頁載入時依然維持隨機顯示一則廣告
       const randomAdIndex = Math.floor(Math.random() * adBanners.length);
       document.getElementById('bottomAd').innerHTML = adBanners[randomAdIndex];
       
@@ -640,23 +666,62 @@
       const gpsBtn = document.getElementById('gpsBtn');
       if(gpsBtn) gpsBtn.disabled = isProcessing;
       const loader = document.getElementById('loader');
+
       if(isProcessing) {
         loader.style.display = 'block';
-        document.getElementById('results').innerHTML = '';
         document.getElementById('bottomAd').style.display = 'none'; 
         updateProgressBar(70);
+
+        // 🌟 1. 動態情境跑馬燈邏輯 (每秒切換文字)
+        const steps = i18n[currentLang].loadingSteps;
+        let stepIndex = 0;
+        const loaderText = document.getElementById('loaderText');
+        loaderText.innerText = steps[0]; 
+        
+        clearInterval(loadingInterval);
+        loadingInterval = setInterval(() => {
+          stepIndex++;
+          if (stepIndex < steps.length) {
+            loaderText.innerText = steps[stepIndex];
+          } else {
+            loaderText.innerText = steps[steps.length - 1]; // 停在最後一句
+          }
+        }, 1000);
+
+        // 🌟 2. 骨架屏 (Skeleton Screen) 渲染邏輯
+        let skeletonHtml = '';
+        for(let i=0; i<3; i++) { // 渲染 3 個假的骨架卡片讓畫面看起來很豐富
+          skeletonHtml += `
+            <div class="result-card" style="pointer-events: none;">
+              <div class="d-flex justify-content-between">
+                <div class="flex-grow-1 pe-2 d-flex flex-column w-100">
+                  <div class="skeleton-pulse" style="width: 50px; height: 22px; border-radius: 4px;"></div>
+                  <div class="skeleton-pulse" style="width: 60%; height: 24px; border-radius: 4px; margin-top: 10px;"></div>
+                  <div class="skeleton-pulse" style="width: 80%; height: 16px; border-radius: 4px; margin-top: 10px;"></div>
+                  <div class="skeleton-pulse" style="width: 50%; height: 16px; border-radius: 4px; margin-top: 6px;"></div>
+                </div>
+                <div class="box-status flex-shrink-0 align-self-start skeleton-pulse" style="border:none; min-height: 110px;"></div>
+              </div>
+              <div class="row g-2 mt-2">
+                <div class="col-6"><div class="skeleton-pulse" style="height: 38px; border-radius: 12px;"></div></div>
+                <div class="col-6"><div class="skeleton-pulse" style="height: 38px; border-radius: 12px;"></div></div>
+              </div>
+            </div>
+          `;
+        }
+        document.getElementById('results').innerHTML = skeletonHtml;
+
       } else {
         updateProgressBar(100);
+        clearInterval(loadingInterval); // 🌟 結束跑馬燈計時器
         setTimeout(() => { loader.style.display = 'none'; }, 300);
       }
     }
 
-    // 🌟 第一道防線：輸入完成後檢查尺寸並跳出提示 (不強制修改使用者的輸入)
     function checkDimLimit(el) {
       if (!el.value) return;
       let val = parseInt(el.value, 10);
       
-      // 防止輸入負數
       if (val < 0) {
         el.value = Math.abs(val);
         val = Math.abs(val);
@@ -666,17 +731,14 @@
       const w = parseInt(document.getElementById('dimW').value, 10) || 0;
       const h = parseInt(document.getElementById('dimH').value, 10) || 0;
       
-      // 檢查 1：單邊絕對不可超過 45
       if (val > 45) {
         alert(i18n[currentLang].jsDimMax);
       }
-      // 檢查 2：三邊總和絕對不可超過 105
       else if ((l + w + h) > 105) {
         alert(i18n[currentLang].jsDimSum);
       }
     }
 
-    // 🌟 第二道防線：按下搜尋按鈕時的最後把關
     function validateDims() {
       const lInput = document.getElementById('dimL').value;
       const wInput = document.getElementById('dimW').value;
@@ -686,17 +748,14 @@
       const w = parseInt(wInput, 10) || 0;
       const h = parseInt(hInput, 10) || 0;
 
-      // 只要有一邊大於 45，直接阻擋搜尋
       if (l > 45 || w > 45 || h > 45) {
         return { valid: false, error: i18n[currentLang].jsDimMax };
       }
 
-      // 只要總和大於 105，直接阻擋搜尋
       if ((l + w + h) > 105) {
         return { valid: false, error: i18n[currentLang].jsDimSum };
       }
 
-      // 必須三格都有填，才會把尺寸送去後端過濾
       if (l > 0 && w > 0 && h > 0) {
         return { valid: true, dims: [l, w, h] };
       }
@@ -743,7 +802,6 @@
       const city = document.getElementById('cityInput').value, district = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
       if (!city || !detail) return alert(i18n[currentLang].jsAlertAddress);
       
-      // 🌟 套用防呆檢查
       const dimCheck = validateDims();
       if (!dimCheck.valid) return alert(dimCheck.error);
 
@@ -751,7 +809,6 @@
     }
 
     function startSearchGPS() {
-      // 🌟 套用防呆檢查
       const dimCheck = validateDims();
       if (!dimCheck.valid) return alert(dimCheck.error);
 
@@ -769,10 +826,7 @@
       let html = '';
       const t = i18n[currentLang];
       
-      // 取前 5 筆並維持原始距離排序
       let data = [...originalData].slice(0, 5);
-
-      // 每次搜尋都會隨機洗牌廣告版面
       const shuffledAds = [...adBanners].sort(() => 0.5 - Math.random());
 
       if (userAddressStr) {
@@ -782,7 +836,6 @@
       }
       if (dims) html += `<div class="alert alert-warning border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #fff8e1; color: #856404; font-size: 0.85rem; padding: 12px 16px;"><strong>${t.jsFilterActive}</strong></div>`;
 
-      // 記錄排名 (按照距離 1, 2, 3...)
       data.forEach((item, index) => item.originalRank = index + 1);
 
       data.forEach((item, loopIndex) => {
@@ -836,7 +889,6 @@
           </div>
         `;
         
-        // 分別在第1筆、第2筆、第3筆(即第三和第四之間) 結果後插入已經洗牌的廣告
         if (loopIndex === 0 && shuffledAds.length > 0) html += shuffledAds[0];
         else if (loopIndex === 1 && shuffledAds.length > 1) html += shuffledAds[1];
         else if (loopIndex === 2 && shuffledAds.length > 2) html += shuffledAds[2];
@@ -853,7 +905,6 @@
         entries.forEach(entry => {
           if (entry.isIntersecting && !surveyShownThisSearch) {
             surveyShownThisSearch = true;
-            // 🌟 修復 Bug：使用 getOrCreateInstance 確保只建立一層黑底
             setTimeout(() => { bootstrap.Modal.getOrCreateInstance(document.getElementById('surveyModal')).show(); }, 1000);
             observer.unobserve(target);
           }
@@ -917,7 +968,7 @@
 
     function drag(e) {
       if (!isDragging) return;
-      e.preventDefault(); // 防止手機拖拉時背景跟著滾動
+      e.preventDefault(); 
       let ball = document.getElementById('assistiveTouch');
       let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
       let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
@@ -929,13 +980,12 @@
       let newX = initialX + dx;
       let newY = initialY + dy;
 
-      // 防止球跑出畫面邊界
       newX = Math.max(0, Math.min(window.innerWidth - 70, newX));
       newY = Math.max(0, Math.min(window.innerHeight - 70, newY));
 
       ball.style.left = newX + 'px';
       ball.style.top = newY + 'px';
-      ball.style.right = 'auto'; // 取消預設的 right，改用 left 控制位置
+      ball.style.right = 'auto'; 
     }
 
     function stopDrag(e) {
@@ -949,7 +999,6 @@
       let ballX = ball.offsetLeft;
       let screenWidth = window.innerWidth;
       
-      // 自動貼邊動畫邏輯
       if (ballX + 35 < screenWidth / 2) {
         ball.style.transition = 'left 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
         ball.style.left = '10px';
@@ -958,17 +1007,14 @@
         ball.style.left = (screenWidth - 80) + 'px';
       }
 
-      // 🌟 修復 Bug：使用 getOrCreateInstance 確保只建立一層黑底
       if (dragDistance < 10) {
         bootstrap.Modal.getOrCreateInstance(document.getElementById('surveyModal')).show();
       }
       
-      // 復原 transition，讓下次拖拉保持流暢
       setTimeout(() => { ball.style.transition = 'opacity 0.3s, transform 0.1s'; }, 300);
     }
 
     function closeAssistiveTouch(e) {
-      // 🌟 修復 Bug：加入 event.stopPropagation() 在 HTML 中，這裡只要隱藏就好
       document.getElementById('assistiveTouch').style.display = 'none';
     }
   </script>
