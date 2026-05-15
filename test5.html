@@ -105,7 +105,7 @@
       position: fixed;
       width: 70px;
       height: 70px;
-      background: rgba(40, 167, 69, 0.85); /* 搭配您網站的綠色主題 */
+      background: rgba(40, 167, 69, 0.85);
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
       border-radius: 50%;
@@ -150,6 +150,18 @@
       padding: 5px;
     }
 
+    /* 🌟 骨架屏閃爍動畫 (Skeleton Pulse) */
+    .skeleton-pulse {
+      background-color: #e2e3e5;
+      background-image: linear-gradient(90deg, #e2e3e5 25%, #ced4da 50%, #e2e3e5 75%);
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.5s infinite linear;
+    }
+    @keyframes skeleton-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
     /* 語言控制樣式 */
     :lang(en) .zh-only { display: none !important; }
     :lang(zh-TW) .en-only { display: none !important; }
@@ -158,40 +170,43 @@
 <body>
 
   <!-- 🍏 小白球按鈕 -->
-  <div id="assistiveTouch" onmousedown="startDrag(event)" ontouchstart="startDrag(event)">
+  <div id="assistiveTouch" onmousedown="startDrag(event)" ontouchstart="startDrag(event)" aria-label="Quick action button">
     <div class="inner-text" data-i18n="assistiveTouchText">去給個<br>讚👍</div>
-    <div class="close-touch" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()" onclick="closeAssistiveTouch(event)">✕</div>
+    <div class="close-touch" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()" onclick="closeAssistiveTouch(event)" aria-label="Close">✕</div>
   </div>
 
   <div class="container">
-    <!-- 🌟 修改：頂部功能列 (左邊分享按鈕，右邊語系切換) -->
-    <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
-      <button class="lang-toggle shadow-sm fw-bold" style="color: #0d6efd; border-color: #cfe2ff; background-color: #f8f9fa;" onclick="shareWebsite()">
-        <span data-i18n="shareWeb">📤 分享網站</span>
-      </button>
-      <button class="lang-toggle shadow-sm" onclick="toggleLanguage()">🌐 EN / 中文</button>
-    </div>
+    <!-- 🌟 SEO: 使用 <header> 標示網頁頭部資訊區塊 -->
+    <header>
+      <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+        <button class="lang-toggle shadow-sm fw-bold" style="color: #0d6efd; border-color: #cfe2ff; background-color: #f8f9fa;" onclick="shareWebsite()" aria-label="Share website">
+          <span data-i18n="shareWeb">📤 分享網站</span>
+        </button>
+        <button class="lang-toggle shadow-sm" onclick="toggleLanguage()" aria-label="Toggle language">🌐 EN / 中文</button>
+      </div>
 
-    <h1 class="text-center mb-2" style="font-weight: 700; font-size: 1.8rem;">
-      <span data-i18n="mainTitle">🛵 i 郵箱查找大師</span>
-    </h1>
-    
-    <div id="statsContainer" class="text-center mb-4">
-      <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
-        <span data-i18n="statsPrefix">🎉 累積已提供</span> <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> <span data-i18n="statsSuffix">次最佳機車路徑</span>
-      </span>
-    </div>
+      <h1 class="text-center mb-2" style="font-weight: 700; font-size: 1.8rem;">
+        <span data-i18n="mainTitle">🛵 i 郵箱查找大師</span>
+      </h1>
+      
+      <div id="statsContainer" class="text-center mb-4">
+        <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
+          <span data-i18n="statsPrefix">🎉 累積已提供</span> <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> <span data-i18n="statsSuffix">次最佳機車路徑</span>
+        </span>
+      </div>
+    </header>
 
     <div class="row g-lg-4 justify-content-center">
-      <div class="col-lg-7">
-        <div class="row g-2 mb-3">
+      <!-- 🌟 SEO: 使用 <main> 標示網頁核心操作與結果區塊 -->
+      <main class="col-lg-7">
+        <section class="row g-2 mb-3">
           <div class="col-6">
-            <select id="cityInput" class="form-select filter-input" onchange="updateDistricts()">
+            <select id="cityInput" class="form-select filter-input" onchange="updateDistricts()" aria-label="Select City">
               <option value="" data-i18n="selectCity">選擇縣市</option>
             </select>
           </div>
           <div class="col-6">
-            <select id="districtInput" class="form-select filter-input">
+            <select id="districtInput" class="form-select filter-input" aria-label="Select District">
               <option value="" data-i18n="selectDistrict">全區 / 不指定 (推薦)</option>
             </select>
           </div>
@@ -200,17 +215,17 @@
             <div class="card border-0 shadow-sm rounded-3 mb-1" style="background-color: #fff9e6;">
               <div class="card-body p-2 px-3">
                 <div class="d-flex align-items-center mb-2">
-                  <span style="font-size: 1rem; margin-right: 5px;">📦</span>
-                  <h6 class="card-title fw-bold mb-0 text-primary" style="font-size: 0.85rem;" data-i18n="measureTitle">寄件包裹預先測量 (選填)</h6>
+                  <span style="font-size: 1rem; margin-right: 5px;" aria-hidden="true">📦</span>
+                  <!-- 🌟 SEO: 將 h6 改為 h2 以符合標題層級，並透過 class 維持原有樣式 -->
+                  <h2 class="card-title fw-bold mb-0 text-primary h6" style="font-size: 0.85rem;" data-i18n="measureTitle">寄件包裹預先測量 (選填)</h2>
                 </div>
-                <!-- 防呆機制：使用 onchange 動態檢查與變色 -->
                 <div class="input-group input-group-sm">
                   <span class="input-group-text bg-white text-secondary border-end-0" data-i18n="dimL">長</span>
-                  <input type="number" id="dimL" class="form-control border-start-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)">
+                  <input type="number" id="dimL" class="form-control border-start-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Length">
                   <span class="input-group-text bg-white text-secondary border-end-0 border-start-0" data-i18n="dimW">寬</span>
-                  <input type="number" id="dimW" class="form-control border-start-0 border-end-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)">
+                  <input type="number" id="dimW" class="form-control border-start-0 border-end-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Width">
                   <span class="input-group-text bg-white text-secondary border-end-0 border-start-0" data-i18n="dimH">高</span>
-                  <input type="number" id="dimH" class="form-control border-start-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)">
+                  <input type="number" id="dimH" class="form-control border-start-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Height">
                 </div>
                 <div id="dimWarningBlock" class="alert alert-danger mt-2 mb-0 py-2 px-3 small fw-bold" style="display: none; border-radius: 8px;"></div>
                 <div class="form-text mt-1 text-muted" style="font-size: 0.7rem;" data-i18n="measureDesc">
@@ -222,26 +237,26 @@
 
           <div class="col-12">
             <div class="input-group search-group">
-              <input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)" data-i18n-placeholder="detailPl">
+              <input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)" data-i18n-placeholder="detailPl" aria-label="Detailed Address">
               <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn" data-i18n="searchBtn">搜尋</button>
             </div>
           </div>
-        </div>
+        </section>
 
         <button class="btn-gps shadow-sm" onclick="startSearchGPS()" id="gpsBtn">
           <span data-i18n="gpsBtn">📍 自動定位並搜尋附近</span>
         </button>
 
-        <div id="loader" class="text-center loading" style="margin-bottom: 25px;">
+        <div id="loader" class="text-center loading" style="margin-bottom: 25px;" aria-live="polite">
           <div class="progress shadow-sm mb-2">
             <div id="fakeProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
-                 role="progressbar" style="width: 0%;">
+                 role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
             </div>
           </div>
           <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;" data-i18n="loadingText">🚀 正在火速規劃最佳機車路徑...</p>
         </div>
 
-        <div id="results"></div>
+        <section id="results" aria-live="polite"></section>
         <div id="bottomAd" class="mt-4 mb-2"></div>
 
         <div class="text-center mt-3 mb-4">
@@ -249,11 +264,13 @@
             <span data-i18n="feedbackBtn">💡 錯誤回報 / 意見回饋</span>
           </button>
         </div>
-      </div> 
+      </main> 
       
-      <div class="col-lg-5">
-        <div class="side-card">
-          <h5 class="fw-bold mb-3 text-dark" data-i18n="tableTitle">📦 i 郵箱資費與尺寸總表</h5>
+      <!-- 🌟 SEO: 使用 <aside> 標示側邊附屬資訊區塊 -->
+      <aside class="col-lg-5">
+        <section class="side-card">
+          <!-- 🌟 SEO: 將 h5 改為 h2 以符合標題層級，並透過 h5 class 維持視覺大小 -->
+          <h2 class="fw-bold mb-3 text-dark h5" data-i18n="tableTitle">📦 i 郵箱資費與尺寸總表</h2>
           <div class="seo-table-wrapper table-responsive border rounded mb-3">
             <table class="table table-sm table-hover text-center align-middle mb-0" style="font-size: 0.75rem; white-space: nowrap;">
               <thead style="position: sticky; top: 0; z-index: 1;">
@@ -314,10 +331,11 @@
               <li><strong>Cash on Delivery:</strong> Under NT$ 6,000.</li>
             </ul>
           </div>
-        </div>
+        </section>
 
-        <div class="side-card">
-          <h5 class="fw-bold mb-3 text-dark" data-i18n="faqTitle">❓ 常見問題 FAQ</h5>
+        <section class="side-card">
+          <!-- 🌟 SEO: 將 h5 改為 h2 以符合標題層級，並透過 h5 class 維持視覺大小 -->
+          <h2 class="fw-bold mb-3 text-dark h5" data-i18n="faqTitle">❓ 常見問題 FAQ</h2>
           <div class="accordion accordion-flush" id="faqAccordion">
             <div class="accordion-item">
               <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" data-i18n="faq1Q">包裹可以在 i 郵箱放多久？</button></h2>
@@ -344,8 +362,8 @@
               <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq6A">1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href="https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348" target="_blank" rel="noopener" class="text-decoration-none text-primary me-2">(參考網址)</a><br>4. 一個儲格只能放置一個包裹且不可併箱。<br>5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。</div></div>
             </div>
           </div>
-        </div>
-      </div> 
+        </section>
+      </aside> 
     </div> 
 
     <!-- 意見回饋 Modal -->
@@ -466,8 +484,8 @@
       </div>
     </div>
 
-    <!-- 專業頁尾宣告 -->
-    <div class="footer-copy mt-4 mb-5">
+    <!-- 🌟 SEO: 使用 <footer> 標示頁尾區塊 -->
+    <footer class="footer-copy mt-4 mb-5">
       <div class="text-start text-muted mb-3 p-3 rounded" style="background-color: #eef2f7; font-size: 0.8rem; line-height: 1.6;">
         <strong data-i18n="footer1">💡 關於 i 郵箱查找大師：</strong><br>
         <span class="zh-only">提供全台 24 小時 <strong>i 郵箱 (iBox)</strong> 據點查詢、即時空格狀態（大、中、小格位），以及獨家的<strong>機車導航</strong>路線規劃。無論是在PChome、MOMO、東森購物等等網購取件，或是中華郵政國內包裹寄件、取件、ezPost 郵寄便，一鍵定位，就能馬上為您找到距離最近的 i 郵箱，省時又便利！</span>
@@ -489,7 +507,7 @@
         <span class="text-secondary">(本站非官方網站，位置資訊僅用於距離計算，不作他用)</span><br>
         <a href="#" class="text-decoration-none text-muted" style="text-decoration: underline !important;" data-bs-toggle="modal" data-bs-target="#privacyModal">隱私權聲明 / Privacy Policy</a>
       </div>
-    </div>
+    </footer>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -500,10 +518,11 @@
 
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
+    // 🌟 SEO: 優化圖片的 alt 屬性，加入更有意義的關鍵字
     const adBanners = [
-      `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-img-960-240-01_0.jpg" alt="Ads" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`,
-      `<a href="https://lottery.post.gov.tw/post/internet/post_vote115/index.jsp" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-img-960-240-05_0.jpg" alt="Ads" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`,
-      `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-img-960-240-04_0.jpg" alt="Ads" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`
+      `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-img-960-240-01_0.jpg" alt="中華郵政 i郵箱活動推廣" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`,
+      `<a href="https://lottery.post.gov.tw/post/internet/post_vote115/index.jsp" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-img-960-240-05_0.jpg" alt="中華郵政 i郵箱活動推廣" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`,
+      `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-img-960-240-04_0.jpg" alt="中華郵政 i郵箱活動推廣" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`
     ];
 
     const taiwanData = {"台北市":["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"],"新北市":["板橋區","三重區","中和區","永和區","新莊區","新店區","樹林區","鶯歌區","三峽區","淡水區","汐止區","瑞芳區","土城區","蘆洲區","五股區","泰山區","林口區","深坑區","石碇區","坪林區","三芝區","石門區","八里區","平溪區","雙溪區","貢寮區","金山區","萬里區","烏來區"],"桃園市":["桃園區","中壢區","大溪區","楊梅區","蘆竹區","大園區","龜山區","八德區","龍潭區","平鎮區","新屋區","觀音區","復興區"],"台中市":["中區","東區","南區","西區","北區","北屯區","西屯區","南屯區","太平區","大里區","霧峰區","烏日區","豐原區","后里區","石岡區","東勢區","和平區","新社區","潭子區","大雅區","神岡區","大肚區","沙鹿區","龍井區","梧棲區","清水區","大甲區","外埔區","大安區"],"台南市":["中西區","東區","南區","北區","安平區","安南區","永康區","歸仁區","新化區","左鎮區","玉井區","楠西區","南化區","仁德區","關廟區","龍崎區","官田區","麻豆區","佳里區","西港區","七股區","將軍區","學甲區","北門區","新營區","後壁區","白河區","東山區","六甲區","下營區","柳營區","鹽水區","善化區","大內區","山上區","新市區","安定區"],"高雄市":["新興區","前金區","苓雅區","鹽埕區","鼓山區","旗津區","前鎮區","三民區","楠梓區","小港區","左營區","仁武區","大社區","岡山區","路竹區","阿蓮區","田寮區","燕巢區","橋頭區","梓官區","彌陀區","永安區","湖內區","鳳山區","大寮區","林園區","鳥松區","大樹區","旗山區","美濃區","六龜區","內門區","杉林區","甲仙區","桃源區","那瑪夏區","茂林區"],"基隆市":["仁愛區","信義區","中正區","中山區","安樂區","暖暖區","七堵區"],"新竹市":["東區","北區","香山區"],"新竹縣":["竹北市","湖口鄉","新豐鄉","新埔鎮","關西鎮","芎林鄉","寶山鄉","竹東鎮","五峰鄉","橫山鄉","尖石鄉","北埔鄉","峨眉鄉"],"苗栗縣":["竹南鎮","頭份市","三灣鄉","南庄鄉","獅潭鄉","後龍鎮","通霄鎮","苑裡鎮","苗栗市","造橋鄉","頭屋鄉","公館鄉","大湖鄉","泰安鄉","銅鑼鄉","三義鄉","西湖鄉","卓蘭鎮"],"彰化縣":["彰化市","鹿港鎮","和美鎮","線西鄉","伸港鄉","福興鄉","秀水鄉","花壇鄉","芬園鄉","員林市","溪湖鎮","田中鎮","大村鄉","埔鹽鄉","埔心鄉","永靖鄉","社頭鄉","二水鄉","田尾鄉","埤頭鄉","芳苑鄉","二林鎮","大城鄉","竹塘鄉","溪州鄉"],"南投縣":["南投市","埔里鎮","草屯鎮","竹山鎮","集集鎮","名間鄉","鹿谷鄉","中寮鄉","魚池鄉","國姓鄉","水里鄉","信義鄉","仁愛鄉"],"雲林縣":["斗六市","斗南鎮","虎尾鎮","西螺鎮","土庫鎮","北港鎮","古坑鄉","大埤鄉","莿桐鄉","林內鄉","二崙鄉","崙背鄉","麥寮鄉","東勢鄉","褒忠鄉","台西鄉","元長鄉","四湖鄉","口湖鄉","水林鄉"],"嘉義市":["東區","西區"],"嘉義縣":["太保市","朴子市","布袋鎮","大林鎮","民雄鄉","溪口鄉","新港鄉","六腳鄉","東石鄉","義竹鄉","鹿草鄉","水上鄉","中埔鄉","竹崎鄉","梅山鄉","番路鄉","大埔鄉","阿里山鄉"],"屏東縣":["屏東市","三地門鄉","霧台鄉","瑪家鄉","九如鄉","里港鄉","高樹鄉","鹽埔鄉","長治鄉","麟洛鄉","竹田鄉","內埔鄉","萬丹鄉","潮州鎮","泰武鄉","來義鄉","萬巒鄉","崁頂鄉","新埤鄉","南州鄉","林邊鄉","東港鎮","琉球鄉","佳冬鄉","新園鄉","枋寮鄉","枋山鄉","春日鄉","獅子鄉","車城鄉","牡丹鄉","恆春鎮","滿州鄉"],"宜蘭縣":["宜蘭市","羅東鎮","蘇澳鎮","頭城鎮","礁溪鄉","壯圍鄉","員山鄉","冬山鄉","五結鄉","三星鄉","大同鄉","南澳鄉"],"花蓮縣":["花蓮市","鳳林鎮","玉里鎮","新城鄉","吉安鄉","壽豐鄉","光復鄉","豐濱鄉","瑞穗鄉","萬榮鄉","卓溪鄉","富里鄉","秀林鄉"],"台東縣":["台東市","成功鎮","關山鎮","卑南鄉","鹿野鄉","池上鄉","東河鄉","長濱鄉","太麻里鄉","大武鄉","綠島鄉","海端鄉","延平鄉","金峰鄉","達仁鄉","蘭嶼鄉"],"澎湖縣":["馬公市","湖西鄉","白沙鄉","西嶼鄉","望安鄉","七美鄉"],"金門縣":["金城鎮","金湖鎮","金沙鎮","金寧鄉","烈嶼鄉","烏坵鄉"],"連江縣":["南竿鄉","北竿鄉","莒光鄉","東引鄉"]};
@@ -535,13 +554,12 @@
         jsTopX: "距離第 {X} 近", jsRoute: "🛵 路程：", jsMin: "分鐘", jsLoc: "💡 位置：", jsUpdated: "🕒 更新時間：",
         jsLive: "(即時)", jsStatusTitle: "格位狀態", jsSizeTh: "寬*高*深(cm)", jsTotalTh: "總數", jsRemainTh: "剩餘",
         jsNoData: "暫無資料", 
-        // 🌟 更新：按鈕文字與複製提示
         jsCopied: "✅ 已複製！",
-        shareWeb: "📤 分享網站",
+        shareWeb: "📤 分享本站",
         jsCopyBtn: "📄 複製",
         jsNavBtn: "🛵 導航",
         jsShareBtn: "📤 分享",
-        jsShareWebMsg: "這是我用過最棒的 i 郵箱搜尋神器，幫你找距離最近的機台還有機車導航！",
+        jsShareWebMsg: "這是我用過最棒的 i 郵箱搜尋工具，幫你找距離最近的i郵箱據點還有導航！",
         jsShareRouteMsg: "這是前往【{NAME}】的機車導航路線，分享給你！",
         jsDimMax: "超過單邊最長尺寸45公分",
         jsDimSum: "長寬高加總不能超過105cm",
@@ -580,7 +598,6 @@
         jsTopX: "Top {X} Closest", jsRoute: "🛵 Route: ", jsMin: "mins", jsLoc: "💡 Location: ", jsUpdated: "🕒 Updated: ",
         jsLive: "(Live)", jsStatusTitle: "Locker Status", jsSizeTh: "W*H*D(cm)", jsTotalTh: "Total", jsRemainTh: "Free",
         jsNoData: "No Data", 
-        // 🌟 更新：按鈕文字與複製提示
         jsCopied: "✅ Copied!",
         shareWeb: "📤 Share",
         jsCopyBtn: "📄 Copy",
@@ -624,7 +641,6 @@
       if(lastSearchData) showResults(JSON.parse(JSON.stringify(lastSearchData.data)), lastSearchData.userAddressStr, lastSearchData.dims);
     }
 
-    // 🌟 新增：全站共用的分享網站功能 (Web Share API)
     function shareWebsite() {
       const t = i18n[currentLang];
       const shareData = {
@@ -636,12 +652,10 @@
       if (navigator.share) {
         navigator.share(shareData).catch((err) => console.log('分享取消或發生錯誤', err));
       } else {
-        // Fallback: 如果不支援原生分享，則複製網址
         copyText('https://goibox.tw/');
       }
     }
 
-    // 🌟 新增：單一導航路線的分享功能 (Web Share API)
     function shareRoute(name, url) {
       const t = i18n[currentLang];
       const textMsg = t.jsShareRouteMsg.replace('{NAME}', name);
@@ -654,7 +668,6 @@
       if (navigator.share) {
         navigator.share(shareData).catch((err) => console.log('分享取消或發生錯誤', err));
       } else {
-        // Fallback: 如果不支援原生分享，則複製導航網址
         copyText(url);
       }
     }
@@ -728,25 +741,25 @@
           } else {
             loaderText.innerText = steps[steps.length - 1]; 
           }
-        }, 1800);
+        }, 2500);
 
         let skeletonHtml = '';
         for(let i=0; i<3; i++) { 
           skeletonHtml += `
             <div class="result-card" style="pointer-events: none;">
               <div class="d-flex justify-content-between">
-                <div class="flex-grow-1 pe-2 d-flex flex-column w-100">
-                  <div class="skeleton-pulse" style="width: 50px; height: 22px; border-radius: 4px;"></div>
-                  <div class="skeleton-pulse" style="width: 60%; height: 24px; border-radius: 4px; margin-top: 10px;"></div>
-                  <div class="skeleton-pulse" style="width: 80%; height: 16px; border-radius: 4px; margin-top: 10px;"></div>
-                  <div class="skeleton-pulse" style="width: 50%; height: 16px; border-radius: 4px; margin-top: 6px;"></div>
+                <div class="flex-grow-1 pe-3 d-flex flex-column w-100">
+                  <div class="skeleton-pulse" style="width: 70px; height: 24px; border-radius: 6px; margin-bottom: 12px;"></div>
+                  <div class="skeleton-pulse" style="width: 70%; height: 20px; border-radius: 4px; margin-bottom: 8px;"></div>
+                  <div class="skeleton-pulse" style="width: 90%; height: 16px; border-radius: 4px; margin-bottom: 8px;"></div>
+                  <div class="skeleton-pulse" style="width: 50%; height: 14px; border-radius: 4px; margin-top: auto;"></div>
                 </div>
-                <div class="box-status flex-shrink-0 align-self-start skeleton-pulse" style="border:none; min-height: 110px;"></div>
+                <div class="box-status flex-shrink-0 skeleton-pulse" style="border:none; width: 145px; height: 110px; border-radius: 10px;"></div>
               </div>
-              <div class="row g-2 mt-2">
-                <div class="col-4"><div class="skeleton-pulse" style="height: 38px; border-radius: 8px;"></div></div>
-                <div class="col-4"><div class="skeleton-pulse" style="height: 38px; border-radius: 8px;"></div></div>
-                <div class="col-4"><div class="skeleton-pulse" style="height: 38px; border-radius: 8px;"></div></div>
+              <div class="row g-2 mt-3">
+                <div class="col-4"><div class="skeleton-pulse w-100" style="height: 38px; border-radius: 8px;"></div></div>
+                <div class="col-4"><div class="skeleton-pulse w-100" style="height: 38px; border-radius: 8px;"></div></div>
+                <div class="col-4"><div class="skeleton-pulse w-100" style="height: 38px; border-radius: 8px;"></div></div>
               </div>
             </div>
           `;
@@ -956,7 +969,8 @@
               <div class="flex-grow-1 pe-2 d-flex flex-column">
                 <div>
                   <span class="badge ${item.originalRank === 1 ? 'bg-danger' : 'bg-success'} mb-2">${t.jsTopX.replace('{X}', item.originalRank)}</span>
-                  <h5 style="font-weight: 700;">${item.name}</h5>
+                  <!-- 🌟 SEO: 將 h5 改為 h3 以符合標題層級，保留原本外觀 -->
+                  <h3 style="font-weight: 700; font-size: 1.25rem;">${item.name}</h3>
                   <p class="mb-1">${t.jsRoute}<span class="text-danger fw-bold">${distText}</span> (約 ${durText})</p>
                   <p class="small text-secondary mb-0">${item.address}</p>
                   ${locationHtml}
@@ -966,16 +980,15 @@
               <div class="box-status flex-shrink-0 shadow-sm align-self-start"><div class="box-status-title">${t.jsStatusTitle}</div>${tableHtml}</div>
             </div>
             
-            <!-- 🌟 修改：將按鈕重構成均分的黃金三等分 -->
             <div class="row g-2 mt-2">
               <div class="col-4">
-                <button class="btn btn-outline-secondary w-100 px-1 py-2" style="font-size: 0.85rem;" onclick="copyText('${item.address}')">${t.jsCopyBtn}</button>
+                <button class="btn btn-outline-secondary w-100 px-1 py-2" style="font-size: 0.85rem;" onclick="copyText('${item.address}')" aria-label="Copy address">${t.jsCopyBtn}</button>
               </div>
               <div class="col-4">
-                <button class="btn btn-outline-primary w-100 px-1 py-2" style="font-size: 0.85rem;" onclick="shareRoute('${item.name}', '${mapUrl}')">${t.jsShareBtn}</button>
+                <button class="btn btn-outline-primary w-100 px-1 py-2" style="font-size: 0.85rem;" onclick="shareRoute('${item.name}', '${mapUrl}')" aria-label="Share route">${t.jsShareBtn}</button>
               </div>
               <div class="col-4">
-                <a href="${mapUrl}" target="_blank" class="btn btn-primary w-100 px-1 py-2" style="font-size: 0.85rem;">${t.jsNavBtn}</a>
+                <a href="${mapUrl}" target="_blank" class="btn btn-primary w-100 px-1 py-2" style="font-size: 0.85rem;" aria-label="Open navigation">${t.jsNavBtn}</a>
               </div>
             </div>
           </div>
