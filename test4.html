@@ -548,9 +548,9 @@
         // 🌟 新增：幽默跑馬燈文字 (繁體中文)
         loadingSteps: [
           "🚀 正在火速連線郵局主機...",
-          "📦 正在偷偷看哪些機台還沒客滿...",
+          "📦 正在偷偷看哪些機台還沒滿格...",
           "📏 拿著量尺比對您的包裹塞不塞得下...",
-          "📏 幫你搜尋怎麼騎最近...",
+          "🔎 幫你搜尋怎麼騎最近...",
           "🛵 正在幫您避開路上的紅綠燈...",
           "✨ 找到有空位的i郵箱了！稍後為您呈現..."
         ]
@@ -588,7 +588,7 @@
           "🚀 Connecting to the post office servers...",
           "📦 Peeking at which lockers are not full yet...",
           "📏 Measuring to make sure your parcel fits...",
-          "📏 Searching for the closest riding route...",
+          "🔎 Searching for the closest riding route...",
           "🛵 Helping you avoid red lights on the way...",
           "✨ Found an iBox with empty lockers! Displaying shortly..."
         ]
@@ -689,7 +689,7 @@
           } else {
             loaderText.innerText = steps[steps.length - 1]; // 停在最後一句
           }
-        }, 1800);
+        }, 2200);
 
         // 🌟 2. 骨架屏 (Skeleton Screen) 渲染邏輯
         let skeletonHtml = '';
