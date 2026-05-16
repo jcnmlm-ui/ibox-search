@@ -417,7 +417,7 @@
         <main class="col-lg-7">
           <section class="side-card" style="background-color: #fff; padding: 25px;">
             <div class="row g-3 mb-3">
-              <!-- ✅ 修正 1：縣市與行政區在手機版上下堆疊，電腦版維持並排 -->
+              <!-- 縣市與行政區 -->
               <div class="col-12 col-md-6">
                 <select id="cityInput" class="form-select" onchange="updateDistricts()" aria-label="Select City">
                   <option value="" data-i18n="selectCity">選擇縣市</option>
@@ -429,19 +429,27 @@
                 </select>
               </div>
               
+              <!-- ✅ 對調位置：詳細地址輸入框移至上方 -->
+              <div class="col-12 mt-3">
+                <div class="input-group search-group">
+                  <input type="text" id="detailInput" class="form-control" placeholder="例：中正路179號" data-i18n-placeholder="detailPl" aria-label="Detailed Address">
+                  <button class="btn-3d btn-primary-3d" onclick="startSearchText()" id="searchBtn" data-i18n="searchBtn">搜尋</button>
+                </div>
+              </div>
+
+              <!-- ✅ 對調位置：包裹預先測量移至下方，並微調背景與邊框顏色 -->
               <div class="col-12 mt-2">
                 <div class="card border-0" style="background-color: transparent;">
                   <div class="card-body p-0">
-                    <!-- ✅ 新增：可點擊的收合標題列 (箱庭立體按鈕風格) -->
-                    <div class="d-flex justify-content-between align-items-center mb-2 collapsed" data-bs-toggle="collapse" data-bs-target="#measureCollapse" aria-expanded="false" aria-controls="measureCollapse" style="cursor: pointer; padding: 12px 16px; background-color: #F6F4EE; border-radius: 12px; border: 2px solid var(--border-color); border-bottom-width: 4px; user-select: none;">
-                      <h2 class="card-title fw-bold mb-0 text-secondary h6" style="font-size: 0.9rem;" data-i18n="measureTitle"><i class="fa-solid fa-box text-primary me-2 fs-6"></i>寄件包裹預先測量 (選填)</h2>
+                    <!-- 收合標題列：微調為柔和灰杏色，不突兀但與地址欄有區分 -->
+                    <div class="d-flex justify-content-between align-items-center mb-2 collapsed" data-bs-toggle="collapse" data-bs-target="#measureCollapse" aria-expanded="false" aria-controls="measureCollapse" style="cursor: pointer; padding: 12px 16px; background-color: #F2EFE8; border-radius: 12px; border: 2px solid #E1DCD0; border-bottom-width: 4px; user-select: none;">
+                      <h2 class="card-title fw-bold mb-0 h6" style="font-size: 0.9rem; color: #6D6455;" data-i18n="measureTitle"><i class="fa-solid fa-box text-primary me-2 fs-6"></i>寄件包裹預先測量 (選填)</h2>
                       <i class="fa-solid fa-chevron-down text-secondary" id="measureToggleIcon" style="transition: transform 0.3s ease;"></i>
                     </div>
                     
-                    <!-- ✅ 新增：Collapse 區塊，預設收合隱藏 -->
+                    <!-- Collapse 區塊 -->
                     <div class="collapse" id="measureCollapse">
                       <div class="pt-1 pb-2">
-                        <!-- ✅ 修正 2：長寬高輸入框在手機版上下排列，電腦版並排 (flex-column flex-md-row) -->
                         <div class="d-flex flex-column flex-md-row gap-2">
                           <div class="input-group">
                             <span class="input-group-text" data-i18n="dimL">長</span>
@@ -466,12 +474,6 @@
                 </div>
               </div>
 
-              <div class="col-12 mt-4">
-                <div class="input-group search-group">
-                  <input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)" data-i18n-placeholder="detailPl" aria-label="Detailed Address">
-                  <button class="btn-3d btn-primary-3d" onclick="startSearchText()" id="searchBtn" data-i18n="searchBtn">搜尋</button>
-                </div>
-              </div>
             </div>
           </section>
 
@@ -771,7 +773,7 @@
         measureTitle: "<i class='fa-solid fa-box text-primary me-2 fs-6'></i>寄件包裹預先測量 (選填)", 
         measureDesc: "輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。",
         dimL: "長", dimW: "寬", dimH: "高", 
-        detailPl: "詳細地址 (必填，如：中正路1號)",
+        detailPl: "例：中正路179號",
         searchBtn: "搜尋", 
         gpsBtn: "<i class='fa-solid fa-location-crosshairs me-2'></i>自動定位並搜尋附近",
         loadingText: "<i class='fa-solid fa-rocket text-danger me-2'></i>正在火速連線郵局主機...", 
@@ -1022,7 +1024,6 @@
           }
         }, 2500);
 
-        // ✅ 修正 3：骨架屏也同步採用上下堆疊的響應式設計
         let skeletonHtml = '';
         for(let i=0; i<3; i++) { 
           skeletonHtml += `
@@ -1191,7 +1192,6 @@
       let data = [...originalData].slice(0, 5);
       const shuffledAds = [...adBanners].sort(() => 0.5 - Math.random());
 
-      // 箱庭風格的搜尋提示區塊
       if (userAddressStr) {
           html += `<div class="alert border-0 mb-3 text-start fw-bold" style="background-color: #E2ECF7; color: #4B6E91; font-size: 0.85rem; padding: 14px 16px; border-radius: 12px; border: 2px solid #C4D7EB !important; border-bottom-width: 4px !important;"><strong>${t.jsSearchCenter}</strong>${userAddressStr}<br><span style="font-size: 0.75rem; display: block; margin-top: 6px; opacity: 0.9;">${t.jsHint}</span></div>`;
       } else {
@@ -1203,7 +1203,9 @@
 
       data.forEach((item, loopIndex) => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
-        const locationHtml = item.locationDesc ? `<p class="small mb-0 mt-2 fw-bold" style="color: var(--post-green-dark); background-color: #E6F3EC; padding: 6px 10px; border-radius: 8px; display: inline-block;">${t.jsLoc}${item.locationDesc}</p>` : '';
+        // ✅ 顏色微調：使用柔和的燕麥色背景與大地色文字，不突兀又可與結果區別
+        const locationHtml = item.locationDesc ? `<div class="small mt-2 fw-bold" style="color: #71695A; background-color: #F5F2EA; border: 1px solid #E3DCC8; padding: 8px 12px; border-radius: 10px; display: inline-block; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">${t.jsLoc}${item.locationDesc}</div>` : '';
+        
         let boxesHtml = ''; let hasBoxes = false;
         
         if (item.boxes && Object.keys(item.boxes).length > 0) {
@@ -1230,7 +1232,6 @@
         let durText = item.duration.replace('分鐘', t.jsMin);
         let updatedText = (item.updateTime || t.jsNoData).replace('(即時)', t.jsLive);
 
-        // ✅ 修正 4：結果卡片內部在手機版採上下堆疊 (flex-column)，電腦版並排 (flex-md-row)，並保留下方三顆按鈕置底
         html += `
           <div class="result-card" ${cardId}>
             <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
