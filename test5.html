@@ -114,6 +114,8 @@
     }
     @media (min-width: 768px) {
       .hakoniwa-base { padding: 30px 40px; }
+      /* 響應式：在 md 以上的螢幕才讓寬度變成 auto */
+      .w-md-auto { width: auto !important; }
     }
 
     /* 立體感實體按鈕設計 (Chunky Buttons) */
@@ -410,12 +412,13 @@
         <main class="col-lg-7">
           <section class="side-card" style="background-color: #fff; padding: 25px;">
             <div class="row g-3 mb-3">
-              <div class="col-6">
+              <!-- ✅ 修正 1：縣市與行政區在手機版上下堆疊，電腦版維持並排 -->
+              <div class="col-12 col-md-6">
                 <select id="cityInput" class="form-select" onchange="updateDistricts()" aria-label="Select City">
                   <option value="" data-i18n="selectCity">選擇縣市</option>
                 </select>
               </div>
-              <div class="col-6">
+              <div class="col-12 col-md-6">
                 <select id="districtInput" class="form-select" aria-label="Select District">
                   <option value="" data-i18n="selectDistrict">全區 / 不指定 (推薦)</option>
                 </select>
@@ -427,13 +430,20 @@
                     <div class="d-flex align-items-center mb-2">
                       <h2 class="card-title fw-bold mb-0 text-secondary h6" style="font-size: 0.9rem;" data-i18n="measureTitle"><i class="fa-solid fa-box text-primary me-2 fs-6"></i>寄件包裹預先測量 (選填)</h2>
                     </div>
-                    <div class="input-group">
-                      <span class="input-group-text" data-i18n="dimL">長</span>
-                      <input type="number" id="dimL" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Length">
-                      <span class="input-group-text" data-i18n="dimW">寬</span>
-                      <input type="number" id="dimW" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Width">
-                      <span class="input-group-text" data-i18n="dimH">高</span>
-                      <input type="number" id="dimH" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Height">
+                    <!-- ✅ 修正 2：長寬高輸入框在手機版上下排列，電腦版並排 (flex-column flex-md-row) -->
+                    <div class="d-flex flex-column flex-md-row gap-2">
+                      <div class="input-group">
+                        <span class="input-group-text" data-i18n="dimL">長</span>
+                        <input type="number" id="dimL" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Length">
+                      </div>
+                      <div class="input-group">
+                        <span class="input-group-text" data-i18n="dimW">寬</span>
+                        <input type="number" id="dimW" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Width">
+                      </div>
+                      <div class="input-group">
+                        <span class="input-group-text" data-i18n="dimH">高</span>
+                        <input type="number" id="dimH" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Height">
+                      </div>
                     </div>
                     <div id="dimWarningBlock" class="alert border-0 mt-2 mb-0 py-2 px-3 small fw-bold" style="display: none; background-color: var(--post-red); color: white; border-radius: 8px; border-bottom: 3px solid #BA4E45 !important;"></div>
                     <div class="form-text mt-2 fw-bold text-muted" style="font-size: 0.75rem;" data-i18n="measureDesc">
@@ -999,19 +1009,19 @@
           }
         }, 2500);
 
-        // 箱庭風格骨架屏
+        // ✅ 修正 3：骨架屏也同步採用上下堆疊的響應式設計
         let skeletonHtml = '';
         for(let i=0; i<3; i++) { 
           skeletonHtml += `
             <div class="result-card" style="pointer-events: none;">
-              <div class="d-flex justify-content-between">
-                <div class="flex-grow-1 pe-3 d-flex flex-column w-100">
+              <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                <div class="flex-grow-1 pe-md-3 d-flex flex-column w-100">
                   <div class="skeleton-pulse" style="width: 70px; height: 28px; border-radius: 8px; margin-bottom: 12px;"></div>
                   <div class="skeleton-pulse" style="width: 70%; height: 22px; border-radius: 6px; margin-bottom: 8px;"></div>
                   <div class="skeleton-pulse" style="width: 90%; height: 16px; border-radius: 6px; margin-bottom: 8px;"></div>
                   <div class="skeleton-pulse" style="width: 50%; height: 14px; border-radius: 6px; margin-top: auto;"></div>
                 </div>
-                <div class="box-status flex-shrink-0 skeleton-pulse" style="border:none; width: 145px; height: 110px;"></div>
+                <div class="box-status flex-shrink-0 skeleton-pulse w-100 w-md-auto" style="border:none; min-height: 110px;"></div>
               </div>
               <div class="row g-2 mt-3">
                 <div class="col-4"><div class="skeleton-pulse w-100" style="height: 42px; border-radius: 12px;"></div></div>
@@ -1207,11 +1217,11 @@
         let durText = item.duration.replace('分鐘', t.jsMin);
         let updatedText = (item.updateTime || t.jsNoData).replace('(即時)', t.jsLive);
 
-        // 使用箱庭風格的厚卡片設計與立體按鈕
+        // ✅ 修正 4：結果卡片內部在手機版採上下堆疊 (flex-column)，電腦版並排 (flex-md-row)，並保留下方三顆按鈕置底
         html += `
           <div class="result-card" ${cardId}>
-            <div class="d-flex justify-content-between">
-              <div class="flex-grow-1 pe-2 d-flex flex-column">
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+              <div class="flex-grow-1 pe-md-2 d-flex flex-column">
                 <div>
                   <span class="badge-3d ${item.originalRank === 1 ? '' : 'bg-success'} mb-2 d-inline-block">${t.jsTopX.replace('{X}', item.originalRank)}</span>
                   <h3 style="font-weight: 900; font-size: 1.3rem; color: var(--post-green-dark);">${item.name}</h3>
@@ -1221,7 +1231,7 @@
                 </div>
                 <div class="mt-auto pt-3 fw-bold" style="font-size: 0.75rem; color: #A6A095;">${t.jsUpdated}${updatedText}</div>
               </div>
-              <div class="box-status flex-shrink-0 align-self-start"><div class="box-status-title">${t.jsStatusTitle}</div>${tableHtml}</div>
+              <div class="box-status flex-shrink-0 align-self-md-start w-100 w-md-auto"><div class="box-status-title">${t.jsStatusTitle}</div>${tableHtml}</div>
             </div>
             
             <div class="row g-2 mt-3">
