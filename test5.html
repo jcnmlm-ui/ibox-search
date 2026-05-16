@@ -267,6 +267,11 @@
     }
     .accordion-button:focus { box-shadow: none; border-color: transparent; }
 
+    /* 包裹測量區塊收合箭頭動畫 */
+    [data-bs-toggle="collapse"]:not(.collapsed) #measureToggleIcon {
+      transform: rotate(180deg);
+    }
+
     /* 頂部控制列 */
     .lang-toggle {
       border-radius: 12px;
@@ -427,27 +432,35 @@
               <div class="col-12 mt-2">
                 <div class="card border-0" style="background-color: transparent;">
                   <div class="card-body p-0">
-                    <div class="d-flex align-items-center mb-2">
+                    <!-- ✅ 新增：可點擊的收合標題列 (箱庭立體按鈕風格) -->
+                    <div class="d-flex justify-content-between align-items-center mb-2 collapsed" data-bs-toggle="collapse" data-bs-target="#measureCollapse" aria-expanded="false" aria-controls="measureCollapse" style="cursor: pointer; padding: 12px 16px; background-color: #F6F4EE; border-radius: 12px; border: 2px solid var(--border-color); border-bottom-width: 4px; user-select: none;">
                       <h2 class="card-title fw-bold mb-0 text-secondary h6" style="font-size: 0.9rem;" data-i18n="measureTitle"><i class="fa-solid fa-box text-primary me-2 fs-6"></i>寄件包裹預先測量 (選填)</h2>
+                      <i class="fa-solid fa-chevron-down text-secondary" id="measureToggleIcon" style="transition: transform 0.3s ease;"></i>
                     </div>
-                    <!-- ✅ 修正 2：長寬高輸入框在手機版上下排列，電腦版並排 (flex-column flex-md-row) -->
-                    <div class="d-flex flex-column flex-md-row gap-2">
-                      <div class="input-group">
-                        <span class="input-group-text" data-i18n="dimL">長</span>
-                        <input type="number" id="dimL" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Length">
+                    
+                    <!-- ✅ 新增：Collapse 區塊，預設收合隱藏 -->
+                    <div class="collapse" id="measureCollapse">
+                      <div class="pt-1 pb-2">
+                        <!-- ✅ 修正 2：長寬高輸入框在手機版上下排列，電腦版並排 (flex-column flex-md-row) -->
+                        <div class="d-flex flex-column flex-md-row gap-2">
+                          <div class="input-group">
+                            <span class="input-group-text" data-i18n="dimL">長</span>
+                            <input type="number" id="dimL" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Length">
+                          </div>
+                          <div class="input-group">
+                            <span class="input-group-text" data-i18n="dimW">寬</span>
+                            <input type="number" id="dimW" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Width">
+                          </div>
+                          <div class="input-group">
+                            <span class="input-group-text" data-i18n="dimH">高</span>
+                            <input type="number" id="dimH" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Height">
+                          </div>
+                        </div>
+                        <div id="dimWarningBlock" class="alert border-0 mt-2 mb-0 py-2 px-3 small fw-bold" style="display: none; background-color: var(--post-red); color: white; border-radius: 8px; border-bottom: 3px solid #BA4E45 !important;"></div>
+                        <div class="form-text mt-2 fw-bold text-muted" style="font-size: 0.75rem;" data-i18n="measureDesc">
+                          輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。
+                        </div>
                       </div>
-                      <div class="input-group">
-                        <span class="input-group-text" data-i18n="dimW">寬</span>
-                        <input type="number" id="dimW" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Width">
-                      </div>
-                      <div class="input-group">
-                        <span class="input-group-text" data-i18n="dimH">高</span>
-                        <input type="number" id="dimH" class="form-control text-center" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Height">
-                      </div>
-                    </div>
-                    <div id="dimWarningBlock" class="alert border-0 mt-2 mb-0 py-2 px-3 small fw-bold" style="display: none; background-color: var(--post-red); color: white; border-radius: 8px; border-bottom: 3px solid #BA4E45 !important;"></div>
-                    <div class="form-text mt-2 fw-bold text-muted" style="font-size: 0.75rem;" data-i18n="measureDesc">
-                      輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。
                     </div>
                   </div>
                 </div>
