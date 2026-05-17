@@ -5,1326 +5,730 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="favicon.png">
+  
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#f4a818">
+  <meta name="theme-color" content="#28a745">
 
   <title>i 郵箱查找大師 | Taiwan iBox Locator | 一鍵尋找最近的 i 郵箱</title>
   <meta name="description" content="自動定位尋找距離您最近的 i 郵箱 (iBox Locator)，提供精準機車導航與即時大中小格位狀態，寄件收件超方便！Find the nearest Chunghwa Post iBox locker in Taiwan 24/7.">
-
+  
   <meta property="og:title" content="🛵 i 郵箱查找大師 | Taiwan iBox Locator">
   <meta property="og:description" content="一鍵尋找距離您最近的 i 郵箱，提供精準機車路徑與即時格位狀態！Find the nearest iBox with real-time locker availability!">
   <meta property="og:url" content="https://goibox.tw/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="i 郵箱查找大師">
-  <meta property="og:image" content="https://goibox.tw/og-image.png">
+  <meta property="og:image" content="https://goibox.tw/og-image.png"> 
 
+  <!-- SEO 擴充關鍵字 -->
   <meta name="keywords" content="i郵箱, ｉ郵箱, ibox, iBox, i郵箱查詢, i郵箱據點, 機車導航, 中華郵政, 24小時取件, ezPost, Taiwan iBox, Post locker Taiwan, send parcel 24/7, Chunghwa Post tracking, iBox Locator, PChome i郵箱, MOMO i郵箱">
   <link rel="canonical" href="https://goibox.tw/" />
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "i 郵箱查找大師",
+    "alternateName": "Taiwan iBox Locator",
+    "url": "https://goibox.tw/",
+    "description": "提供全台 i 郵箱 (iBox) 即時格位查詢與機車導航服務。",
+    "applicationCategory": "NavigationApplication",
+    "operatingSystem": "All",
+    "areaServed": "TW",
+    "creator": { "@type": "Person", "name": "Chiahsien" }
+  }
+  </script>
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"i 郵箱查找大師","alternateName":"Taiwan iBox Locator","url":"https://goibox.tw/","description":"提供全台 i 郵箱 (iBox) 即時格位查詢與機車導航服務。","applicationCategory":"NavigationApplication","operatingSystem":"All","areaServed":"TW","creator":{"@type":"Person","name":"Chiahsien"}}</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "i 郵箱可以放多久？ How long can a parcel stay in iBox?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "包裹送達後，提供 3 天 (72 小時) 內免費取件。超過時間會被退回原寄件局喔！"
+      }
+    }, {
+      "@type": "Question",
+      "name": "什麼是ｉ郵箱？ What is iBox?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。"
+      }
+    }, {
+      "@type": "Question",
+      "name": "如何支付寄件郵資？ How can I pay for postage?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "提供郵政金融卡、悠遊卡、一卡通、icash 2.0及多種行動支付。"
+      }
+    }]
+  }
+  </script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-
+  <!-- 引入 Font Awesome 向量圖示庫 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
-    /* ─── OW Design Tokens ─── */
-    :root {
-      --ow-bg:        #0d1117;
-      --ow-surface:   #111820;
-      --ow-panel:     #16202c;
-      --ow-border:    #243040;
-      --ow-gold:      #f4a818;
-      --ow-gold-dim:  #b87a10;
-      --ow-blue:      #4fc3f7;
-      --ow-blue-dim:  #1a4a6a;
-      --ow-red:       #ef5350;
-      --ow-green:     #66bb6a;
-      --ow-text:      #d6e4f0;
-      --ow-text-dim:  #6a8ca8;
-      --ow-glow:      0 0 18px rgba(244,168,24,0.4);
-      --ow-glow-blue: 0 0 14px rgba(79,195,247,0.35);
-      --clip-a: polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px);
-      --clip-b: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
-    }
-
-    /* ─── Base ─── */
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--ow-bg);
-      background-image:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(244,168,24,0.07) 0%, transparent 70%),
-        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.02) 40px),
-        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.02) 40px);
-      font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
-      color: var(--ow-text);
-      min-height: 100vh;
-    }
-
-    /* ─── Layout ─── */
-    .ow-container {
-      max-width: 1060px;
-      margin: 0 auto;
-      padding: 0 20px 60px;
-    }
-
-    /* ─── Header ─── */
-    .ow-topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 0 10px;
-      border-bottom: 1px solid var(--ow-border);
-      margin-bottom: 24px;
-    }
-
-    /* ─── Hero Title ─── */
-    .ow-hero {
-      text-align: center;
-      padding: 28px 0 32px;
-      position: relative;
-    }
-    .ow-hero::before {
-      content: '';
-      position: absolute;
-      left: 50%; top: 0;
-      transform: translateX(-50%);
-      width: 60%; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--ow-gold), transparent);
-    }
-    .ow-logo-mark {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .ow-hex {
-      width: 40px; height: 40px;
-      background: var(--ow-gold);
-      clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-      animation: hexPulse 3s ease-in-out infinite;
-      box-shadow: var(--ow-glow);
-    }
-    @keyframes hexPulse {
-      0%, 100% { box-shadow: 0 0 16px rgba(244,168,24,0.4); }
-      50%       { box-shadow: 0 0 32px rgba(244,168,24,0.75); }
-    }
-    .ow-title {
-      font-family: 'Barlow Condensed', 'Rajdhani', sans-serif;
-      font-size: 2.8rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, #f4a818 0%, #ffd166 50%, #f4a818 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1;
-      text-shadow: none;
-    }
-    .ow-subtitle {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--ow-blue);
-      margin-top: 4px;
-    }
-    .ow-stats-badge {
-      display: inline-block;
-      margin-top: 14px;
-      background: var(--ow-panel);
-      border: 1px solid var(--ow-gold-dim);
-      clip-path: var(--clip-b);
-      padding: 7px 22px;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.95rem;
-      letter-spacing: 0.05em;
-      color: var(--ow-text-dim);
-    }
-    .ow-stats-badge .count {
-      color: var(--ow-gold);
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-
-    /* ─── Panel / Card ─── */
-    .ow-panel {
-      background: var(--ow-panel);
-      border: 1px solid var(--ow-border);
-      clip-path: var(--clip-a);
-      padding: 20px;
-      position: relative;
-      margin-bottom: 20px;
-      transition: border-color 0.25s;
-    }
-    .ow-panel:hover { border-color: rgba(244,168,24,0.4); }
-    .ow-panel::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 100%;
-      background: linear-gradient(180deg, var(--ow-gold), transparent);
-    }
-    .ow-panel-title {
-      font-family: 'Barlow Condensed', 'Rajdhani', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--ow-gold);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .ow-panel-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, var(--ow-gold-dim), transparent);
-    }
-
-    /* ─── Form Controls ─── */
-    .ow-select, .ow-input {
-      background: var(--ow-surface) !important;
-      border: 1px solid var(--ow-border) !important;
-      color: var(--ow-text) !important;
-      border-radius: 0 !important;
-      padding: 10px 14px;
-      font-size: 0.9rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      clip-path: var(--clip-b);
-    }
-    .ow-select:focus, .ow-input:focus {
-      border-color: var(--ow-gold) !important;
-      box-shadow: var(--ow-glow) !important;
-      outline: none;
-    }
-    .ow-select option { background: var(--ow-surface); }
-    .ow-input::placeholder { color: var(--ow-text-dim); }
-
-    /* Measurement inputs */
-    .dim-group {
-      display: flex;
-      align-items: stretch;
-      gap: 0;
-    }
-    .dim-label {
-      background: rgba(244,168,24,0.12);
-      border: 1px solid var(--ow-border);
-      border-right: none;
-      color: var(--ow-gold);
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      padding: 8px 12px;
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
-      display: flex;
-      align-items: center;
-    }
-    .dim-input {
-      background: var(--ow-surface) !important;
-      border: 1px solid var(--ow-border) !important;
-      color: var(--ow-text) !important;
-      text-align: center;
+    body { background-color: #f4f6f9; font-family: 'Taipei Sans TC Beta', 'Taipei Sans TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #333; }
+    .container { max-width: 1000px; margin-top: 15px; padding-bottom: 30px; padding-left: 20px; padding-right: 20px; position: relative; }
+    .lang-toggle { border-radius: 20px; font-weight: 500; background: white; border: 1px solid #ced4da; padding: 5px 12px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; color: #495057; }
+    .lang-toggle:hover { background: #f8f9fa; border-color: #adb5bd; }
+    .result-card { background: white; border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; position: relative; overflow: hidden; }
+    .box-status { background-color: #f8f9fc; border: 1px solid #e3e6f0; border-radius: 10px; padding: 10px; min-width: 145px; }
+    .box-status-title { font-size: 0.75rem; color: #4e73df; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .box-table { width: 100%; font-size: 0.75rem; text-align: center; border-collapse: collapse; }
+    .box-table th { color: #858796; font-weight: 600; border-bottom: 1px solid #eaecf4; padding-bottom: 4px; }
+    .box-table td { padding: 5px 2px; border-bottom: 1px dashed #eaecf4; }
+    .box-table .size-col { text-align: left; color: #5a5c69; font-size: 0.7rem; }
+    .btn-gps { width: 100%; border-radius: 12px; padding: 12px; font-weight: 500; margin-bottom: 20px; background-color: #28a745; color: white; border: none; }
+    .btn-gps:hover { background-color: #218838; }
+    .filter-input { border-radius: 12px; padding: 12px; }
+    .search-group input { border-radius: 12px 0 0 12px; padding: 12px; }
+    .search-group button { border-radius: 0 12px 12px 0; padding: 12px 20px; }
+    .loading { display: none; margin-top: 20px; }
+    .progress { height: 12px; border-radius: 6px; background-color: #e9ecef; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
+    .progress-bar-animated { animation: progress-bar-stripes 0.4s linear infinite !important; }
+    .side-card { background: white; border-radius: 16px; padding: 22px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eaeaea; }
+    .accordion-button:focus { box-shadow: none; border-color: rgba(0,0,0,.125); }
+    .accordion-button:not(.collapsed) { background-color: #eef5ff; color: #0d6efd; font-weight: bold; box-shadow: inset 0 -1px 0 rgba(0,0,0,.125); }
+    .accordion-item { border-radius: 12px !important; overflow: hidden; margin-bottom: 8px; border: 1px solid #eaeaea; }
+    .accordion-button { padding: 12px 16px; font-size: 0.9rem; font-weight: 500; }
+    .seo-table-wrapper::-webkit-scrollbar { width: 6px; }
+    .seo-table-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; }
+    .seo-table-wrapper::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 8px; }
+    .seo-table-wrapper::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+    
+    /* 🍏 小白球樣式 (Floating Ball) */
+    #assistiveTouch {
+      position: fixed;
       width: 70px;
-      padding: 8px 6px;
-      font-size: 0.9rem;
-      flex: 1;
-    }
-    .dim-input:focus {
-      border-color: var(--ow-gold) !important;
-      box-shadow: var(--ow-glow) !important;
-      outline: none;
-    }
-    .dim-input::placeholder { color: var(--ow-text-dim); font-size: 0.75rem; }
-
-    /* ─── Buttons ─── */
-    .ow-btn {
-      font-family: 'Barlow Condensed', 'Rajdhani', sans-serif;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      border: none;
-      clip-path: var(--clip-b);
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .ow-btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0);
-      transition: background 0.15s;
-    }
-    .ow-btn:hover::after { background: rgba(255,255,255,0.08); }
-    .ow-btn:active { transform: scale(0.97); }
-
-    .ow-btn-gold {
-      background: linear-gradient(135deg, #f4a818, #e8950c);
-      color: #0d1117;
-      padding: 11px 22px;
-      font-size: 0.95rem;
-      box-shadow: var(--ow-glow);
-    }
-    .ow-btn-gold:hover { box-shadow: 0 0 28px rgba(244,168,24,0.65); }
-
-    .ow-btn-gps {
-      background: linear-gradient(135deg, #f4a818, #e8950c);
-      color: #0d1117;
-      padding: 14px 20px;
-      font-size: 1.05rem;
-      width: 100%;
-      margin-bottom: 20px;
+      height: 70px;
+      background: rgba(40, 167, 69, 0.85);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 50%;
+      right: 15px;
+      top: 75%;
+      z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      box-shadow: var(--ow-glow);
-    }
-    .ow-btn-gps:hover { box-shadow: 0 0 32px rgba(244,168,24,0.7); }
-
-    .ow-btn-outline {
-      background: transparent;
-      border: 1px solid var(--ow-border) !important;
-      color: var(--ow-text-dim);
-      padding: 10px 14px;
-      font-size: 0.8rem;
-      width: 100%;
-    }
-    .ow-btn-outline:hover { border-color: var(--ow-gold) !important; color: var(--ow-gold); }
-
-    .ow-btn-blue {
-      background: linear-gradient(135deg, #1a4a6a, #1e5c84);
-      border: 1px solid var(--ow-blue-dim) !important;
-      color: var(--ow-blue);
-      padding: 10px 14px;
-      font-size: 0.8rem;
-      width: 100%;
-      box-shadow: var(--ow-glow-blue);
-    }
-    .ow-btn-blue:hover { box-shadow: 0 0 20px rgba(79,195,247,0.5); }
-
-    .ow-btn-nav {
-      background: linear-gradient(135deg, #f4a818, #e8950c);
-      color: #0d1117;
-      padding: 10px 14px;
-      font-size: 0.8rem;
-      width: 100%;
-      text-decoration: none;
-      display: block;
-      text-align: center;
-      box-shadow: var(--ow-glow);
-    }
-
-    /* Top bar buttons */
-    .ow-topbtn {
-      background: var(--ow-panel);
-      border: 1px solid var(--ow-border);
-      color: var(--ow-text-dim);
-      padding: 7px 16px;
-      font-family: 'Rajdhani', sans-serif;
+      color: white;
       font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      clip-path: var(--clip-b);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .ow-topbtn:hover { border-color: var(--ow-gold); color: var(--ow-gold); }
-    .ow-topbtn-share {
-      border-color: rgba(244,168,24,0.4);
-      color: var(--ow-gold);
-    }
-
-    /* ─── Search Group ─── */
-    .ow-search-group {
-      display: flex;
-      gap: 0;
-    }
-    .ow-search-group .ow-input {
-      flex: 1;
-      border-right: none !important;
-      clip-path: none !important;
-    }
-    .ow-search-group .ow-btn-gold {
-      clip-path: none;
-      white-space: nowrap;
-    }
-
-    /* ─── Result Card ─── */
-    .ow-result-card {
-      background: var(--ow-panel);
-      border: 1px solid var(--ow-border);
-      clip-path: var(--clip-a);
-      padding: 20px;
-      margin-bottom: 18px;
-      position: relative;
-      transition: border-color 0.25s, box-shadow 0.25s;
-      animation: cardSlideIn 0.35s ease both;
-    }
-    .ow-result-card:hover {
-      border-color: rgba(244,168,24,0.5);
-      box-shadow: 0 4px 24px rgba(244,168,24,0.12);
-    }
-    @keyframes cardSlideIn {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .ow-result-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 100%;
-      background: var(--ow-gold);
-    }
-    .ow-result-card.rank1::before { background: linear-gradient(180deg, #f4a818, #ffd166); }
-
-    .ow-rank-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: 'Barlow Condensed', 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 3px 12px;
-      clip-path: var(--clip-b);
-      margin-bottom: 10px;
-    }
-    .ow-rank-badge.rank1 {
-      background: linear-gradient(135deg, #f4a818, #e8950c);
-      color: #0d1117;
-    }
-    .ow-rank-badge.rankN { background: var(--ow-surface); border: 1px solid var(--ow-border); color: var(--ow-text-dim); }
-
-    .ow-name {
-      font-family: 'Barlow Condensed', 'Rajdhani', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: #fff;
-      margin-bottom: 4px;
+      font-weight: bold;
+      text-align: center;
       line-height: 1.2;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      user-select: none;
+      transition: opacity 0.3s, transform 0.1s;
+      border: 2px solid rgba(255,255,255,0.4);
     }
-    .ow-route {
-      font-size: 0.9rem;
-      color: var(--ow-text-dim);
-      margin-bottom: 3px;
+    #assistiveTouch:active {
+      transform: scale(0.9);
+      background: rgba(33, 136, 56, 0.9);
     }
-    .ow-route .dist { color: var(--ow-gold); font-weight: 700; }
-    .ow-addr {
-      font-size: 0.8rem;
-      color: var(--ow-text-dim);
-      margin-bottom: 0;
-    }
-    .ow-location-tag {
-      display: inline-block;
-      background: rgba(102,187,106,0.12);
-      border: 1px solid rgba(102,187,106,0.3);
-      color: var(--ow-green);
-      font-size: 0.75rem;
-      padding: 3px 10px;
-      clip-path: var(--clip-b);
-      margin-top: 6px;
-    }
-    .ow-update-time {
-      font-size: 0.72rem;
-      color: var(--ow-text-dim);
-      margin-top: 8px;
-      font-family: 'Rajdhani', sans-serif;
-      letter-spacing: 0.05em;
-    }
-
-    /* ─── Box Status ─── */
-    .ow-box-status {
-      background: var(--ow-surface);
-      border: 1px solid var(--ow-border);
-      clip-path: var(--clip-b);
-      padding: 10px 12px;
-      min-width: 148px;
-      flex-shrink: 0;
-    }
-    .ow-box-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ow-blue);
-      margin-bottom: 8px;
-      text-align: center;
-      border-bottom: 1px solid var(--ow-border);
-      padding-bottom: 5px;
-    }
-    .ow-box-table {
-      width: 100%;
-      font-size: 0.72rem;
-      border-collapse: collapse;
-    }
-    .ow-box-table th {
-      color: var(--ow-text-dim);
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      padding-bottom: 4px;
-      text-align: center;
-      border-bottom: 1px solid var(--ow-border);
-    }
-    .ow-box-table th:first-child { text-align: left; }
-    .ow-box-table td {
-      padding: 4px 2px;
-      text-align: center;
-      border-bottom: 1px solid rgba(36,48,64,0.5);
-    }
-    .ow-box-table td:first-child { text-align: left; color: var(--ow-text-dim); font-size: 0.68rem; }
-    .ow-box-table .available { color: var(--ow-green); font-weight: 700; }
-    .ow-box-table .full { color: var(--ow-red); font-weight: 700; }
-
-    /* ─── Loading ─── */
-    #loader { display: none; margin-bottom: 24px; }
-    .ow-progress-track {
-      height: 4px;
-      background: var(--ow-surface);
-      border: 1px solid var(--ow-border);
-      margin-bottom: 10px;
-      position: relative;
-      overflow: hidden;
-    }
-    .ow-progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--ow-gold), #ffd166);
-      box-shadow: 0 0 12px rgba(244,168,24,0.7);
-      transition: width 0.5s ease;
-      position: relative;
-    }
-    .ow-progress-bar::after {
-      content: '';
+    #assistiveTouch .close-touch {
       position: absolute;
-      right: 0; top: 0; bottom: 0;
-      width: 60px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
-      animation: scanLine 1.2s ease-in-out infinite;
+      top: -5px;
+      right: -5px;
+      width: 22px;
+      height: 22px;
+      background: #ff4757;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
-    @keyframes scanLine {
-      0%   { opacity: 0; }
-      50%  { opacity: 1; }
-      100% { opacity: 0; }
-    }
-    #loaderText {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.08em;
-      color: var(--ow-gold);
-      text-align: center;
+    #assistiveTouch .inner-text {
+      padding: 5px;
     }
 
-    /* ─── Skeleton ─── */
-    .ow-skeleton {
-      background: linear-gradient(90deg, var(--ow-surface) 25%, var(--ow-border) 50%, var(--ow-surface) 75%);
+    /* 🌟 骨架屏閃爍動畫 (Skeleton Pulse) */
+    .skeleton-pulse {
+      background-color: #e2e3e5;
+      background-image: linear-gradient(90deg, #e2e3e5 25%, #ced4da 50%, #e2e3e5 75%);
       background-size: 200% 100%;
-      animation: owShimmer 1.6s infinite linear;
-      border-radius: 2px;
+      animation: skeleton-shimmer 1.5s infinite linear;
     }
-    @keyframes owShimmer {
-      0%   { background-position: 200% 0; }
+    @keyframes skeleton-shimmer {
+      0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
 
-    /* ─── Info Alert ─── */
-    .ow-alert {
-      background: var(--ow-surface);
-      border: 1px solid var(--ow-border);
-      clip-path: var(--clip-b);
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      font-size: 0.85rem;
-    }
-    .ow-alert-info { border-left: 3px solid var(--ow-blue); }
-    .ow-alert-success { border-left: 3px solid var(--ow-green); }
-    .ow-alert-warning { border-left: 3px solid var(--ow-gold); }
-    .ow-alert strong { color: var(--ow-gold); font-family: 'Rajdhani', sans-serif; letter-spacing: 0.08em; }
-
-    /* ─── Warning Block ─── */
-    #dimWarningBlock {
-      display: none;
-      background: rgba(239,83,80,0.12);
-      border: 1px solid rgba(239,83,80,0.4);
-      color: var(--ow-red);
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-top: 8px;
-      clip-path: var(--clip-b);
-    }
-    .ow-measure-note {
-      font-size: 0.72rem;
-      color: var(--ow-text-dim);
-      margin-top: 6px;
-    }
-
-    /* ─── Side Table ─── */
-    .ow-table {
-      width: 100%;
-      font-size: 0.75rem;
-      border-collapse: collapse;
-      color: var(--ow-text);
-    }
-    .ow-table th {
-      background: rgba(244,168,24,0.08);
-      border-bottom: 1px solid var(--ow-gold-dim);
-      color: var(--ow-gold);
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 8px 6px;
-      text-align: center;
-      white-space: nowrap;
-    }
-    .ow-table td {
-      padding: 6px;
-      text-align: center;
-      border-bottom: 1px solid rgba(36,48,64,0.6);
-      color: var(--ow-text-dim);
-    }
-    .ow-table td:first-child {
-      background: rgba(244,168,24,0.05);
-      color: var(--ow-text-dim);
-      font-weight: 700;
-      border-right: 1px solid var(--ow-border);
-    }
-    .ow-table-wrap { overflow-x: auto; border: 1px solid var(--ow-border); clip-path: var(--clip-a); }
-
-    /* ─── FAQ Accordion ─── */
-    .ow-accordion-item { border: 1px solid var(--ow-border); margin-bottom: 6px; }
-    .ow-accordion-btn {
-      background: var(--ow-surface) !important;
-      color: var(--ow-text) !important;
-      font-size: 0.88rem;
-      font-weight: 500;
-      padding: 12px 16px;
-      border: none !important;
-      box-shadow: none !important;
-      letter-spacing: 0.02em;
-    }
-    .ow-accordion-btn:not(.collapsed) {
-      background: rgba(244,168,24,0.1) !important;
-      color: var(--ow-gold) !important;
-      font-weight: 700;
-    }
-    .ow-accordion-btn::after { filter: invert(0.5) sepia(1) hue-rotate(0deg) saturate(2); }
-    .ow-accordion-body {
-      background: var(--ow-surface);
-      color: var(--ow-text-dim);
-      font-size: 0.82rem;
-      line-height: 1.7;
-      padding: 12px 16px;
-      border-top: 1px solid var(--ow-border);
-    }
-
-    /* ─── Restriction Info ─── */
-    .ow-info-box {
-      background: rgba(79,195,247,0.05);
-      border: 1px solid rgba(79,195,247,0.2);
-      clip-path: var(--clip-b);
-      padding: 14px;
-      margin-top: 14px;
-    }
-    .ow-info-box .ow-info-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
-      color: var(--ow-blue);
-      margin-bottom: 8px;
-    }
-    .ow-info-box ul {
-      margin: 0; padding-left: 16px;
-      font-size: 0.78rem;
-      color: var(--ow-text-dim);
-      line-height: 1.7;
-    }
-
-    /* ─── Floating Ball ─── */
-    #assistiveTouch {
-      position: fixed;
-      width: 64px; height: 64px;
-      background: rgba(244,168,24,0.9);
-      border: 2px solid rgba(255,255,255,0.25);
-      clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
-      right: 15px; top: 75%;
-      z-index: 9999;
-      display: flex; align-items: center; justify-content: center;
-      color: #0d1117;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-align: center;
-      line-height: 1.2;
-      cursor: pointer;
-      box-shadow: var(--ow-glow);
-      user-select: none;
-      transition: opacity 0.3s;
-    }
-    #assistiveTouch:active { opacity: 0.8; }
-    #assistiveTouch .close-touch {
-      position: absolute;
-      top: -4px; right: -4px;
-      width: 20px; height: 20px;
-      background: var(--ow-red);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; color: white;
-      border: 2px solid var(--ow-bg);
-    }
-
-    /* ─── Modal ─── */
-    .ow-modal .modal-content {
-      background: var(--ow-panel);
-      border: 1px solid var(--ow-border);
-      clip-path: var(--clip-a);
-      color: var(--ow-text);
-    }
-    .ow-modal .modal-header {
-      background: var(--ow-surface);
-      border-bottom: 1px solid var(--ow-border);
-    }
-    .ow-modal .modal-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--ow-gold);
-    }
-    .ow-modal .btn-close { filter: invert(1); }
-    .ow-modal .modal-footer { border-top: 1px solid var(--ow-border); }
-    .ow-modal .form-label { color: var(--ow-text-dim); font-size: 0.85rem; }
-    .ow-modal .form-control, .ow-modal textarea {
-      background: var(--ow-surface) !important;
-      border: 1px solid var(--ow-border) !important;
-      color: var(--ow-text) !important;
-      border-radius: 0 !important;
-    }
-    .ow-modal .form-control:focus, .ow-modal textarea:focus {
-      border-color: var(--ow-gold) !important;
-      box-shadow: var(--ow-glow) !important;
-    }
-    .ow-modal .btn-light {
-      background: var(--ow-surface) !important;
-      color: var(--ow-text-dim) !important;
-      border: 1px solid var(--ow-border) !important;
-      clip-path: var(--clip-b);
-    }
-
-    /* Survey modal */
-    .ow-modal .btn-check + label {
-      background: var(--ow-surface) !important;
-      border: 1px solid var(--ow-border) !important;
-      color: var(--ow-text-dim) !important;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      clip-path: var(--clip-b) !important;
-      border-radius: 0 !important;
-      transition: all 0.2s;
-    }
-    .ow-modal .btn-check:checked + label {
-      background: linear-gradient(135deg, #f4a818, #e8950c) !important;
-      border-color: var(--ow-gold) !important;
-      color: #0d1117 !important;
-      box-shadow: var(--ow-glow) !important;
-    }
-    .ow-modal .survey-rating label {
-      border-radius: 0 !important;
-      clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%) !important;
-    }
-
-    /* ─── Footer ─── */
-    .ow-footer {
-      border-top: 1px solid var(--ow-border);
-      margin-top: 32px;
-      padding-top: 20px;
-    }
-    .ow-footer-box {
-      background: var(--ow-surface);
-      border: 1px solid var(--ow-border);
-      clip-path: var(--clip-a);
-      padding: 16px 20px;
-      font-size: 0.8rem;
-      color: var(--ow-text-dim);
-      line-height: 1.7;
-      margin-bottom: 16px;
-    }
-    .ow-footer-box strong { color: var(--ow-gold); }
-    .ow-footer-link { color: var(--ow-blue); text-decoration: none; }
-    .ow-footer-link:hover { color: var(--ow-gold); }
-    .ow-copyright {
-      text-align: center;
-      font-size: 0.7rem;
-      color: var(--ow-text-dim);
-      line-height: 1.8;
-    }
-
-    /* ─── Lang hide ─── */
+    /* 語言控制樣式 */
     :lang(en) .zh-only { display: none !important; }
     :lang(zh-TW) .en-only { display: none !important; }
-
-    /* ─── Responsive ─── */
-    @media (max-width: 576px) {
-      .ow-title { font-size: 2rem; }
-      .ow-box-status { min-width: 130px; }
-    }
-
-    /* ─── Decorative corner accent ─── */
-    .ow-corner-accent {
-      position: absolute;
-      top: 0; right: 0;
-      width: 40px; height: 40px;
-      border-top: 2px solid var(--ow-gold);
-      border-right: 2px solid var(--ow-gold);
-      opacity: 0.5;
-    }
   </style>
 </head>
 <body>
 
-  <!-- Floating Hex Ball -->
-  <div id="assistiveTouch"
-       onmousedown="startDrag(event)"
-       ontouchstart="startDrag(event)"
-       aria-label="Quick action button">
-    <div class="inner-text" data-i18n="assistiveTouchText">讚👍<br>支持</div>
-    <div class="close-touch"
-         onmousedown="event.stopPropagation()"
-         ontouchstart="event.stopPropagation()"
-         onclick="closeAssistiveTouch(event)"
-         aria-label="Close">✕</div>
+  <!-- 🍏 小白球按鈕 -->
+  <div id="assistiveTouch" onmousedown="startDrag(event)" ontouchstart="startDrag(event)" aria-label="Quick action button">
+    <div class="inner-text" data-i18n="assistiveTouchText">給個讚<br><i class="fa-solid fa-thumbs-up mt-1"></i></div>
+    <div class="close-touch" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()" onclick="closeAssistiveTouch(event)" aria-label="Close">✕</div>
   </div>
 
-  <div class="ow-container">
-
-    <!-- ── Header ── -->
+  <div class="container">
+    <!-- 🌟 SEO: 使用 <header> 標示網頁頭部資訊區塊 -->
     <header>
-      <div class="ow-topbar">
-        <button class="ow-topbtn ow-topbtn-share ow-btn" onclick="shareWebsite()" aria-label="Share website">
-          <span data-i18n="shareWeb">📤 分享網站</span>
+      <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+        <button class="lang-toggle shadow-sm fw-bold" style="color: #0d6efd; border-color: #cfe2ff; background-color: #f8f9fa;" onclick="shareWebsite()" aria-label="Share website">
+          <span data-i18n="shareWeb"><i class="fa-solid fa-share-nodes me-1"></i>分享網站</span>
         </button>
-        <button class="ow-topbtn ow-btn" onclick="toggleLanguage()" aria-label="Toggle language">
-          🌐 EN / 中文
-        </button>
+        <button class="lang-toggle shadow-sm" onclick="toggleLanguage()" aria-label="Toggle language"><i class="fa-solid fa-globe me-1"></i>EN / 中文</button>
       </div>
 
-      <div class="ow-hero">
-        <div class="ow-logo-mark">
-          <div class="ow-hex">📦</div>
-        </div>
-        <h1 class="ow-title" data-i18n="mainTitle">I 郵箱查找大師</h1>
-        <div class="ow-subtitle">TAIWAN IBOX LOCATOR · MOTORCYCLE NAVIGATION</div>
-        <div id="statsContainer">
-          <div class="ow-stats-badge">
-            <span data-i18n="statsPrefix">累積已提供</span>
-            <span id="totalSearchCount" class="count">...</span>
-            <span data-i18n="statsSuffix">次最佳機車路徑</span>
-          </div>
-        </div>
+      <h1 class="text-center mb-2" style="font-weight: 700; font-size: 1.8rem;">
+        <span data-i18n="mainTitle"><i class="fa-solid fa-motorcycle text-success me-2"></i>i 郵箱查找大師</span>
+      </h1>
+      
+      <div id="statsContainer" class="text-center mb-4">
+        <span class="badge bg-light border text-secondary px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.85rem;">
+          <span data-i18n="statsPrefix"><i class="fa-solid fa-award text-warning me-1"></i>累積已提供</span> <span id="totalSearchCount" class="text-primary fw-bold" style="font-size: 1rem;">...</span> <span data-i18n="statsSuffix">次最佳機車路徑</span>
+        </span>
       </div>
     </header>
 
     <div class="row g-lg-4 justify-content-center">
-
-      <!-- ── Main ── -->
+      <!-- 🌟 SEO: 使用 <main> 標示網頁核心操作與結果區塊 -->
       <main class="col-lg-7">
-
-        <!-- City / District -->
-        <div class="row g-2 mb-2">
+        <section class="row g-2 mb-3">
           <div class="col-6">
-            <select id="cityInput" class="ow-select form-select" onchange="updateDistricts()" aria-label="Select City">
+            <select id="cityInput" class="form-select filter-input" onchange="updateDistricts()" aria-label="Select City">
               <option value="" data-i18n="selectCity">選擇縣市</option>
             </select>
           </div>
           <div class="col-6">
-            <select id="districtInput" class="ow-select form-select" aria-label="Select District">
+            <select id="districtInput" class="form-select filter-input" aria-label="Select District">
               <option value="" data-i18n="selectDistrict">全區 / 不指定 (推薦)</option>
             </select>
           </div>
-        </div>
-
-        <!-- Parcel Measurement -->
-        <div class="ow-panel mb-3" style="padding: 14px 16px;">
-          <div class="ow-corner-accent"></div>
-          <div class="ow-panel-title" data-i18n="measureTitle">📐 寄件包裹預先測量 (選填)</div>
-          <div class="dim-group">
-            <div class="dim-label" data-i18n="dimL">長</div>
-            <input type="number" id="dimL" class="dim-input ow-input form-control" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Length">
-            <div class="dim-label" data-i18n="dimW" style="border-left: none;">寬</div>
-            <input type="number" id="dimW" class="dim-input ow-input form-control" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Width">
-            <div class="dim-label" data-i18n="dimH" style="border-left: none;">高</div>
-            <input type="number" id="dimH" class="dim-input ow-input form-control" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Height">
-          </div>
-          <div id="dimWarningBlock"></div>
-          <div class="ow-measure-note" data-i18n="measureDesc">輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。</div>
-        </div>
-
-        <!-- Address + Search -->
-        <div class="ow-search-group mb-3">
-          <input type="text" id="detailInput" class="ow-input form-control"
-                 placeholder="詳細地址 (必填，如：中正路1號)"
-                 data-i18n-placeholder="detailPl"
-                 aria-label="Detailed Address">
-          <button class="ow-btn ow-btn-gold" onclick="startSearchText()" id="searchBtn" data-i18n="searchBtn">搜尋</button>
-        </div>
-
-        <!-- GPS Button -->
-        <button class="ow-btn ow-btn-gps" onclick="startSearchGPS()" id="gpsBtn">
-          <span style="font-size:1.1rem">📍</span>
-          <span data-i18n="gpsBtn">自動定位並搜尋附近</span>
-        </button>
-
-        <!-- Loader -->
-        <div id="loader" aria-live="polite">
-          <div class="ow-progress-track">
-            <div id="fakeProgressBar" class="ow-progress-bar" style="width: 0%" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <div id="loaderText" data-i18n="loadingText">🚀 正在火速連線郵局主機...</div>
-        </div>
-
-        <!-- Results -->
-        <section id="results" aria-live="polite"></section>
-
-        <div id="bottomAd" class="mt-3 mb-2"></div>
-
-        <!-- Feedback Button -->
-        <div class="text-center mt-3 mb-4">
-          <button type="button" class="ow-btn ow-btn-outline" style="width: auto; padding: 9px 28px;"
-                  data-bs-toggle="modal" data-bs-target="#feedbackModal">
-            <span data-i18n="feedbackBtn">💡 錯誤回報 / 意見回饋</span>
-          </button>
-        </div>
-
-      </main>
-
-      <!-- ── Aside ── -->
-      <aside class="col-lg-5">
-
-        <!-- Pricing Table -->
-        <div class="ow-panel">
-          <div class="ow-corner-accent"></div>
-          <div class="ow-panel-title" data-i18n="tableTitle">📦 i 郵箱資費與尺寸總表</div>
-          <div class="ow-table-wrap mb-2">
-            <table class="ow-table">
-              <thead>
-                <tr>
-                  <th data-i18n="thGen">櫃代</th>
-                  <th data-i18n="thType">格型</th>
-                  <th data-i18n="thSize">尺寸(寬*高*深)</th>
-                  <th data-i18n="thHome">箱到宅</th>
-                  <th data-i18n="thBox">箱到箱</th>
-                </tr>
-              </thead>
-              <tbody class="zh-only">
-                <tr><td rowspan="3">四代</td><td>小方格</td><td>14*17*47</td><td>60</td><td>55</td></tr>
-                <tr><td>中格</td><td>34*17*47</td><td>65</td><td>60</td></tr>
-                <tr><td>大格</td><td>34*27*47</td><td>70</td><td>60</td></tr>
-                <tr><td colspan="5" style="height:6px; background:transparent; border:none;"></td></tr>
-                <tr><td rowspan="5">三代</td><td>小方格</td><td>14*17*47</td><td>60</td><td>55</td></tr>
-                <tr><td>大方格</td><td>34*31*47</td><td>70</td><td>60</td></tr>
-                <tr><td>小格</td><td>34*12*47</td><td>65</td><td>60</td></tr>
-                <tr><td>中格</td><td>34*17*47</td><td>65</td><td>60</td></tr>
-                <tr><td>大格</td><td>34*24*47</td><td>70</td><td>60</td></tr>
-                <tr><td colspan="5" style="height:6px; background:transparent; border:none;"></td></tr>
-                <tr><td rowspan="5">二代</td><td>小方格</td><td>14*17*47</td><td>60</td><td>55</td></tr>
-                <tr><td>大方格</td><td>18*22*47</td><td>65</td><td>60</td></tr>
-                <tr><td>小格</td><td>34*11*47</td><td>65</td><td>60</td></tr>
-                <tr><td>中格</td><td>34*20*47</td><td>70</td><td>60</td></tr>
-                <tr><td>大格</td><td>34*24*47</td><td>70</td><td>60</td></tr>
-              </tbody>
-              <tbody class="en-only">
-                <tr><td rowspan="3">Gen 4</td><td>S-Sq</td><td>14*17*47</td><td>60</td><td>55</td></tr>
-                <tr><td>Med</td><td>34*17*47</td><td>65</td><td>60</td></tr>
-                <tr><td>Lrg</td><td>34*27*47</td><td>70</td><td>60</td></tr>
-                <tr><td colspan="5" style="height:6px;background:transparent;border:none;"></td></tr>
-                <tr><td rowspan="5">Gen 3</td><td>S-Sq</td><td>14*17*47</td><td>60</td><td>55</td></tr>
-                <tr><td>L-Sq</td><td>34*31*47</td><td>70</td><td>60</td></tr>
-                <tr><td>Sml</td><td>34*12*47</td><td>65</td><td>60</td></tr>
-                <tr><td>Med</td><td>34*17*47</td><td>65</td><td>60</td></tr>
-                <tr><td>Lrg</td><td>34*24*47</td><td>70</td><td>60</td></tr>
-                <tr><td colspan="5" style="height:6px;background:transparent;border:none;"></td></tr>
-                <tr><td rowspan="5">Gen 2</td><td>S-Sq</td><td>14*17*47</td><td>60</td><td>55</td></tr>
-                <tr><td>L-Sq</td><td>18*22*47</td><td>65</td><td>60</td></tr>
-                <tr><td>Sml</td><td>34*11*47</td><td>65</td><td>60</td></tr>
-                <tr><td>Med</td><td>34*20*47</td><td>70</td><td>60</td></tr>
-                <tr><td>Lrg</td><td>34*24*47</td><td>70</td><td>60</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="ow-info-box">
-            <div class="ow-info-title" data-i18n="ruleTitle">⚠ 寄件限制與注意事項</div>
-            <ul class="zh-only">
-              <li><strong style="color:var(--ow-gold)">重量：</strong>國內包裹限重 20 公斤。</li>
-              <li><strong style="color:var(--ow-gold)">尺寸：</strong>單邊 ≤ 45 cm，三邊合計 ≤ 105 cm。</li>
-              <li><strong style="color:var(--ow-gold)">代收：</strong>金額不逾新臺幣 6,000 元。</li>
-            </ul>
-            <ul class="en-only">
-              <li><strong style="color:var(--ow-gold)">Weight:</strong> Max 20 kg per parcel.</li>
-              <li><strong style="color:var(--ow-gold)">Size:</strong> Longest side ≤ 45 cm, L+W+H ≤ 105 cm.</li>
-              <li><strong style="color:var(--ow-gold)">COD:</strong> Under NT$ 6,000.</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- FAQ -->
-        <div class="ow-panel">
-          <div class="ow-corner-accent"></div>
-          <div class="ow-panel-title" data-i18n="faqTitle">❓ 常見問題 FAQ</div>
-          <div class="accordion accordion-flush" id="faqAccordion">
-
-            <div class="accordion-item ow-accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed ow-accordion-btn" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" data-i18n="faq1Q">包裹可以在 i 郵箱放多久？</button>
-              </h2>
-              <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body ow-accordion-body" data-i18n="faq1A">包裹送達後，提供存放 <strong style="color:var(--ow-gold)">3 天 (72 小時)</strong>（含例假日）的待領期間。將於第4天早上8點前由郵局人員取出後轉郵局招領。</div>
-              </div>
-            </div>
-
-            <div class="accordion-item ow-accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed ow-accordion-btn" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" data-i18n="faq2Q">蝦皮、MOMO 可以寄到 i 郵箱嗎？</button>
-              </h2>
-              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body ow-accordion-body" data-i18n="faq2A">沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。</div>
-              </div>
-            </div>
-
-            <div class="accordion-item ow-accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed ow-accordion-btn" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" data-i18n="faq3Q">如何使用ｉ郵箱取件？</button>
-              </h2>
-              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body ow-accordion-body" data-i18n="faq3A">郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。</div>
-              </div>
-            </div>
-
-            <div class="accordion-item ow-accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed ow-accordion-btn" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" data-i18n="faq4Q">什麼是ｉ郵箱？</button>
-              </h2>
-              <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body ow-accordion-body" data-i18n="faq4A">ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。可於網路購物後遞送至ｉ郵箱，在領件時間內至指定地點取件。</div>
-              </div>
-            </div>
-
-            <div class="accordion-item ow-accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed ow-accordion-btn" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" data-i18n="faq5Q">如何支付寄件郵資？</button>
-              </h2>
-              <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body ow-accordion-body" data-i18n="faq5A">目前提供郵政金融卡、悠遊卡、一卡通及icash 2.0、iPASS MONEY、悠遊付、街口支付等多種行動支付。</div>
-              </div>
-            </div>
-
-            <div class="accordion-item ow-accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed ow-accordion-btn" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" data-i18n="faq6Q">重要！寄件注意事項！</button>
-              </h2>
-              <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body ow-accordion-body" data-i18n="faq6A">
-                  1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>
-                  2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>
-                  3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href="https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348" target="_blank" rel="noopener" class="ow-footer-link">(參考網址)</a><br>
-                  4. 一個儲格只能放置一個包裹且不可併箱。<br>
-                  5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。
+          
+          <div class="col-12 mt-2">
+            <div class="card border-0 shadow-sm rounded-3 mb-1" style="background-color: #fff9e6;">
+              <div class="card-body p-2 px-3">
+                <div class="d-flex align-items-center mb-2">
+                  <!-- 🌟 SEO: 將 h6 改為 h2 以符合標題層級，並透過 class 維持原有樣式 -->
+                  <h2 class="card-title fw-bold mb-0 text-primary h6" style="font-size: 0.85rem;" data-i18n="measureTitle"><i class="fa-solid fa-box text-primary me-2 fs-6"></i>寄件包裹預先測量 (選填)</h2>
+                </div>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white text-secondary border-end-0" data-i18n="dimL">長</span>
+                  <input type="number" id="dimL" class="form-control border-start-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Length">
+                  <span class="input-group-text bg-white text-secondary border-end-0 border-start-0" data-i18n="dimW">寬</span>
+                  <input type="number" id="dimW" class="form-control border-start-0 border-end-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Width">
+                  <span class="input-group-text bg-white text-secondary border-end-0 border-start-0" data-i18n="dimH">高</span>
+                  <input type="number" id="dimH" class="form-control border-start-0 text-center px-1" placeholder="cm" min="1" max="45" onchange="checkDimLimit(this)" aria-label="Height">
+                </div>
+                <div id="dimWarningBlock" class="alert alert-danger mt-2 mb-0 py-2 px-3 small fw-bold" style="display: none; border-radius: 8px;"></div>
+                <div class="form-text mt-1 text-muted" style="font-size: 0.7rem;" data-i18n="measureDesc">
+                  輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。
                 </div>
               </div>
             </div>
+          </div>
 
+          <div class="col-12">
+            <div class="input-group search-group">
+              <input type="text" id="detailInput" class="form-control" placeholder="詳細地址 (必填，如：中正路1號)" data-i18n-placeholder="detailPl" aria-label="Detailed Address">
+              <button class="btn btn-primary" onclick="startSearchText()" id="searchBtn" data-i18n="searchBtn">搜尋</button>
+            </div>
+          </div>
+        </section>
+
+        <button class="btn-gps shadow-sm" onclick="startSearchGPS()" id="gpsBtn">
+          <span data-i18n="gpsBtn"><i class="fa-solid fa-location-crosshairs me-2"></i>自動定位並搜尋附近</span>
+        </button>
+
+        <div id="loader" class="text-center loading" style="margin-bottom: 25px;" aria-live="polite">
+          <div class="progress shadow-sm mb-2">
+            <div id="fakeProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                 role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            </div>
+          </div>
+          <p id="loaderText" class="text-secondary" style="font-size: 0.9rem; font-weight: 500;" data-i18n="loadingText"><i class="fa-solid fa-rocket text-danger me-2"></i>正在火速規劃最佳機車路徑...</p>
+        </div>
+
+        <section id="results" aria-live="polite"></section>
+        <div id="bottomAd" class="mt-4 mb-2"></div>
+
+        <div class="text-center mt-3 mb-4">
+          <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+            <span data-i18n="feedbackBtn"><i class="fa-solid fa-lightbulb text-warning me-2"></i>錯誤回報 / 意見回饋</span>
+          </button>
+        </div>
+      </main> 
+      
+      <!-- 🌟 SEO: 使用 <aside> 標示側邊附屬資訊區塊 -->
+      <aside class="col-lg-5">
+        <section class="side-card">
+          <!-- 🌟 SEO: 將 h5 改為 h2 以符合標題層級，並透過 h5 class 維持視覺大小 -->
+          <h2 class="fw-bold mb-3 text-dark h5" data-i18n="tableTitle"><i class="fa-solid fa-box-open text-primary me-2"></i>i 郵箱資費與尺寸總表</h2>
+          <div class="seo-table-wrapper table-responsive border rounded mb-3">
+            <table class="table table-sm table-hover text-center align-middle mb-0" style="font-size: 0.75rem; white-space: nowrap;">
+              <thead style="position: sticky; top: 0; z-index: 1;">
+                <tr style="background-color: #eef5ff;">
+                  <th class="text-primary py-2 border-bottom" data-i18n="thGen">櫃代</th>
+                  <th class="text-primary py-2 border-bottom" data-i18n="thType">格型</th>
+                  <th class="text-primary py-2 border-bottom" data-i18n="thSize">尺寸(寬*高*深)</th>
+                  <th class="text-primary py-2 border-bottom" data-i18n="thHome">箱到宅</th>
+                  <th class="text-primary py-2 border-bottom" data-i18n="thBox">箱到箱</th>
+                </tr>
+              </thead>
+              <tbody class="zh-only">
+                <tr><td rowspan="3" class="fw-bold text-secondary bg-light border-end">四代</td><td>小方格</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
+                <tr><td>中格</td><td>34*17*47 cm</td><td>65</td><td>60</td></tr>
+                <tr class="border-bottom-0"><td>大格</td><td>34*27*47 cm</td><td>70</td><td>60</td></tr>
+                <tr style="border-top: 2px solid #eaeaea;"><td colspan="5" class="p-0"></td></tr>
+                <tr><td rowspan="5" class="fw-bold text-secondary bg-light border-end">三代</td><td>小方格</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
+                <tr><td>大方格</td><td>34*31*47 cm</td><td>70</td><td>60</td></tr>
+                <tr><td>小格</td><td>34*12*47 cm</td><td>65</td><td>60</td></tr>
+                <tr><td>中格</td><td>34*17*47 cm</td><td>65</td><td>60</td></tr>
+                <tr class="border-bottom-0"><td>大格</td><td>34*24*47 cm</td><td>70</td><td>60</td></tr>
+                <tr style="border-top: 2px solid #eaeaea;"><td colspan="5" class="p-0"></td></tr>
+                <tr><td rowspan="5" class="fw-bold text-secondary bg-light border-end">二代</td><td>小方格</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
+                <tr><td>大方格</td><td>18*22*47 cm</td><td>65</td><td>60</td></tr>
+                <tr><td>小格</td><td>34*11*47 cm</td><td>65</td><td>60</td></tr>
+                <tr><td>中格</td><td>34*20*47 cm</td><td>70</td><td>60</td></tr>
+                <tr><td>大格</td><td>34*24*47 cm</td><td>70</td><td>60</td></tr>
+              </tbody>
+              <tbody class="en-only">
+                <tr><td rowspan="3" class="fw-bold text-secondary bg-light border-end">Gen 4</td><td>S-Square</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
+                <tr><td>Medium</td><td>34*17*47 cm</td><td>65</td><td>60</td></tr>
+                <tr class="border-bottom-0"><td>Large</td><td>34*27*47 cm</td><td>70</td><td>60</td></tr>
+                <tr style="border-top: 2px solid #eaeaea;"><td colspan="5" class="p-0"></td></tr>
+                <tr><td rowspan="5" class="fw-bold text-secondary bg-light border-end">Gen 3</td><td>S-Square</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
+                <tr><td>L-Square</td><td>34*31*47 cm</td><td>70</td><td>60</td></tr>
+                <tr><td>Small</td><td>34*12*47 cm</td><td>65</td><td>60</td></tr>
+                <tr><td>Medium</td><td>34*17*47 cm</td><td>65</td><td>60</td></tr>
+                <tr class="border-bottom-0"><td>Large</td><td>34*24*47 cm</td><td>70</td><td>60</td></tr>
+                <tr style="border-top: 2px solid #eaeaea;"><td colspan="5" class="p-0"></td></tr>
+                <tr><td rowspan="5" class="fw-bold text-secondary bg-light border-end">Gen 2</td><td>S-Square</td><td>14*17*47 cm</td><td>60</td><td>55</td></tr>
+                <tr><td>L-Square</td><td>18*22*47 cm</td><td>65</td><td>60</td></tr>
+                <tr><td>Small</td><td>34*11*47 cm</td><td>65</td><td>60</td></tr>
+                <tr><td>Medium</td><td>34*20*47 cm</td><td>70</td><td>60</td></tr>
+                <tr><td>Large</td><td>34*24*47 cm</td><td>70</td><td>60</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="alert alert-info border-0 shadow-sm p-3 mb-0 rounded-3" style="background-color: #f8fbff;">
+            <div class="fw-bold text-primary mb-2" style="font-size: 0.85rem;" data-i18n="ruleTitle"><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>寄件限制與注意事項</div>
+            <ul class="mb-0 ps-3 text-secondary zh-only" style="font-size: 0.75rem; line-height: 1.6;">
+              <li><strong>重量限制：</strong>國內包裹、快捷郵件限重 <strong>20 公斤</strong>。</li>
+              <li><strong>尺寸限制：</strong>單邊最大不逾 <strong>45 公分</strong>，長寬高合計不逾 <strong>105 公分</strong>。請預留約 5 公分空間方便拿取。</li>
+              <li><strong>代收貨款：</strong>金額不逾新臺幣 <strong>6,000 元</strong>。</li>
+            </ul>
+            <ul class="mb-0 ps-3 text-secondary en-only" style="font-size: 0.75rem; line-height: 1.6;">
+              <li><strong>Max Weight:</strong> 20 kg per parcel.</li>
+              <li><strong>Max Dimensions:</strong> Longest side ≤ 45 cm, total L+W+H ≤ 105 cm. Reserve ~5cm for easy pickup.</li>
+              <li><strong>Cash on Delivery:</strong> Under NT$ 6,000.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <!-- 🌟 SEO: 將 h5 改為 h2 以符合標題層級，並透過 h5 class 維持視覺大小 -->
+          <h2 class="fw-bold mb-3 text-dark h5" data-i18n="faqTitle"><i class="fa-solid fa-circle-question text-info me-2"></i>常見問題 FAQ</h2>
+          <div class="accordion accordion-flush" id="faqAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" data-i18n="faq1Q">包裹可以在 i 郵箱放多久？</button></h2>
+              <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq1A">包裹送達後，會提供存放 <strong>3 天 (72 小時)</strong>(含例假日)的待領期間。將於第4天早上8點前由郵局人員取出後轉郵局招領。</div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" data-i18n="faq2Q">蝦皮、MOMO 可以寄到 i 郵箱嗎？</button></h2>
+              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq2A">沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。</div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" data-i18n="faq3Q">如何使用ｉ郵箱取件？</button></h2>
+              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq3A">郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。</div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" data-i18n="faq4Q">什麼是ｉ郵箱？</button></h2>
+              <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq4A">ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。可於網路購物後遞送至ｉ郵箱，在領件時間內至指定地點取件。</div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" data-i18n="faq5Q">如何支付寄件郵資？</button></h2>
+              <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq5A">目前提供郵政金融卡、悠遊卡、一卡通及icash 2.0、iPASS MONEY、悠遊付、街口支付等多種行動支付。</div></div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" data-i18n="faq6Q">重要！寄件注意事項！</button></h2>
+              <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary" style="line-height: 1.6;" data-i18n="faq6A">1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href="https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348" target="_blank" rel="noopener" class="text-decoration-none text-primary me-2">(參考網址)</a><br>4. 一個儲格只能放置一個包裹且不可併箱。<br>5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。</div></div>
+            </div>
+          </div>
+        </section>
+      </aside> 
+    </div> 
+
+    <!-- 意見回饋 Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold" data-i18n="fbTitle">意見回饋</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-start">
+            <div class="mb-3">
+              <label for="feedbackName" class="form-label text-secondary small" data-i18n="fbName">您的姓名/暱稱</label>
+              <input type="text" class="form-control" id="feedbackName" placeholder="例如：王大明 (選填)" data-i18n-placeholder="fbNamePl">
+            </div>
+            <div class="mb-3">
+              <label for="feedbackMessage" class="form-label text-secondary small"><span data-i18n="fbMsg">回饋內容</span> <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="feedbackMessage" rows="4" placeholder="請描述您遇到的問題或給我們的建議..." data-i18n-placeholder="fbMsgPl"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal" data-i18n="fbCancel">取消</button>
+            <button type="button" class="btn btn-primary px-4" onclick="submitFeedback()" id="submitFeedbackBtn" data-i18n="fbSubmit">送出回饋</button>
           </div>
         </div>
-
-      </aside>
+      </div>
     </div>
 
-    <!-- ── Footer ── -->
-    <footer class="ow-footer">
-      <div class="ow-footer-box">
-        <strong data-i18n="footer1">💡 關於 i 郵箱查找大師：</strong><br>
-        <span class="zh-only">提供全台 24 小時 <strong>i 郵箱 (iBox)</strong> 據點查詢、即時空格狀態，以及獨家的<strong>機車導航</strong>路線規劃。無論是 PChome、MOMO 網購取件，或是中華郵政包裹寄件，一鍵定位，立即找到最近的 i 郵箱！</span>
-        <span class="en-only">24/7 <strong>iBox locator</strong> with real-time locker availability and exclusive <strong>motorcycle navigation</strong>. Find the nearest iBox in one click.</span>
-        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--ow-border); font-size: 0.75rem;">
-          <span style="color: var(--ow-gold); font-weight: 700;">官方連結：</span>
-          <a href="https://postserv.post.gov.tw/pstmail/main_mail.html?targetTxn=EB500100" target="_blank" rel="noopener" class="ow-footer-link">郵件查詢</a> ·
-          <a href="https://ezpost.post.gov.tw/" target="_blank" rel="noopener" class="ow-footer-link">ezPost 郵寄便</a> ·
-          <a href="https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=1506568354956" target="_blank" rel="noopener" class="ow-footer-link">資費說明</a> ·
-          <a href="https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348" target="_blank" rel="noopener" class="ow-footer-link">禁寄物品</a>
+    <!-- 問卷調查 Modal -->
+    <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+          <div class="modal-header bg-light" style="border-radius: 20px 20px 0 0;">
+            <h5 class="modal-title fw-bold" data-i18n="svTitle"><i class="fa-solid fa-clipboard-list text-primary me-2"></i>幫助我們變得更好</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button>
+          </div>
+          <div class="modal-body text-start p-4">
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark" data-i18n="svQ1">1. 請問您這次查詢是為了？</label>
+              <div class="d-flex flex-wrap gap-2 justify-content-center mt-2">
+                <input type="radio" class="btn-check" name="surveyRole" id="role1" value="寄件" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold shadow-sm" for="role1" data-i18n="svA1"><i class="fa-solid fa-box me-1"></i>我要寄件</label>
+                <input type="radio" class="btn-check" name="surveyRole" id="role2" value="取件" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold shadow-sm" for="role2" data-i18n="svA2"><i class="fa-solid fa-bag-shopping me-1"></i>我要取件</label>
+                <input type="radio" class="btn-check" name="surveyRole" id="role3" value="測試" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold shadow-sm" for="role3" data-i18n="svA3"><i class="fa-solid fa-flask me-1"></i>純粹測試</label>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark" data-i18n="svQ2">2. 使用體驗？ (1很差 → 5很棒)</label>
+              <div class="d-flex justify-content-between gap-2 mt-2 px-2">
+                <input type="radio" class="btn-check" name="surveyUX" id="ux1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux1">1</label>
+                <input type="radio" class="btn-check" name="surveyUX" id="ux2" value="2" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux2">2</label>
+                <input type="radio" class="btn-check" name="surveyUX" id="ux3" value="3" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux3">3</label>
+                <input type="radio" class="btn-check" name="surveyUX" id="ux4" value="4" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux4">4</label>
+                <input type="radio" class="btn-check" name="surveyUX" id="ux5" value="5" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="ux5">5</label>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-bold text-dark" data-i18n="svQ3">3. 格位準確度？ (1不準 → 5很準)</label>
+              <div class="d-flex justify-content-between gap-2 mt-2 px-2">
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc1">1</label>
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc2" value="2" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc2">2</label>
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc3" value="3" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc3">3</label>
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc4" value="4" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc4">4</label>
+                <input type="radio" class="btn-check" name="surveyAccuracy" id="acc5" value="5" autocomplete="off">
+                <label class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm" style="width: 45px; height: 45px;" for="acc5">5</label>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-pill" onclick="submitSurvey()" id="submitSurveyBtn" data-i18n="svSubmit">送出問卷</button>
+            <div class="text-center mt-3"><a href="#" class="text-muted small text-decoration-none" data-bs-dismiss="modal" onclick="markSurveyDone()" data-i18n="svSkip">先不要，略過</a></div>
+          </div>
         </div>
-        <span style="color: var(--ow-green); font-weight: 700; display: inline-block; margin-top: 6px;" data-i18n="footer2">✅ 資料來源：中華郵政 Open Data</span>
       </div>
-      <div class="ow-copyright">
-        &copy; Design by Chiahsien · i 郵箱查找大師 v1.0<br>
-        <span style="font-size: 0.68rem;">(本站非官方網站，位置資訊僅用於距離計算，不作他用)</span><br>
-        <a href="#" class="ow-footer-link" style="font-size:0.72rem;" data-bs-toggle="modal" data-bs-target="#privacyModal">隱私權聲明 / Privacy Policy</a>
+    </div>
+
+    <!-- 隱私權聲明 Modal -->
+    <div class="modal fade" id="privacyModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="border-radius: 16px;">
+          <div class="modal-header bg-light" style="border-radius: 16px 16px 0 0;">
+            <h5 class="modal-title fw-bold zh-only">隱私權聲明</h5>
+            <h5 class="modal-title fw-bold en-only">Privacy Policy</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-start p-4" style="font-size: 0.9rem; line-height: 1.6;">
+            <div class="zh-only">
+              <h6 class="fw-bold text-primary">1. 位置資訊使用與保護</h6>
+              <p class="text-secondary mb-3">本網站僅在您的明確授權下，使用裝置的 GPS 定位功能來提供導航。我們<strong>絕對不會</strong>記錄或分享您的確切座標。</p>
+              <h6 class="fw-bold text-primary">2. 匿名資料收集</h6>
+              <p class="text-secondary mb-3">我們會匿名記錄「去識別化搜尋地址」、「包裹尺寸」及「搜尋結果」用於優化系統，不包含個人身分資訊。</p>
+              <h6 class="fw-bold text-primary">3. 外部服務與 API</h6>
+              <p class="text-secondary mb-0">本站串接中華郵政 Open Data 與 Google Maps API，使用本站即表示同意相關服務條款。</p>
+            </div>
+            <div class="en-only">
+              <h6 class="fw-bold text-primary">1. Location Data</h6>
+              <p class="text-secondary mb-3">We use GPS only for navigation with your permission. We <strong>do not</strong> record or share your exact coordinates.</p>
+              <h6 class="fw-bold text-primary">2. Anonymous Collection</h6>
+              <p class="text-secondary mb-3">We log de-identified addresses, parcel sizes, and results for analytics. No personal ID information is stored.</p>
+              <h6 class="fw-bold text-primary">3. APIs</h6>
+              <p class="text-secondary mb-0">We use Chunghwa Post Open Data and Google Maps API. Usage implies consent to their terms.</p>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary w-100 rounded-pill zh-only" data-bs-dismiss="modal">我知道了</button>
+            <button type="button" class="btn btn-secondary w-100 rounded-pill en-only" data-bs-dismiss="modal">I Understand</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🌟 SEO: 使用 <footer> 標示頁尾區塊 -->
+    <footer class="footer-copy mt-4 mb-5">
+      <div class="text-start text-muted mb-3 p-3 rounded" style="background-color: #eef2f7; font-size: 0.8rem; line-height: 1.6;">
+        <strong data-i18n="footer1"><i class="fa-solid fa-lightbulb text-warning me-1"></i>關於 i 郵箱查找大師：</strong><br>
+        <span class="zh-only">提供全台 24 小時 <strong>i 郵箱 (iBox)</strong> 據點查詢、即時空格狀態（大、中、小格位），以及獨家的<strong>機車導航</strong>路線規劃。無論是在PChome、MOMO、東森購物等等網購取件，或是中華郵政國內包裹寄件、取件、ezPost 郵寄便，一鍵定位，就能馬上為您找到距離最近的 i 郵箱，省時又便利！</span>
+        <span class="en-only">Providing 24/7 <strong>iBox locator</strong> services across Taiwan, featuring real-time locker availability (large, medium, and small) and exclusive <strong>motorcycle navigation</strong> routes. Whether you are picking up online orders from PChome, MOMO, or Eastern Shopping, or sending/receiving domestic parcels via Chunghwa Post and ezPost, you can find the nearest iBox in one click—saving you time and hassle!</span><br>
+        
+        <div class="mt-2 pt-2 border-top border-secondary border-opacity-10" style="font-size: 0.75rem;">
+          <span class="text-dark fw-bold me-2">官方連結：</span>
+          <a href="https://postserv.post.gov.tw/pstmail/main_mail.html?targetTxn=EB500100" target="_blank" rel="noopener" class="text-decoration-none text-primary me-2">郵件查詢</a> |
+          <a href="https://ezpost.post.gov.tw/" target="_blank" rel="noopener" class="text-decoration-none text-primary me-2">ezPost 郵寄便</a> |
+          <a href="https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=1506568354956" target="_blank" rel="noopener" class="text-decoration-none text-primary mx-2">資費說明</a> |
+          <a href="https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348" target="_blank" rel="noopener" class="text-decoration-none text-primary ms-2">禁寄物品</a>
+        </div>
+        <span class="text-success fw-bold d-inline-block mt-2" data-i18n="footer2"><i class="fa-solid fa-check-circle text-success me-1"></i>資料來源：中華郵政 Open Data</span>
+      </div>
+      
+      <div class="text-center w-100 mx-auto" style="font-size: 0.7rem; color: #a0a0a0; max-width: 400px; line-height: 1.6;">
+        &copy; Design by Chiahsien <br>
+        i 郵箱查找大師 v1.0 <br>
+        <span class="text-secondary">(本站非官方網站，位置資訊僅用於距離計算，不作他用)</span><br>
+        <a href="#" class="text-decoration-none text-muted" style="text-decoration: underline !important;" data-bs-toggle="modal" data-bs-target="#privacyModal">隱私權聲明 / Privacy Policy</a>
       </div>
     </footer>
-
-  </div><!-- /ow-container -->
-
-
-  <!-- ─── Feedback Modal ─── -->
-  <div class="modal fade ow-modal" id="feedbackModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" data-i18n="fbTitle">意見回饋</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="feedbackName" class="form-label" data-i18n="fbName">您的姓名/暱稱</label>
-            <input type="text" class="form-control" id="feedbackName" placeholder="例如：王大明 (選填)" data-i18n-placeholder="fbNamePl">
-          </div>
-          <div class="mb-3">
-            <label for="feedbackMessage" class="form-label"><span data-i18n="fbMsg">回饋內容</span> <span style="color:var(--ow-red)">*</span></label>
-            <textarea class="form-control" id="feedbackMessage" rows="4" placeholder="請描述您遇到的問題或給我們的建議..." data-i18n-placeholder="fbMsgPl"></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal" data-i18n="fbCancel">取消</button>
-          <button type="button" class="ow-btn ow-btn-gold" style="clip-path:var(--clip-b); padding: 10px 24px;" onclick="submitFeedback()" id="submitFeedbackBtn" data-i18n="fbSubmit">送出回饋</button>
-        </div>
-      </div>
-    </div>
   </div>
-
-  <!-- ─── Survey Modal ─── -->
-  <div class="modal fade ow-modal" id="surveyModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" data-i18n="svTitle">📝 幫助我們變得更好</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="markSurveyDone()"></button>
-        </div>
-        <div class="modal-body p-4">
-          <div class="mb-4">
-            <label class="form-label" style="font-weight:700;color:var(--ow-text);" data-i18n="svQ1">1. 請問您這次查詢是為了？</label>
-            <div class="d-flex flex-wrap gap-2 justify-content-center mt-2">
-              <input type="radio" class="btn-check" name="surveyRole" id="role1" value="寄件" autocomplete="off">
-              <label class="btn" for="role1" data-i18n="svA1">📦 我要寄件</label>
-              <input type="radio" class="btn-check" name="surveyRole" id="role2" value="取件" autocomplete="off">
-              <label class="btn" for="role2" data-i18n="svA2">🛍️ 我要取件</label>
-              <input type="radio" class="btn-check" name="surveyRole" id="role3" value="測試" autocomplete="off">
-              <label class="btn" for="role3" data-i18n="svA3">🤔 純粹測試</label>
-            </div>
-          </div>
-          <div class="mb-4">
-            <label class="form-label" style="font-weight:700;color:var(--ow-text);" data-i18n="svQ2">2. 使用體驗？ (1很差 → 5很棒)</label>
-            <div class="d-flex justify-content-between gap-2 mt-2 px-2 survey-rating">
-              <input type="radio" class="btn-check" name="surveyUX" id="ux1" value="1" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="ux1">1</label>
-              <input type="radio" class="btn-check" name="surveyUX" id="ux2" value="2" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="ux2">2</label>
-              <input type="radio" class="btn-check" name="surveyUX" id="ux3" value="3" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="ux3">3</label>
-              <input type="radio" class="btn-check" name="surveyUX" id="ux4" value="4" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="ux4">4</label>
-              <input type="radio" class="btn-check" name="surveyUX" id="ux5" value="5" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="ux5">5</label>
-            </div>
-          </div>
-          <div class="mb-4">
-            <label class="form-label" style="font-weight:700;color:var(--ow-text);" data-i18n="svQ3">3. 格位準確度？ (1不準 → 5很準)</label>
-            <div class="d-flex justify-content-between gap-2 mt-2 px-2 survey-rating">
-              <input type="radio" class="btn-check" name="surveyAccuracy" id="acc1" value="1" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="acc1">1</label>
-              <input type="radio" class="btn-check" name="surveyAccuracy" id="acc2" value="2" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="acc2">2</label>
-              <input type="radio" class="btn-check" name="surveyAccuracy" id="acc3" value="3" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="acc3">3</label>
-              <input type="radio" class="btn-check" name="surveyAccuracy" id="acc4" value="4" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="acc4">4</label>
-              <input type="radio" class="btn-check" name="surveyAccuracy" id="acc5" value="5" autocomplete="off"><label class="btn d-flex align-items-center justify-content-center fw-bold" style="width:46px;height:46px;" for="acc5">5</label>
-            </div>
-          </div>
-          <button type="button" class="ow-btn ow-btn-gold w-100 py-2" onclick="submitSurvey()" id="submitSurveyBtn" data-i18n="svSubmit">送出問卷</button>
-          <div class="text-center mt-3">
-            <a href="#" style="color:var(--ow-text-dim);font-size:0.82rem;" data-bs-dismiss="modal" onclick="markSurveyDone()" data-i18n="svSkip">先不要，略過</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ─── Privacy Modal ─── -->
-  <div class="modal fade ow-modal" id="privacyModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title zh-only">隱私權聲明</h5>
-          <h5 class="modal-title en-only">Privacy Policy</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body p-4" style="font-size:0.88rem;line-height:1.7;">
-          <div class="zh-only">
-            <p style="color:var(--ow-gold);font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:.08em;">01 · 位置資訊使用與保護</p>
-            <p style="color:var(--ow-text-dim)">本網站僅在您的明確授權下，使用裝置的 GPS 定位功能來提供導航。我們<strong style="color:var(--ow-text)">絕對不會</strong>記錄或分享您的確切座標。</p>
-            <p style="color:var(--ow-gold);font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:.08em;">02 · 匿名資料收集</p>
-            <p style="color:var(--ow-text-dim)">我們會匿名記錄「去識別化搜尋地址」、「包裹尺寸」及「搜尋結果」用於優化系統，不包含個人身分資訊。</p>
-            <p style="color:var(--ow-gold);font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:.08em;">03 · 外部服務與 API</p>
-            <p style="color:var(--ow-text-dim);margin-bottom:0">本站串接中華郵政 Open Data 與 Google Maps API，使用本站即表示同意相關服務條款。</p>
-          </div>
-          <div class="en-only">
-            <p style="color:var(--ow-gold);font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:.08em;">01 · Location Data</p>
-            <p style="color:var(--ow-text-dim)">We use GPS only for navigation with your permission. We <strong style="color:var(--ow-text)">do not</strong> record or share your exact coordinates.</p>
-            <p style="color:var(--ow-gold);font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:.08em;">02 · Anonymous Collection</p>
-            <p style="color:var(--ow-text-dim)">We log de-identified addresses, parcel sizes, and results for analytics. No personal ID is stored.</p>
-            <p style="color:var(--ow-gold);font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:.08em;">03 · APIs</p>
-            <p style="color:var(--ow-text-dim);margin-bottom:0">We use Chunghwa Post Open Data and Google Maps API. Usage implies consent to their terms.</p>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="ow-btn ow-btn-gold w-100 zh-only" data-bs-dismiss="modal">我知道了</button>
-          <button type="button" class="ow-btn ow-btn-gold w-100 en-only" data-bs-dismiss="modal">I Understand</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // ─── Constants ───────────────────────────────────────────────
     const GAS_API_URL_SEARCH = 'https://script.google.com/macros/s/AKfycbwXO-oMiYRG4RuqenL4lBtBKuIY2S3U_QSnDxMGQ_kEpwgXzW8Q7wvWObBL_wHPpe2A6Q/exec';
-    const GAS_API_URL_LOG    = 'https://script.google.com/macros/s/AKfycbxVGuaW1uBynyiQdrzTlUO3g5WQ9lD3aI1bJnYVkcDreDJk7kgLMjKB4jHTiP-oCrU_dQ/exec';
+    const GAS_API_URL_LOG = 'https://script.google.com/macros/s/AKfycbxVGuaW1uBynyiQdrzTlUO3g5WQ9lD3aI1bJnYVkcDreDJk7kgLMjKB4jHTiP-oCrU_dQ/exec';
+
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
+    // 🌟 SEO: 優化圖片的 alt 屬性，加入更有意義的關鍵字
     const adBanners = [
-      `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display:block;margin-bottom:16px;"><img src="banner-img-960-240-01_0.jpg" alt="中華郵政 i郵箱活動推廣" class="img-fluid w-100" style="clip-path:polygon(8px 0%,100% 0%,100% calc(100% - 8px),calc(100% - 8px) 100%,0% 100%,0% 8px);border:1px solid var(--ow-border);"></a>`,
-      `<a href="https://lottery.post.gov.tw/post/internet/post_vote115/index.jsp" target="_blank" style="display:block;margin-bottom:16px;"><img src="banner-img-960-240-05_0.jpg" alt="中華郵政 i郵箱活動推廣" class="img-fluid w-100" style="clip-path:polygon(8px 0%,100% 0%,100% calc(100% - 8px),calc(100% - 8px) 100%,0% 100%,0% 8px);border:1px solid var(--ow-border);"></a>`,
-      `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display:block;margin-bottom:16px;"><img src="banner-img-960-240-04_0.jpg" alt="中華郵政 i郵箱活動推廣" class="img-fluid w-100" style="clip-path:polygon(8px 0%,100% 0%,100% calc(100% - 8px),calc(100% - 8px) 100%,0% 100%,0% 8px);border:1px solid var(--ow-border);"></a>`
+      `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-img-960-240-01_0.jpg" alt="中華郵政 i郵箱活動推廣" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`,
+      `<a href="https://lottery.post.gov.tw/post/internet/post_vote115/index.jsp" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-img-960-240-05_0.jpg" alt="中華郵政 i郵箱活動推廣" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`,
+      `<a href="https://www.postmall.com.tw/page4.aspx?uid=511" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;"><img src="banner-img-960-240-04_0.jpg" alt="中華郵政 i郵箱活動推廣" class="img-fluid w-100 rounded shadow-sm" style="border: 1px solid #eaeaea;"></a>`
     ];
 
     const taiwanData = {"台北市":["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"],"新北市":["板橋區","三重區","中和區","永和區","新莊區","新店區","樹林區","鶯歌區","三峽區","淡水區","汐止區","瑞芳區","土城區","蘆洲區","五股區","泰山區","林口區","深坑區","石碇區","坪林區","三芝區","石門區","八里區","平溪區","雙溪區","貢寮區","金山區","萬里區","烏來區"],"桃園市":["桃園區","中壢區","大溪區","楊梅區","蘆竹區","大園區","龜山區","八德區","龍潭區","平鎮區","新屋區","觀音區","復興區"],"台中市":["中區","東區","南區","西區","北區","北屯區","西屯區","南屯區","太平區","大里區","霧峰區","烏日區","豐原區","后里區","石岡區","東勢區","和平區","新社區","潭子區","大雅區","神岡區","大肚區","沙鹿區","龍井區","梧棲區","清水區","大甲區","外埔區","大安區"],"台南市":["中西區","東區","南區","北區","安平區","安南區","永康區","歸仁區","新化區","左鎮區","玉井區","楠西區","南化區","仁德區","關廟區","龍崎區","官田區","麻豆區","佳里區","西港區","七股區","將軍區","學甲區","北門區","新營區","後壁區","白河區","東山區","六甲區","下營區","柳營區","鹽水區","善化區","大內區","山上區","新市區","安定區"],"高雄市":["新興區","前金區","苓雅區","鹽埕區","鼓山區","旗津區","前鎮區","三民區","楠梓區","小港區","左營區","仁武區","大社區","岡山區","路竹區","阿蓮區","田寮區","燕巢區","橋頭區","梓官區","彌陀區","永安區","湖內區","鳳山區","大寮區","林園區","鳥松區","大樹區","旗山區","美濃區","六龜區","內門區","杉林區","甲仙區","桃源區","那瑪夏區","茂林區"],"基隆市":["仁愛區","信義區","中正區","中山區","安樂區","暖暖區","七堵區"],"新竹市":["東區","北區","香山區"],"新竹縣":["竹北市","湖口鄉","新豐鄉","新埔鎮","關西鎮","芎林鄉","寶山鄉","竹東鎮","五峰鄉","橫山鄉","尖石鄉","北埔鄉","峨眉鄉"],"苗栗縣":["竹南鎮","頭份市","三灣鄉","南庄鄉","獅潭鄉","後龍鎮","通霄鎮","苑裡鎮","苗栗市","造橋鄉","頭屋鄉","公館鄉","大湖鄉","泰安鄉","銅鑼鄉","三義鄉","西湖鄉","卓蘭鎮"],"彰化縣":["彰化市","鹿港鎮","和美鎮","線西鄉","伸港鄉","福興鄉","秀水鄉","花壇鄉","芬園鄉","員林市","溪湖鎮","田中鎮","大村鄉","埔鹽鄉","埔心鄉","永靖鄉","社頭鄉","二水鄉","田尾鄉","埤頭鄉","芳苑鄉","二林鎮","大城鄉","竹塘鄉","溪州鄉"],"南投縣":["南投市","埔里鎮","草屯鎮","竹山鎮","集集鎮","名間鄉","鹿谷鄉","中寮鄉","魚池鄉","國姓鄉","水里鄉","信義鄉","仁愛鄉"],"雲林縣":["斗六市","斗南鎮","虎尾鎮","西螺鎮","土庫鎮","北港鎮","古坑鄉","大埤鄉","莿桐鄉","林內鄉","二崙鄉","崙背鄉","麥寮鄉","東勢鄉","褒忠鄉","台西鄉","元長鄉","四湖鄉","口湖鄉","水林鄉"],"嘉義市":["東區","西區"],"嘉義縣":["太保市","朴子市","布袋鎮","大林鎮","民雄鄉","溪口鄉","新港鄉","六腳鄉","東石鄉","義竹鄉","鹿草鄉","水上鄉","中埔鄉","竹崎鄉","梅山鄉","番路鄉","大埔鄉","阿里山鄉"],"屏東縣":["屏東市","三地門鄉","霧台鄉","瑪家鄉","九如鄉","里港鄉","高樹鄉","鹽埔鄉","長治鄉","麟洛鄉","竹田鄉","內埔鄉","萬丹鄉","潮州鎮","泰武鄉","來義鄉","萬巒鄉","崁頂鄉","新埤鄉","南州鄉","林邊鄉","東港鎮","琉球鄉","佳冬鄉","新園鄉","枋寮鄉","枋山鄉","春日鄉","獅子鄉","車城鄉","牡丹鄉","恆春鎮","滿州鄉"],"宜蘭縣":["宜蘭市","羅東鎮","蘇澳鎮","頭城鎮","礁溪鄉","壯圍鄉","員山鄉","冬山鄉","五結鄉","三星鄉","大同鄉","南澳鄉"],"花蓮縣":["花蓮市","鳳林鎮","玉里鎮","新城鄉","吉安鄉","壽豐鄉","光復鄉","豐濱鄉","瑞穗鄉","萬榮鄉","卓溪鄉","富里鄉","秀林鄉"],"台東縣":["台東市","成功鎮","關山鎮","卑南鄉","鹿野鄉","池上鄉","東河鄉","長濱鄉","太麻里鄉","大武鄉","綠島鄉","海端鄉","延平鄉","金峰鄉","達仁鄉","蘭嶼鄉"],"澎湖縣":["馬公市","湖西鄉","白沙鄉","西嶼鄉","望安鄉","七美鄉"],"金門縣":["金城鎮","金湖鎮","金沙鎮","金寧鄉","烈嶼鄉","烏坵鄉"],"連江縣":["南竿鄉","北竿鄉","莒光鄉","東引鄉"]};
 
-    // ─── i18n ────────────────────────────────────────────────────
     const i18n = {
       zh: {
-        mainTitle:"🛵 i 郵箱查找大師",statsPrefix:"累積已提供",statsSuffix:"次最佳機車路徑",
-        selectCity:"選擇縣市",selectDistrict:"全區 / 不指定 (推薦)",
-        measureTitle:"📐 寄件包裹預先測量 (選填)",measureDesc:"輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。",
-        dimL:"長",dimW:"寬",dimH:"高",detailPl:"詳細地址 (必填，如：中正路1號)",
-        searchBtn:"搜尋",gpsBtn:"自動定位並搜尋附近",
-        loadingText:"🚀 正在火速連線郵局主機...",feedbackBtn:"💡 錯誤回報 / 意見回饋",
-        tableTitle:"📦 i 郵箱資費與尺寸總表",thGen:"櫃代",thType:"格型",thSize:"尺寸(寬*高*深)",thHome:"箱到宅",thBox:"箱到箱",
-        ruleTitle:"⚠ 寄件限制與注意事項",faqTitle:"❓ 常見問題 FAQ",
-        faq1Q:"包裹可以在 i 郵箱放多久？",faq1A:"包裹送達後，提供存放 <strong style='color:var(--ow-gold)'>3 天 (72 小時)</strong>（含例假日）的待領期間。將於第4天早上8點前由郵局人員取出後轉郵局招領。",
-        faq2Q:"蝦皮、MOMO 可以寄到 i 郵箱嗎？",faq2A:"沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。",
-        faq3Q:"如何使用ｉ郵箱取件？",faq3A:"郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。",
-        faq4Q:"什麼是ｉ郵箱？",faq4A:"ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。可於網路購物後遞送至ｉ郵箱，在領件時間內至指定地點取件。",
-        faq5Q:"如何支付寄件郵資？",faq5A:"目前提供郵政金融卡、悠遊卡、一卡通及icash 2.0、iPASS MONEY、悠遊付、街口支付等多種行動支付。",
-        faq6Q:"重要！寄件注意事項！",faq6A:"1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href='https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348' target='_blank' rel='noopener' class='ow-footer-link'>(參考網址)</a><br>4. 一個儲格只能放置一個包裹且不可併箱。<br>5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。",
-        footer1:"💡 關於 i 郵箱查找大師：",footer2:"✅ 資料來源：中華郵政 Open Data",
-        assistiveTouchText:"讚👍<br>支持",
-        fbTitle:"意見回饋",fbName:"您的姓名/暱稱",fbNamePl:"例如：王大明 (選填)",fbMsg:"回饋內容",fbMsgPl:"請描述您遇到的問題或給我們的建議...",fbCancel:"取消",fbSubmit:"送出回饋",
-        svTitle:"📝 幫助我們變得更好",svQ1:"1. 請問您這次查詢是為了？",svA1:"📦 我要寄件",svA2:"🛍️ 我要取件",svA3:"🤔 純粹測試",svQ2:"2. 使用體驗？ (1很差 → 5很棒)",svQ3:"3. 格位準確度？ (1不準 → 5很準)",svSubmit:"送出問卷",svSkip:"先不要，略過",
-        jsAlertAddress:"請至少選擇縣市並填寫詳細地址喔！\n詳細地址請務必包含門牌號碼！",
-        jsAlertGPS:"無法取得定位，請改用手動輸入。",jsSearchCenter:"📍 搜尋中心：",
-        jsGpsExact:"您的 GPS 目前精準定位",jsHint:"💡 若結果過遠或不準確，建議鄉鎮市區改選「全區 / 不指定」再試一次！",
-        jsFilterActive:"📦 尺寸過濾啟動：已為您剔除裝不下或目前客滿的機台！",
-        jsTopX:"距離第 {X} 近",jsRoute:"🛵 路程：",jsMin:"分鐘",jsLoc:"💡 位置：",jsUpdated:"🕒 更新時間：",
-        jsLive:"(即時)",jsStatusTitle:"格位狀態",jsSizeTh:"寬*高*深(cm)",jsTotalTh:"總數",jsRemainTh:"剩餘",
-        jsNoData:"暫無資料",jsCopied:"✅ 已複製！",shareWeb:"📤 分享網站",
-        jsCopyBtn:"📄 複製",jsNavBtn:"🛵 導航",jsShareBtn:"📤 分享",
-        jsShareWebMsg:"這是我用過最棒的 i 郵箱搜尋工具，幫你找距離最近的i郵箱據點還有導航！",
-        jsShareRouteMsg:"這是前往【{NAME}】的機車導航路線，分享給你！",
-        jsDimMax:"超過單邊最長尺寸45公分",jsDimSum:"長寬高加總不能超過105cm",
-        loadingSteps:[
-          "🚀 正在火速連線郵局主機...","📦 正在偷偷看哪些機台還沒滿格...",
-          "📏 拿著量尺比對您的包裹塞不塞得下...","🔎 幫你搜尋怎麼騎最近...",
-          "🛵 正在幫您避開路上的紅綠燈...","✨ 找到有空位的i郵箱了！稍後為您呈現..."
+        mainTitle: "<i class='fa-solid fa-motorcycle text-success me-2'></i>i 郵箱查找大師", 
+        statsPrefix: "<i class='fa-solid fa-award text-warning me-1'></i>累積已提供", 
+        statsSuffix: "次最佳機車路徑",
+        selectCity: "選擇縣市", 
+        selectDistrict: "全區 / 不指定 (推薦)",
+        measureTitle: "<i class='fa-solid fa-box text-primary me-2 fs-6'></i>寄件包裹預先測量 (選填)", 
+        measureDesc: "輸入長寬高，系統將自動為您剔除「裝不下」或「目前客滿」的機台。",
+        dimL: "長", dimW: "寬", dimH: "高", 
+        detailPl: "詳細地址 (必填，如：中正路1號)",
+        searchBtn: "搜尋", 
+        gpsBtn: "<i class='fa-solid fa-location-crosshairs me-2'></i>自動定位並搜尋附近",
+        loadingText: "<i class='fa-solid fa-rocket text-danger me-2'></i>正在火速連線郵局主機...", 
+        feedbackBtn: "<i class='fa-solid fa-lightbulb text-warning me-2'></i>錯誤回報 / 意見回饋",
+        tableTitle: "<i class='fa-solid fa-box-open text-primary me-2'></i>i 郵箱資費與尺寸總表", 
+        thGen: "櫃代", thType: "格型", thSize: "尺寸(寬*高*深)", thHome: "箱到宅", thBox: "箱到箱",
+        ruleTitle: "<i class='fa-solid fa-triangle-exclamation text-warning me-2'></i>寄件限制與注意事項", 
+        faqTitle: "<i class='fa-solid fa-circle-question text-info me-2'></i>常見問題 FAQ",
+        faq1Q: "包裹可以在 i 郵箱放多久？", faq1A: "包裹送達後，提供 <strong>3 天 (72 小時)</strong>(含例假日)的待領期間。將於第4天早上8點前由郵局人員取出後轉郵局招領。",
+        faq2Q: "蝦皮、MOMO 可以寄到 i 郵箱嗎？", faq2A: "沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。",
+        faq3Q: "如何使用ｉ郵箱取件？", faq3A: "郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。",
+        faq4Q: "什麼是ｉ郵箱？", faq4A: "ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。可於網路購物後遞送至ｉ郵箱，在領件時間內至指定地點取件。",
+        faq5Q: "如何支付寄件郵資？", faq5A: "目前提供郵政金融卡、悠遊卡、一卡通及icash 2.0、iPASS MONEY、悠遊付、街口支付等多種行動支付。",
+        faq6Q: "重要！寄件注意事項！", faq6A: "1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href=\"https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348\" target=\"_blank\" rel=\"noopener\" class=\"text-decoration-none text-primary me-2\">(參考網址)</a><br>4. 一個儲格只能放置一個包裹且不可併箱。<br>5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。",
+        footer1: "<i class='fa-solid fa-lightbulb text-warning me-1'></i>關於 i 郵箱查找大師：", 
+        footer2: "<i class='fa-solid fa-check-circle text-success me-1'></i>資料來源：中華郵政 Open Data",
+        assistiveTouchText: "給個讚<br><i class='fa-solid fa-thumbs-up mt-1'></i>",
+        fbTitle: "意見回饋", fbName: "您的姓名/暱稱", fbNamePl: "例如：王大明 (選填)", fbMsg: "回饋內容", fbMsgPl: "請描述您遇到的問題或給我們的建議...", fbCancel: "取消", fbSubmit: "送出回饋",
+        svTitle: "<i class='fa-solid fa-clipboard-list text-primary me-2'></i>幫助我們變得更好", 
+        svQ1: "1. 請問您這次查詢是為了？", 
+        svA1: "<i class='fa-solid fa-box me-1'></i>我要寄件", 
+        svA2: "<i class='fa-solid fa-bag-shopping me-1'></i>我要取件", 
+        svA3: "<i class='fa-solid fa-flask me-1'></i>純粹測試", 
+        svQ2: "2. 使用體驗？ (1很差 → 5很棒)", 
+        svQ3: "3. 格位準確度？ (1不準 → 5很準)", 
+        svSubmit: "送出問卷", 
+        svSkip: "先不要，略過",
+        jsAlertAddress: "請至少選擇縣市並填寫詳細地址喔！\n詳細地址請務必包含門牌號碼！",
+        jsAlertGPS: "無法取得定位，請改用手動輸入。", 
+        jsSearchCenter: "<i class='fa-solid fa-location-dot text-danger me-1'></i>搜尋中心：",
+        jsGpsExact: "您的 GPS 目前精準定位", 
+        jsHint: "<i class='fa-solid fa-lightbulb text-warning me-1'></i>若結果過遠或不準確，建議鄉鎮市區改選「全區 / 不指定」再試一次！",
+        jsFilterActive: "<i class='fa-solid fa-filter text-warning me-1'></i>尺寸過濾啟動：已為您剔除裝不下或目前客滿的機台！",
+        jsTopX: "距離第 {X} 近", 
+        jsRoute: "<i class='fa-solid fa-motorcycle text-primary me-1'></i>路程：", 
+        jsMin: "分鐘", 
+        jsLoc: "<i class='fa-solid fa-map-pin text-success me-1'></i>位置：", 
+        jsUpdated: "<i class='fa-regular fa-clock me-1'></i>更新時間：",
+        jsLive: "(即時)", jsStatusTitle: "格位狀態", jsSizeTh: "寬*高*深(cm)", jsTotalTh: "總數", jsRemainTh: "剩餘",
+        jsNoData: "暫無資料", 
+        jsCopied: "<i class='fa-solid fa-check-circle text-success me-1'></i>已複製！",
+        shareWeb: "<i class='fa-solid fa-share-nodes me-1'></i>分享本站",
+        jsCopyBtn: "<i class='fa-regular fa-copy me-1'></i>複製",
+        jsNavBtn: "<i class='fa-solid fa-location-arrow me-1'></i>導航",
+        jsShareBtn: "<i class='fa-solid fa-share-nodes me-1'></i>分享",
+        jsShareWebMsg: "這是我用過最棒的 i 郵箱搜尋工具，幫你找距離最近的i郵箱據點還有導航！",
+        jsShareRouteMsg: "這是前往【{NAME}】的機車導航路線，分享給你！",
+        jsDimMax: "超過單邊最長尺寸45公分",
+        jsDimSum: "長寬高加總不能超過105cm",
+        loadingSteps: [
+          "<i class='fa-solid fa-rocket text-danger me-2'></i>正在火速連線郵局主機...",
+          "<i class='fa-solid fa-box-open text-primary me-2'></i>正在偷偷看哪些機台還沒滿格...",
+          "<i class='fa-solid fa-ruler-combined text-info me-2'></i>拿著量尺比對您的包裹塞不塞得下...",
+          "<i class='fa-solid fa-magnifying-glass-location text-warning me-2'></i>幫你搜尋怎麼騎最近...",
+          "<i class='fa-solid fa-motorcycle text-success me-2'></i>正在幫您避開路上的紅綠燈...",
+          "<i class='fa-solid fa-wand-magic-sparkles text-primary me-2'></i>找到有空位的i郵箱了！稍後為您呈現..."
         ]
       },
       en: {
-        mainTitle:"🛵 Taiwan iBox Locator",statsPrefix:"Provided",statsSuffix:"best motorcycle routes",
-        selectCity:"Select City",selectDistrict:"All Districts (Recommended)",
-        measureTitle:"📐 Parcel Measurement (Optional)",measureDesc:"Enter L/W/H to filter out lockers that are too small or currently full.",
-        dimL:"L",dimW:"W",dimH:"H",detailPl:"Detailed Address (e.g., No.1 Zhongzheng Rd.)",
-        searchBtn:"Search",gpsBtn:"Auto-Locate & Search Nearby",
-        loadingText:"🚀 Connecting to the post office servers...",feedbackBtn:"💡 Feedback / Report Error",
-        tableTitle:"📦 iBox Size & Pricing",thGen:"Gen",thType:"Type",thSize:"Size(W*H*D)",thHome:"To Home",thBox:"To iBox",
-        ruleTitle:"⚠ Rules & Restrictions",faqTitle:"❓ FAQ",
-        faq1Q:"How long can a parcel stay in iBox?",faq1A:"Parcels must be picked up within <strong style='color:var(--ow-gold)'>3 days (72 hours)</strong>. Unclaimed items will be returned to the post office.",
-        faq2Q:"Can I use iBox for Shopee/MOMO orders?",faq2A:"Yes! Select 'iBox' as your shipping method during checkout, and use our site to find the nearest locker address.",
-        faq3Q:"How to pick up my parcel?",faq3A:"You will receive an SMS when it arrives. Go to the locker, select 'Pickup', and enter the last 3 digits of your phone number and pickup code.",
-        faq4Q:"What is iBox?",faq4A:"iBox provides 24/7 self-service for picking up, sending, and returning parcels. You can have online shopping orders delivered directly to an iBox.",
-        faq5Q:"How can I pay for postage?",faq5A:"Accepts Chunghwa Post ATM cards, EasyCard, iPASS, icash 2.0, and various mobile payments (JKO Pay, EasyWallet, etc.).",
-        faq6Q:"Important! Sending Restrictions!",faq6A:"1. Only domestic general parcels. No 'letters' or 'first-time use convenience boxes'.<br>2. iBoxes with 'Smart Mailboxes' accept Ordinary/Prompt/Air Mail.<br>3. Prohibited items are strictly forbidden. <a href='https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348' target='_blank' rel='noopener' class='ow-footer-link'>(Link)</a><br>4. One locker per parcel only.<br>5. Read the 'Sending Reminders' on the iBox screen.",
-        footer1:"💡 About Taiwan iBox Locator:",footer2:"✅ Data Source: Chunghwa Post Open Data",
-        assistiveTouchText:"Like👍<br>Support",
-        fbTitle:"Feedback",fbName:"Name/Nickname",fbNamePl:"e.g., John Doe (Optional)",fbMsg:"Message",fbMsgPl:"Describe your issue or suggestion...",fbCancel:"Cancel",fbSubmit:"Submit Feedback",
-        svTitle:"📝 Help Us Improve",svQ1:"1. Purpose of this search?",svA1:"📦 Sending",svA2:"🛍️ Picking up",svA3:"🤔 Just testing",svQ2:"2. User Experience? (1 Bad → 5 Great)",svQ3:"3. Accuracy? (1 Bad → 5 Great)",svSubmit:"Submit Survey",svSkip:"Skip for now",
-        jsAlertAddress:"Please select a city and enter a detailed street address!",
-        jsAlertGPS:"Failed to get location. Please type your address manually.",jsSearchCenter:"📍 Search Center: ",
-        jsGpsExact:"Your exact GPS location",jsHint:"💡 If results are inaccurate, try setting the district to 'All Districts'!",
-        jsFilterActive:"📦 Size Filter Active: Lockers too small or full have been excluded!",
-        jsTopX:"Top {X} Closest",jsRoute:"🛵 Route: ",jsMin:"mins",jsLoc:"💡 Location: ",jsUpdated:"🕒 Updated: ",
-        jsLive:"(Live)",jsStatusTitle:"Locker Status",jsSizeTh:"W*H*D(cm)",jsTotalTh:"Total",jsRemainTh:"Free",
-        jsNoData:"No Data",jsCopied:"✅ Copied!",shareWeb:"📤 Share",
-        jsCopyBtn:"📄 Copy",jsNavBtn:"🛵 Nav",jsShareBtn:"📤 Share",
-        jsShareWebMsg:"This is the best iBox locator I've used! Find the nearest locker with motorcycle navigation.",
-        jsShareRouteMsg:"Here is the motorcycle route to [{NAME}], sharing it with you!",
-        jsDimMax:"Exceeds maximum single side length of 45 cm",jsDimSum:"Total dimensions (L+W+H) cannot exceed 105 cm",
-        loadingSteps:[
-          "🚀 Connecting to the post office servers...","📦 Peeking at which lockers are not full yet...",
-          "📏 Measuring to make sure your parcel fits...","🔎 Searching for the closest riding route...",
-          "🛵 Helping you avoid red lights on the way...","✨ Found an iBox with empty lockers! Displaying shortly..."
+        mainTitle: "<i class='fa-solid fa-motorcycle text-success me-2'></i>Taiwan iBox Locator", 
+        statsPrefix: "<i class='fa-solid fa-award text-warning me-1'></i>Provided", 
+        statsSuffix: "best motorcycle routes",
+        selectCity: "Select City", 
+        selectDistrict: "All Districts (Recommended)",
+        measureTitle: "<i class='fa-solid fa-box text-primary me-2 fs-6'></i>Parcel Measurement (Optional)", 
+        measureDesc: "Enter L/W/H to filter out lockers that are too small or currently full.",
+        dimL: "L", dimW: "W", dimH: "H", detailPl: "Detailed Address (e.g., No.1 Zhongzheng Rd.)",
+        searchBtn: "Search", 
+        gpsBtn: "<i class='fa-solid fa-location-crosshairs me-2'></i>Auto-Locate & Search Nearby",
+        loadingText: "<i class='fa-solid fa-rocket text-danger me-2'></i>Connecting to the post office servers...", 
+        feedbackBtn: "<i class='fa-solid fa-lightbulb text-warning me-2'></i>Feedback / Report Error",
+        tableTitle: "<i class='fa-solid fa-box-open text-primary me-2'></i>iBox Size & Pricing", 
+        thGen: "Gen", thType: "Type", thSize: "Size(W*H*D)", thHome: "To Home", thBox: "To iBox",
+        ruleTitle: "<i class='fa-solid fa-triangle-exclamation text-warning me-2'></i>Rules & Restrictions", 
+        faqTitle: "<i class='fa-solid fa-circle-question text-info me-2'></i>FAQ",
+        faq1Q: "How long can a parcel stay in iBox?", faq1A: "Parcels must be picked up within <strong>3 days (72 hours)</strong>. Unclaimed items will be returned to the post office.",
+        faq2Q: "Can I use iBox for Shopee/MOMO orders?", faq2A: "Yes! Select 'iBox' as your shipping method during checkout, and use our site to find the nearest locker address.",
+        faq3Q: "How to pick up my parcel?", faq3A: "You will receive an SMS when it arrives. Go to the locker, select 'Pickup', and enter the last 3 digits of your phone number and pickup code.",
+        faq4Q: "What is iBox?", faq4A: "iBox provides 24/7 self-service for picking up, sending, and returning parcels. You can have online shopping orders delivered directly to an iBox.",
+        faq5Q: "How can I pay for postage?", faq5A: "Accepts Chunghwa Post ATM cards, EasyCard, iPASS, icash 2.0, and various mobile payments (JKO Pay, EasyWallet, etc.).",
+        faq6Q: "Important! Sending Restrictions!", faq6A: "1. Only domestic general parcels are accepted. No 'letters' or 'first-time use convenience boxes (bags)'.<br>2. iBoxes with 'Smart Mailboxes' can accept 'Ordinary/Prompt/Air Mail'.<br>3. Prohibited items are strictly forbidden. Senders bear all responsibilities, and postage won't be refunded. <a href=\"https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348\" target=\"_blank\" rel=\"noopener\" class=\"text-decoration-none text-primary me-2\">(Link)</a><br>4. One locker space per parcel. No bundled parcels.<br>5. Please read the 'Sending Reminders' on the iBox screen.",
+        footer1: "<i class='fa-solid fa-lightbulb text-warning me-1'></i>About Taiwan iBox Locator:", 
+        footer2: "<i class='fa-solid fa-check-circle text-success me-1'></i>Data Source: Chunghwa Post Open Data",
+        assistiveTouchText: "Give a<br>Like <i class='fa-solid fa-thumbs-up'></i>",
+        fbTitle: "Feedback", fbName: "Name/Nickname", fbNamePl: "e.g., John Doe (Optional)", fbMsg: "Message", fbMsgPl: "Describe your issue or suggestion...", fbCancel: "Cancel", fbSubmit: "Submit Feedback",
+        svTitle: "<i class='fa-solid fa-clipboard-list text-primary me-2'></i>Help Us Improve", 
+        svQ1: "1. Purpose of this search?", 
+        svA1: "<i class='fa-solid fa-box me-1'></i>Sending", 
+        svA2: "<i class='fa-solid fa-bag-shopping me-1'></i>Picking up", 
+        svA3: "<i class='fa-solid fa-flask me-1'></i>Just testing", 
+        svQ2: "2. User Experience? (1 Bad → 5 Great)", 
+        svQ3: "3. Accuracy? (1 Bad → 5 Great)", 
+        svSubmit: "Submit Survey", 
+        svSkip: "Skip for now",
+        jsAlertAddress: "Please select a city and enter a detailed street address!",
+        jsAlertGPS: "Failed to get location. Please type your address manually.", 
+        jsSearchCenter: "<i class='fa-solid fa-location-dot text-danger me-1'></i>Search Center: ",
+        jsGpsExact: "Your exact GPS location", 
+        jsHint: "<i class='fa-solid fa-lightbulb text-warning me-1'></i>If results are inaccurate, try setting the district to 'All Districts'!",
+        jsFilterActive: "<i class='fa-solid fa-filter text-warning me-1'></i>Size Filter Active: Lockers too small or full have been excluded!",
+        jsTopX: "Top {X} Closest", 
+        jsRoute: "<i class='fa-solid fa-motorcycle text-primary me-1'></i>Route: ", 
+        jsMin: "mins", 
+        jsLoc: "<i class='fa-solid fa-map-pin text-success me-1'></i>Location: ", 
+        jsUpdated: "<i class='fa-regular fa-clock me-1'></i>Updated: ",
+        jsLive: "(Live)", jsStatusTitle: "Locker Status", jsSizeTh: "W*H*D(cm)", jsTotalTh: "Total", jsRemainTh: "Free",
+        jsNoData: "No Data", 
+        jsCopied: "<i class='fa-solid fa-check-circle text-success me-1'></i>Copied!",
+        shareWeb: "<i class='fa-solid fa-share-nodes me-1'></i>Share",
+        jsCopyBtn: "<i class='fa-regular fa-copy me-1'></i>Copy",
+        jsNavBtn: "<i class='fa-solid fa-location-arrow me-1'></i>Nav",
+        jsShareBtn: "<i class='fa-solid fa-share-nodes me-1'></i>Share",
+        jsShareWebMsg: "This is the best iBox locator I've used! Find the nearest locker with motorcycle navigation.",
+        jsShareRouteMsg: "Here is the motorcycle route to [{NAME}], sharing it with you!",
+        jsDimMax: "Exceeds maximum single side length of 45 cm",
+        jsDimSum: "Total dimensions (L+W+H) cannot exceed 105 cm",
+        loadingSteps: [
+          "<i class='fa-solid fa-rocket text-danger me-2'></i>Connecting to the post office servers...",
+          "<i class='fa-solid fa-box-open text-primary me-2'></i>Peeking at which lockers are not full yet...",
+          "<i class='fa-solid fa-ruler-combined text-info me-2'></i>Measuring to make sure your parcel fits...",
+          "<i class='fa-solid fa-magnifying-glass-location text-warning me-2'></i>Searching for the closest riding route...",
+          "<i class='fa-solid fa-motorcycle text-success me-2'></i>Helping you avoid red lights on the way...",
+          "<i class='fa-solid fa-wand-magic-sparkles text-primary me-2'></i>Found an iBox with empty lockers! Displaying shortly..."
         ]
       }
     };
 
-    // ─── State ───────────────────────────────────────────────────
-    let currentLang   = 'zh';
+    let currentLang = 'zh';
     let lastSearchData = null;
-    let loadingInterval = null;
+    let loadingInterval = null; 
 
-    // ─── Language Toggle ──────────────────────────────────────────
     function toggleLanguage() {
       currentLang = currentLang === 'zh' ? 'en' : 'zh';
       document.getElementById('htmlTag').lang = currentLang === 'zh' ? 'zh-TW' : 'en';
+      
+      // 更新內部文字 (使用 innerHTML 而非 innerText 以渲染 Icon)
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (i18n[currentLang][key]) el.innerHTML = i18n[currentLang][key];
       });
+      
+      // 更新 Placeholder
       document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
         if (i18n[currentLang][key]) el.placeholder = i18n[currentLang][key];
       });
-      if (lastSearchData) showResults(JSON.parse(JSON.stringify(lastSearchData.data)), lastSearchData.userAddressStr, lastSearchData.dims);
+
+      if(lastSearchData) showResults(JSON.parse(JSON.stringify(lastSearchData.data)), lastSearchData.userAddressStr, lastSearchData.dims);
     }
 
-    // ─── Share ────────────────────────────────────────────────────
     function shareWebsite() {
       const t = i18n[currentLang];
-      const shareData = { title: t.mainTitle, text: t.jsShareWebMsg, url: 'https://goibox.tw/' };
-      navigator.share ? navigator.share(shareData).catch(() => {}) : copyText('https://goibox.tw/');
+      const shareData = {
+        title: t.mainTitle.replace(/<[^>]*>?/gm, ''), // 移除 HTML 標籤
+        text: t.jsShareWebMsg,
+        url: 'https://goibox.tw/'
+      };
+      
+      if (navigator.share) {
+        navigator.share(shareData).catch((err) => console.log('分享取消或發生錯誤', err));
+      } else {
+        copyText('https://goibox.tw/');
+      }
     }
 
     function shareRoute(name, url) {
       const t = i18n[currentLang];
       const textMsg = t.jsShareRouteMsg.replace('{NAME}', name);
-      const shareData = { title: t.mainTitle, text: textMsg, url };
-      navigator.share ? navigator.share(shareData).catch(() => {}) : copyText(url);
+      const shareData = {
+        title: t.mainTitle.replace(/<[^>]*>?/gm, ''),
+        text: textMsg,
+        url: url
+      };
+      
+      if (navigator.share) {
+        navigator.share(shareData).catch((err) => console.log('分享取消或發生錯誤', err));
+      } else {
+        copyText(url);
+      }
     }
 
-    // ─── Init ─────────────────────────────────────────────────────
     window.onload = function() {
       loadTotalSearches();
       const randomAdIndex = Math.floor(Math.random() * adBanners.length);
       document.getElementById('bottomAd').innerHTML = adBanners[randomAdIndex];
-
+      
       const citySelect = document.getElementById('cityInput');
       for (let city in taiwanData) {
-        const option = document.createElement('option');
-        option.value = city; option.text = city;
+        let option = document.createElement('option');
+        option.value = city; option.text = city; 
         citySelect.appendChild(option);
       }
       if (isLineApp) {
@@ -1333,13 +737,9 @@
       }
     };
 
-    // ─── Stats ────────────────────────────────────────────────────
     async function loadTotalSearches() {
       try {
-        const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), {
-          method: 'POST',
-          body: JSON.stringify({ action: 'getStats' })
-        });
+        const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'getStats' }) });
         const result = await response.json();
         if (result.status === 'success' && result.totalSearches > 0) {
           document.getElementById('totalSearchCount').innerText = result.totalSearches.toLocaleString();
@@ -1347,86 +747,88 @@
       } catch (err) {}
     }
 
-    // ─── Districts ────────────────────────────────────────────────
     function updateDistricts() {
       const city = document.getElementById('cityInput').value;
       const districtSelect = document.getElementById('districtInput');
       districtSelect.innerHTML = `<option value="">${i18n[currentLang].selectDistrict}</option>`;
       if (taiwanData[city]) {
         taiwanData[city].forEach(district => {
-          const option = document.createElement('option');
-          option.value = district; option.text = district;
+          let option = document.createElement('option');
+          option.value = district; option.text = district; 
           districtSelect.appendChild(option);
         });
       }
     }
 
-    // ─── Progress Bar ─────────────────────────────────────────────
-    function updateProgressBar(pct) {
+    function updateProgressBar(targetWidth) {
       const bar = document.getElementById('fakeProgressBar');
-      if (bar) { bar.style.width = pct + '%'; bar.setAttribute('aria-valuenow', pct); }
+      if (bar) bar.style.width = targetWidth + '%';
     }
 
-    // ─── UI Toggle ────────────────────────────────────────────────
     function toggleUI(isProcessing) {
       document.getElementById('searchBtn').disabled = isProcessing;
       const gpsBtn = document.getElementById('gpsBtn');
-      if (gpsBtn) gpsBtn.disabled = isProcessing;
-
+      if(gpsBtn) gpsBtn.disabled = isProcessing;
       const loader = document.getElementById('loader');
 
-      if (isProcessing) {
+      if(isProcessing) {
         loader.style.display = 'block';
-        document.getElementById('bottomAd').style.display = 'none';
+        document.getElementById('bottomAd').style.display = 'none'; 
         updateProgressBar(70);
 
         const steps = i18n[currentLang].loadingSteps;
-        let stepIdx = 0;
+        let stepIndex = 0;
         const loaderText = document.getElementById('loaderText');
-        loaderText.innerText = steps[0];
+        loaderText.innerHTML = steps[0]; 
+        
         clearInterval(loadingInterval);
         loadingInterval = setInterval(() => {
-          stepIdx = Math.min(stepIdx + 1, steps.length - 1);
-          loaderText.innerText = steps[stepIdx];
+          stepIndex++;
+          if (stepIndex < steps.length) {
+            loaderText.innerHTML = steps[stepIndex];
+          } else {
+            loaderText.innerHTML = steps[steps.length - 1]; 
+          }
         }, 2500);
 
-        // Skeleton cards
         let skeletonHtml = '';
-        for (let i = 0; i < 3; i++) {
+        for(let i=0; i<3; i++) { 
           skeletonHtml += `
-            <div class="ow-result-card" style="pointer-events:none;">
-              <div class="d-flex justify-content-between gap-3">
-                <div class="flex-grow-1 d-flex flex-column gap-2">
-                  <div class="ow-skeleton" style="width:90px;height:22px;"></div>
-                  <div class="ow-skeleton" style="width:65%;height:20px;"></div>
-                  <div class="ow-skeleton" style="width:90%;height:16px;"></div>
-                  <div class="ow-skeleton" style="width:50%;height:13px;margin-top:auto;"></div>
+            <div class="result-card" style="pointer-events: none;">
+              <div class="d-flex justify-content-between">
+                <div class="flex-grow-1 pe-3 d-flex flex-column w-100">
+                  <div class="skeleton-pulse" style="width: 70px; height: 24px; border-radius: 6px; margin-bottom: 12px;"></div>
+                  <div class="skeleton-pulse" style="width: 70%; height: 20px; border-radius: 4px; margin-bottom: 8px;"></div>
+                  <div class="skeleton-pulse" style="width: 90%; height: 16px; border-radius: 4px; margin-bottom: 8px;"></div>
+                  <div class="skeleton-pulse" style="width: 50%; height: 14px; border-radius: 4px; margin-top: auto;"></div>
                 </div>
-                <div class="ow-box-status ow-skeleton" style="border:none;width:148px;height:100px;"></div>
+                <div class="box-status flex-shrink-0 skeleton-pulse" style="border:none; width: 145px; height: 110px; border-radius: 10px;"></div>
               </div>
-              <div class="row g-2 mt-2">
-                <div class="col-4"><div class="ow-skeleton w-100" style="height:36px;"></div></div>
-                <div class="col-4"><div class="ow-skeleton w-100" style="height:36px;"></div></div>
-                <div class="col-4"><div class="ow-skeleton w-100" style="height:36px;"></div></div>
+              <div class="row g-2 mt-3">
+                <div class="col-4"><div class="skeleton-pulse w-100" style="height: 38px; border-radius: 8px;"></div></div>
+                <div class="col-4"><div class="skeleton-pulse w-100" style="height: 38px; border-radius: 8px;"></div></div>
+                <div class="col-4"><div class="skeleton-pulse w-100" style="height: 38px; border-radius: 8px;"></div></div>
               </div>
-            </div>`;
+            </div>
+          `;
         }
         document.getElementById('results').innerHTML = skeletonHtml;
 
       } else {
         updateProgressBar(100);
-        clearInterval(loadingInterval);
+        clearInterval(loadingInterval); 
         setTimeout(() => { loader.style.display = 'none'; }, 300);
       }
     }
 
-    // ─── Dimension Validation ─────────────────────────────────────
     function checkDimLimit(el) {
       if (el && el.value !== '') {
-        const v = parseInt(el.value, 10);
-        if (v < 0) el.value = Math.abs(v);
+        let val = parseInt(el.value, 10);
+        if (val < 0) {
+          el.value = Math.abs(val);
+        }
       }
-
+      
       const dimL_el = document.getElementById('dimL');
       const dimW_el = document.getElementById('dimW');
       const dimH_el = document.getElementById('dimH');
@@ -1436,210 +838,227 @@
       const w = parseInt(dimW_el.value, 10) || 0;
       const h = parseInt(dimH_el.value, 10) || 0;
 
-      [dimL_el, dimW_el, dimH_el].forEach(e => e.style.borderColor = '');
+      // 恢復預設樣式並隱藏警告區塊
+      dimL_el.classList.remove('text-danger', 'fw-bold');
+      dimW_el.classList.remove('text-danger', 'fw-bold');
+      dimH_el.classList.remove('text-danger', 'fw-bold');
       warnBlock.style.display = 'none';
 
-      let alertMsg = '';
+      let alertMsg = "";
       let shouldAlert = false;
 
+      // 檢查 1：單邊絕對不可超過 45
       if (l > 45 || w > 45 || h > 45) {
-        if (l > 45) dimL_el.style.borderColor = 'var(--ow-red)';
-        if (w > 45) dimW_el.style.borderColor = 'var(--ow-red)';
-        if (h > 45) dimH_el.style.borderColor = 'var(--ow-red)';
+        if (l > 45) dimL_el.classList.add('text-danger', 'fw-bold');
+        if (w > 45) dimW_el.classList.add('text-danger', 'fw-bold');
+        if (h > 45) dimH_el.classList.add('text-danger', 'fw-bold');
+        
         alertMsg = i18n[currentLang].jsDimMax;
+        // 如果是當前輸入的格子造成錯誤，就準備跳出 alert
         if (el && parseInt(el.value, 10) > 45) shouldAlert = true;
-      } else if ((l > 0 || w > 0 || h > 0) && (l + w + h) > 105) {
-        [dimL_el, dimW_el, dimH_el].forEach(e => { if (e.value !== '') e.style.borderColor = 'var(--ow-red)'; });
+      }
+      // 檢查 2：三邊總和絕對不可超過 105
+      else if ((l > 0 || w > 0 || h > 0) && (l + w + h) > 105) {
+        if (dimL_el.value !== '') dimL_el.classList.add('text-danger', 'fw-bold');
+        if (dimW_el.value !== '') dimW_el.classList.add('text-danger', 'fw-bold');
+        if (dimH_el.value !== '') dimH_el.classList.add('text-danger', 'fw-bold');
+        
         alertMsg = i18n[currentLang].jsDimSum;
+        // 如果是當前輸入的格子造成總和超過，就準備跳出 alert
         if (el && el.value !== '') shouldAlert = true;
       }
 
+      // 如果有錯誤，顯示下方的紅色警告區塊
       if (alertMsg) {
-        warnBlock.textContent = '🚨 ' + alertMsg;
+        warnBlock.innerHTML = "<i class='fa-solid fa-bell me-1'></i>" + alertMsg.replace(/\n/g, ' '); 
         warnBlock.style.display = 'block';
-        if (shouldAlert) setTimeout(() => alert(alertMsg), 50);
+        
+        // 延遲一點點跳 alert，讓畫面的紅色文字與區塊能先渲染出來
+        if (shouldAlert) {
+           setTimeout(() => alert(alertMsg.replace(/<[^>]*>?/gm, '')), 50);
+        }
       }
     }
 
     function validateDims() {
-      const l = parseInt(document.getElementById('dimL').value, 10) || 0;
-      const w = parseInt(document.getElementById('dimW').value, 10) || 0;
-      const h = parseInt(document.getElementById('dimH').value, 10) || 0;
+      const lInput = document.getElementById('dimL').value;
+      const wInput = document.getElementById('dimW').value;
+      const hInput = document.getElementById('dimH').value;
 
-      if (l > 45 || w > 45 || h > 45) return { valid: false, error: i18n[currentLang].jsDimMax };
-      if ((l + w + h) > 105)           return { valid: false, error: i18n[currentLang].jsDimSum };
-      if (l > 0 && w > 0 && h > 0)    return { valid: true, dims: [l, w, h] };
+      const l = parseInt(lInput, 10) || 0;
+      const w = parseInt(wInput, 10) || 0;
+      const h = parseInt(hInput, 10) || 0;
+
+      if (l > 45 || w > 45 || h > 45) {
+        return { valid: false, error: i18n[currentLang].jsDimMax };
+      }
+
+      if ((l + w + h) > 105) {
+        return { valid: false, error: i18n[currentLang].jsDimSum };
+      }
+
+      if (l > 0 && w > 0 && h > 0) {
+        return { valid: true, dims: [l, w, h] };
+      }
+
       return { valid: true, dims: null };
     }
 
-    // ─── Search ───────────────────────────────────────────────────
     async function callBackendAPI(inputData, userAddressStr = '', dims = null) {
       toggleUI(true);
       try {
         const cleanSearchUrl = GAS_API_URL_SEARCH.replace(/\s+/g, '');
-        const cleanLogUrl    = GAS_API_URL_LOG.replace(/\s+/g, '');
-        const response = await fetch(cleanSearchUrl, {
-          method: 'POST',
-          body: JSON.stringify({ inputData, dims })
-        });
+        const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
+        const payload = { inputData: inputData, dims: dims };
+        const response = await fetch(cleanSearchUrl, { method: 'POST', body: JSON.stringify(payload) });
         const result = await response.json();
-
+        
         if (result.status === 'success') {
           const trueTop1Address = result.data.length > 0 ? result.data[0].address : '';
-          lastSearchData = { data: JSON.parse(JSON.stringify(result.data)), userAddressStr, dims };
-          showResults(result.data, userAddressStr, dims);
+          lastSearchData = { data: JSON.parse(JSON.stringify(result.data)), userAddressStr: userAddressStr, dims: dims };
 
+          showResults(result.data, userAddressStr, dims);
+          
           if (trueTop1Address) {
             const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
-            const maskedUserAddress = (searchType === '文字搜尋' && userAddressStr)
-              ? userAddressStr.replace(/\d+[-之]?\d*號.*$/, '') : 'GPS定位(無地址)';
-            fetch(cleanLogUrl, {
-              method: 'POST',
-              body: JSON.stringify({ action: 'logSearch', address: trueTop1Address, searchType, userAddress: maskedUserAddress, dims })
-            }).catch(() => {});
+            let maskedUserAddress = (searchType === '文字搜尋' && userAddressStr) 
+                ? userAddressStr.replace(/\d+[-之]?\d*號.*$/, "") : 'GPS定位(無地址)';
+
+            fetch(cleanLogUrl, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    action: 'logSearch', address: trueTop1Address, searchType: searchType, 
+                    userAddress: maskedUserAddress, dims: dims 
+                }) 
+            }).catch(err => console.log(err));
           }
         } else { throw new Error(result.message); }
       } catch (err) {
         toggleUI(false);
-        document.getElementById('results').innerHTML = `<div class="ow-alert ow-alert-warning">🤔 發生錯誤：${err.message}</div>`;
+        document.getElementById('results').innerHTML = `<div class="alert alert-warning text-center shadow-sm"><i class='fa-solid fa-circle-exclamation me-2'></i>發生錯誤: ${err.message}</div>`;
       }
     }
 
     function startSearchText() {
-      const city     = document.getElementById('cityInput').value;
-      const district = document.getElementById('districtInput').value;
-      const detail   = document.getElementById('detailInput').value.trim();
-      if (!city || !detail) return alert(i18n[currentLang].jsAlertAddress);
-      checkDimLimit(null);
+      const city = document.getElementById('cityInput').value, district = document.getElementById('districtInput').value, detail = document.getElementById('detailInput').value.trim();
+      if (!city || !detail) return alert(i18n[currentLang].jsAlertAddress.replace(/<[^>]*>?/gm, ''));
+      
+      checkDimLimit(null); 
       const dimCheck = validateDims();
-      if (!dimCheck.valid) return alert(dimCheck.error);
-      callBackendAPI(city + district + detail, city + district + detail, dimCheck.dims);
+      if (!dimCheck.valid) return alert(dimCheck.error.replace(/<[^>]*>?/gm, ''));
+
+      callBackendAPI(city + district + detail, city + district + detail, dimCheck.dims); 
     }
 
     function startSearchGPS() {
-      checkDimLimit(null);
+      checkDimLimit(null); 
       const dimCheck = validateDims();
-      if (!dimCheck.valid) return alert(dimCheck.error);
-      if (!navigator.geolocation) return alert('GPS Not Supported');
-      navigator.geolocation.getCurrentPosition(
-        pos => callBackendAPI({ lat: pos.coords.latitude, lng: pos.coords.longitude }, '', dimCheck.dims),
-        ()  => alert(i18n[currentLang].jsAlertGPS),
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
+      if (!dimCheck.valid) return alert(dimCheck.error.replace(/<[^>]*>?/gm, ''));
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => callBackendAPI({ lat: pos.coords.latitude, lng: pos.coords.longitude }, '', dimCheck.dims),
+          (err) => alert(i18n[currentLang].jsAlertGPS.replace(/<[^>]*>?/gm, '')),
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      } else { alert("GPS Not Supported"); }
     }
 
-    // ─── Render Results ───────────────────────────────────────────
     function showResults(originalData, userAddressStr, dims) {
       toggleUI(false);
-      const t = i18n[currentLang];
-      const data = [...originalData].slice(0, 5);
-      const shuffledAds = [...adBanners].sort(() => 0.5 - Math.random());
       let html = '';
+      const t = i18n[currentLang];
+      
+      let data = [...originalData].slice(0, 5);
 
-      // Search center info
+      const shuffledAds = [...adBanners].sort(() => 0.5 - Math.random());
+
       if (userAddressStr) {
-        html += `<div class="ow-alert ow-alert-info"><strong>${t.jsSearchCenter}</strong>${userAddressStr}<br><span style="color:var(--ow-text-dim);font-size:0.8rem;">${t.jsHint}</span></div>`;
+          html += `<div class="alert alert-info border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #eef5ff; color: #0d6efd; font-size: 0.85rem; padding: 12px 16px;"><strong>${t.jsSearchCenter}</strong>${userAddressStr}<br><span class="text-secondary" style="font-size: 0.8rem; display: block; margin-top: 4px;">${t.jsHint}</span></div>`;
       } else {
-        html += `<div class="ow-alert ow-alert-success"><strong>${t.jsSearchCenter}</strong>${t.jsGpsExact}</div>`;
+          html += `<div class="alert alert-success border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #e8f5e9; color: #1b5e20; font-size: 0.85rem; padding: 12px 16px;"><strong>${t.jsSearchCenter}</strong>${t.jsGpsExact}</div>`;
       }
-      if (dims) {
-        html += `<div class="ow-alert ow-alert-warning"><strong>${t.jsFilterActive}</strong></div>`;
-      }
+      if (dims) html += `<div class="alert alert-warning border-0 shadow-sm rounded-3 mb-3 text-start" style="background-color: #fff8e1; color: #856404; font-size: 0.85rem; padding: 12px 16px;"><strong>${t.jsFilterActive}</strong></div>`;
 
       data.forEach((item, index) => item.originalRank = index + 1);
 
       data.forEach((item, loopIndex) => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=motorcycle`;
-        const isRank1 = item.originalRank === 1;
-
-        // Location tag
-        const locationHtml = item.locationDesc
-          ? `<div class="ow-location-tag">${t.jsLoc}${item.locationDesc}</div>` : '';
-
-        // Box status table
-        let boxesHtml = '';
-        let hasBoxes = false;
+        const locationHtml = item.locationDesc ? `<p class="small mb-0 mt-2" style="color: #2e7d32; background-color: #e8f5e9; padding: 5px 8px; border-radius: 6px; display: inline-block;">${t.jsLoc}${item.locationDesc}</p>` : '';
+        let boxesHtml = ''; let hasBoxes = false;
+        
         if (item.boxes && Object.keys(item.boxes).length > 0) {
           for (const [size, rawValue] of Object.entries(item.boxes)) {
-            let total = 0, remain = '-';
+            let total = 0, used = 0, remain = '-';
             if (typeof rawValue === 'string' && rawValue.includes('/')) {
-              const parts = rawValue.split('/');
-              const used = parseInt(parts[0], 10) || 0;
-              total = parseInt(parts[1], 10) || 0;
-              remain = Math.max(0, total - used);
+              const parts = rawValue.split('/'); used = parseInt(parts[0], 10) || 0; 
+              total = parseInt(parts[1], 10) || 0; remain = Math.max(0, total - used); 
             } else { total = parseInt(rawValue, 10) || 0; remain = total; }
-
             if (total > 0) {
-              hasBoxes = true;
-              const remainClass = remain === 0 ? 'full' : 'available';
-              let ds = size;
-              const sp = size.split('x');
-              if (sp.length === 2) ds = `${parseInt(sp[0],10)/10}*${parseInt(sp[1],10)/10}*47`;
-              boxesHtml += `<tr><td>${ds}</td><td>${total}</td><td class="${remainClass}">${remain}</td></tr>`;
+              hasBoxes = true; 
+              const remainColorClass = (remain === 0) ? 'text-danger' : 'text-success';
+              let ds = size; const sp = size.split('x');
+              if (sp.length === 2) { ds = `${parseInt(sp[0], 10) / 10}*${parseInt(sp[1], 10) / 10}*47`; }
+              boxesHtml += `<tr><td class="size-col">${ds}</td><td class="fw-bold">${total}</td><td class="fw-bold ${remainColorClass}">${remain}</td></tr>`;
             }
           }
         }
-        const tableHtml = hasBoxes
-          ? `<table class="ow-box-table"><thead><tr><th style="text-align:left;">${t.jsSizeTh}</th><th>${t.jsTotalTh}</th><th>${t.jsRemainTh}</th></tr></thead><tbody>${boxesHtml}</tbody></table>`
-          : `<div style="font-size:0.75rem;color:var(--ow-text-dim);text-align:center;margin-top:8px;">${t.jsNoData}</div>`;
+        
+        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">${t.jsSizeTh}</th><th>${t.jsTotalTh}</th><th>${t.jsRemainTh}</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : `<div class="small text-muted text-center mt-2">${t.jsNoData}</div>`;
+        const cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
 
-        const cardId = isRank1 ? 'id="rank1Card"' : '';
-        const distText = item.distanceText.replace('公里', 'km');
-        const durText  = item.duration.replace('分鐘', t.jsMin);
-        const updatedText = (item.updateTime || t.jsNoData).replace('(即時)', t.jsLive);
+        let distText = item.distanceText.replace('公里', 'km');
+        let durText = item.duration.replace('分鐘', t.jsMin);
+        let updatedText = (item.updateTime || t.jsNoData).replace('(即時)', t.jsLive);
 
         html += `
-          <div class="ow-result-card ${isRank1 ? 'rank1' : ''}" ${cardId} style="animation-delay:${loopIndex * 0.08}s">
-            <div class="d-flex justify-content-between gap-3">
-              <div class="flex-grow-1 d-flex flex-column">
+          <div class="result-card" ${cardId}>
+            <div class="d-flex justify-content-between">
+              <div class="flex-grow-1 pe-2 d-flex flex-column">
                 <div>
-                  <div class="ow-rank-badge ${isRank1 ? 'rank1' : 'rankN'}">${t.jsTopX.replace('{X}', item.originalRank)}</div>
-                  <h3 class="ow-name">${item.name}</h3>
-                  <p class="ow-route">${t.jsRoute}<span class="dist">${distText}</span> (約 ${durText})</p>
-                  <p class="ow-addr">${item.address}</p>
+                  <span class="badge ${item.originalRank === 1 ? 'bg-danger' : 'bg-success'} mb-2">${t.jsTopX.replace('{X}', item.originalRank)}</span>
+                  <!-- 🌟 SEO: 將 h5 改為 h3 以符合標題層級，保留原本外觀 -->
+                  <h3 style="font-weight: 700; font-size: 1.25rem;">${item.name}</h3>
+                  <p class="mb-1">${t.jsRoute}<span class="text-danger fw-bold">${distText}</span> (約 ${durText})</p>
+                  <p class="small text-secondary mb-0">${item.address}</p>
                   ${locationHtml}
                 </div>
-                <div class="ow-update-time mt-auto">${t.jsUpdated}${updatedText}</div>
+                <div class="mt-auto pt-3 text-secondary" style="font-size: 0.75rem;">${t.jsUpdated}${updatedText}</div>
               </div>
-              <div class="ow-box-status align-self-start">
-                <div class="ow-box-title">${t.jsStatusTitle}</div>
-                ${tableHtml}
+              <div class="box-status flex-shrink-0 shadow-sm align-self-start"><div class="box-status-title">${t.jsStatusTitle}</div>${tableHtml}</div>
+            </div>
+            
+            <div class="row g-2 mt-2">
+              <div class="col-4">
+                <button class="btn btn-outline-secondary w-100 px-1 py-2" style="font-size: 0.85rem;" onclick="copyText('${item.address}')" aria-label="Copy address">${t.jsCopyBtn}</button>
+              </div>
+              <div class="col-4">
+                <button class="btn btn-outline-primary w-100 px-1 py-2" style="font-size: 0.85rem;" onclick="shareRoute('${item.name}', '${mapUrl}')" aria-label="Share route">${t.jsShareBtn}</button>
+              </div>
+              <div class="col-4">
+                <a href="${mapUrl}" target="_blank" class="btn btn-primary w-100 px-1 py-2" style="font-size: 0.85rem;" aria-label="Open navigation">${t.jsNavBtn}</a>
               </div>
             </div>
-            <div class="row g-2 mt-3">
-              <div class="col-4">
-                <button class="ow-btn ow-btn-outline" onclick="copyText('${item.address}')" aria-label="Copy address">${t.jsCopyBtn}</button>
-              </div>
-              <div class="col-4">
-                <button class="ow-btn ow-btn-blue" onclick="shareRoute('${item.name}', '${mapUrl}')" aria-label="Share route">${t.jsShareBtn}</button>
-              </div>
-              <div class="col-4">
-                <a href="${mapUrl}" target="_blank" class="ow-btn ow-btn-nav" aria-label="Open navigation">${t.jsNavBtn}</a>
-              </div>
-            </div>
-          </div>`;
-
-        if (loopIndex === 0 && shuffledAds[0]) html += shuffledAds[0];
-        else if (loopIndex === 1 && shuffledAds[1]) html += shuffledAds[1];
-        else if (loopIndex === 2 && shuffledAds[2]) html += shuffledAds[2];
+          </div>
+        `;
+        
+        if (loopIndex === 0 && shuffledAds.length > 0) html += shuffledAds[0];
+        else if (loopIndex === 1 && shuffledAds.length > 1) html += shuffledAds[1];
+        else if (loopIndex === 2 && shuffledAds.length > 2) html += shuffledAds[2];
       });
-
       document.getElementById('results').innerHTML = html;
-      initSurveyObserver();
     }
 
-    // ─── Survey ───────────────────────────────────────────────────
     let surveyShownThisSearch = false;
-
     function initSurveyObserver() {
       surveyShownThisSearch = false;
       const target = document.getElementById('rank1Card');
       if (!target) return;
-      const observer = new IntersectionObserver(entries => {
+      const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !surveyShownThisSearch) {
             surveyShownThisSearch = true;
-            setTimeout(() => bootstrap.Modal.getOrCreateInstance(document.getElementById('surveyModal')).show(), 1000);
+            setTimeout(() => { bootstrap.Modal.getOrCreateInstance(document.getElementById('surveyModal')).show(); }, 1000);
             observer.unobserve(target);
           }
         });
@@ -1647,100 +1066,104 @@
       observer.observe(target);
     }
 
+    function copyText(text) { 
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try { document.execCommand('copy'); alert(i18n[currentLang].jsCopied.replace(/<[^>]*>?/gm, '')); } catch (err) {}
+      document.body.removeChild(textArea);
+    }
+
+    async function submitFeedback() {
+      const name = document.getElementById('feedbackName').value.trim() || '匿名', msg = document.getElementById('feedbackMessage').value.trim(), btn = document.getElementById('submitFeedbackBtn');
+      const msgEmpty = currentLang === 'zh' ? '請輸入內容！' : 'Please enter a message!';
+      const msgSuccess = currentLang === 'zh' ? '感謝回饋！' : 'Thanks for your feedback!';
+      const btnSending = currentLang === 'zh' ? '傳送中...' : 'Sending...';
+
+      if (!msg) return alert(msgEmpty);
+      btn.disabled = true; btn.innerHTML = btnSending;
+      try {
+        const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'feedback', name: name, message: msg }) });
+        const result = await response.json();
+        if (result.status === 'success') { alert(msgSuccess); bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide(); }
+      } catch (err) { alert(currentLang === 'zh' ? '失敗' : 'Failed'); } finally { btn.disabled = false; btn.innerHTML = i18n[currentLang].fbSubmit; }
+    }
+
     function markSurveyDone() {}
 
     function submitSurvey() {
-      const role = document.querySelector('input[name="surveyRole"]:checked');
-      const ux   = document.querySelector('input[name="surveyUX"]:checked');
-      const acc  = document.querySelector('input[name="surveyAccuracy"]:checked');
+      const role = document.querySelector('input[name="surveyRole"]:checked'), ux = document.querySelector('input[name="surveyUX"]:checked'), acc = document.querySelector('input[name="surveyAccuracy"]:checked');
       if (!role || !ux || !acc) return alert(currentLang === 'zh' ? '請填寫完整問卷！' : 'Please complete the survey!');
       bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
-      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), {
-        method: 'POST',
-        body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value })
-      }).catch(() => {});
+      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) }).catch(e => console.log(e));
     }
 
-    // ─── Feedback ─────────────────────────────────────────────────
-    async function submitFeedback() {
-      const name = document.getElementById('feedbackName').value.trim() || '匿名';
-      const msg  = document.getElementById('feedbackMessage').value.trim();
-      const btn  = document.getElementById('submitFeedbackBtn');
-      if (!msg) return alert(currentLang === 'zh' ? '請輸入內容！' : 'Please enter a message!');
-      btn.disabled = true;
-      btn.innerHTML = currentLang === 'zh' ? '傳送中...' : 'Sending...';
-      try {
-        const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), {
-          method: 'POST',
-          body: JSON.stringify({ action: 'feedback', name, message: msg })
-        });
-        const result = await response.json();
-        if (result.status === 'success') {
-          alert(currentLang === 'zh' ? '感謝回饋！' : 'Thanks for your feedback!');
-          bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide();
-        }
-      } catch (err) {
-        alert(currentLang === 'zh' ? '失敗' : 'Failed');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = i18n[currentLang].fbSubmit;
-      }
-    }
-
-    // ─── Copy ─────────────────────────────────────────────────────
-    function copyText(text) {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand('copy'); alert(i18n[currentLang].jsCopied); } catch (err) {}
-      document.body.removeChild(ta);
-    }
-
-    // ─── Floating Ball Drag ───────────────────────────────────────
     let isDragging = false;
-    let startX, startY, initialX, initialY, dragDistance;
+    let startX, startY, initialX, initialY;
+    let dragDistance = 0;
 
     function startDrag(e) {
-      isDragging = true; dragDistance = 0;
-      const ball = document.getElementById('assistiveTouch');
-      const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-      const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-      startX = clientX; startY = clientY;
-      initialX = ball.offsetLeft; initialY = ball.offsetTop;
+      let ball = document.getElementById('assistiveTouch');
+      isDragging = true;
+      dragDistance = 0;
+      let clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+      let clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+      startX = clientX;
+      startY = clientY;
+      initialX = ball.offsetLeft;
+      initialY = ball.offsetTop;
+      
       document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', drag, { passive: false });
-      document.addEventListener(e.type === 'touchstart' ? 'touchend'  : 'mouseup',   stopDrag);
+      document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', stopDrag);
     }
 
     function drag(e) {
       if (!isDragging) return;
-      e.preventDefault();
-      const ball = document.getElementById('assistiveTouch');
-      const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-      const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-      const dx = clientX - startX, dy = clientY - startY;
+      e.preventDefault(); 
+      let ball = document.getElementById('assistiveTouch');
+      let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+      let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+      
+      let dx = clientX - startX;
+      let dy = clientY - startY;
       dragDistance += Math.abs(dx) + Math.abs(dy);
-      ball.style.left  = Math.max(0, Math.min(window.innerWidth  - 64, initialX + dx)) + 'px';
-      ball.style.top   = Math.max(0, Math.min(window.innerHeight - 64, initialY + dy)) + 'px';
-      ball.style.right = 'auto';
+
+      let newX = initialX + dx;
+      let newY = initialY + dy;
+
+      newX = Math.max(0, Math.min(window.innerWidth - 70, newX));
+      newY = Math.max(0, Math.min(window.innerHeight - 70, newY));
+
+      ball.style.left = newX + 'px';
+      ball.style.top = newY + 'px';
+      ball.style.right = 'auto'; 
     }
 
     function stopDrag(e) {
       isDragging = false;
       document.removeEventListener('mousemove', drag);
-      document.removeEventListener('mouseup',   stopDrag);
+      document.removeEventListener('mouseup', stopDrag);
       document.removeEventListener('touchmove', drag);
-      document.removeEventListener('touchend',  stopDrag);
+      document.removeEventListener('touchend', stopDrag);
 
-      const ball = document.getElementById('assistiveTouch');
-      const snapLeft = ball.offsetLeft + 32 < window.innerWidth / 2;
-      ball.style.transition = 'left 0.3s cubic-bezier(0.18,0.89,0.32,1.28)';
-      ball.style.left = (snapLeft ? 10 : window.innerWidth - 74) + 'px';
+      let ball = document.getElementById('assistiveTouch');
+      let ballX = ball.offsetLeft;
+      let screenWidth = window.innerWidth;
+      
+      if (ballX + 35 < screenWidth / 2) {
+        ball.style.transition = 'left 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
+        ball.style.left = '10px';
+      } else {
+        ball.style.transition = 'left 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
+        ball.style.left = (screenWidth - 80) + 'px';
+      }
 
       if (dragDistance < 10) {
         bootstrap.Modal.getOrCreateInstance(document.getElementById('surveyModal')).show();
       }
-      setTimeout(() => { ball.style.transition = 'opacity 0.3s'; }, 300);
+      
+      setTimeout(() => { ball.style.transition = 'opacity 0.3s, transform 0.1s'; }, 300);
     }
 
     function closeAssistiveTouch(e) {
