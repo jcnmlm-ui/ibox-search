@@ -202,15 +202,6 @@
       position: relative;
       overflow: hidden;
     }
-    .result-card::before {
-      content: '';
-      position: absolute;
-      left: 15px;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background-color: rgba(0,0,0,0.04);
-    }
 
     /* 內部小標籤或裝飾 */
     .badge-3d {
@@ -227,23 +218,33 @@
       border-color: var(--post-green-dark) !important;
     }
 
-    /* 格位狀態區塊 (像是機台的復古螢幕) */
+    /* 格位狀態區塊 (改為清新淡雅的主題配色) */
     .box-status { 
-      background-color: #2C3531; 
-      color: #A5F2D6; 
-      border: 4px solid #8C8476; 
-      border-radius: 12px; 
+      background-color: #EBF5F0; 
+      color: #3A8960; 
+      border: 3px solid #B0DBC1; 
+      border-radius: 16px; 
       padding: 12px; 
       min-width: 150px;
-      box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);
+      box-shadow: inset 0 2px 6px rgba(76, 174, 123, 0.15);
     }
-    .box-status-title { font-size: 0.8rem; color: #fff; font-weight: 800; margin-bottom: 8px; text-align: center; letter-spacing: 1px;}
+    .box-status-title { 
+      font-size: 0.85rem; 
+      color: #2D6B49; 
+      font-weight: 900; 
+      margin-bottom: 10px; 
+      text-align: center; 
+      letter-spacing: 1px;
+      background-color: #D0EBE0; 
+      padding: 6px;
+      border-radius: 10px;
+    }
     .box-table { width: 100%; font-size: 0.8rem; text-align: center; border-collapse: collapse; }
-    .box-table th { color: #86A89B; font-weight: 700; padding-bottom: 6px; border-bottom: 2px solid #48544D;}
-    .box-table td { padding: 6px 2px; border-bottom: 1px dashed #48544D; }
-    .box-table .size-col { text-align: left; color: #D6D1C4; font-size: 0.75rem; }
-    .box-table .text-success { color: #A5F2D6 !important; } 
-    .box-table .text-danger { color: #FF8F8F !important; }  
+    .box-table th { color: #5C554B; font-weight: 800; padding-bottom: 8px; border-bottom: 2px solid #B0DBC1;}
+    .box-table td { padding: 8px 2px; border-bottom: 1px dashed #C2E0CE; color: #4A443C; font-weight: 700;}
+    .box-table .size-col { text-align: left; color: #6D6455; font-size: 0.75rem; font-weight: 800;}
+    .box-table .text-success { color: #2D8A56 !important; font-weight: 900; } 
+    .box-table .text-danger { color: #E06C62 !important; font-weight: 900; }  
 
     /* FAQ 手風琴立體化 */
     .accordion-item {
@@ -748,10 +749,19 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <!-- 🚀 1. 引入 Supabase JS SDK (加在 Bootstrap 下方) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    const GAS_API_URL_SEARCH = 'https://script.google.com/macros/s/AKfycbwXO-oMiYRG4RuqenL4lBtBKuIY2S3U_QSnDxMGQ_kEpwgXzW8Q7wvWObBL_wHPpe2A6Q/exec';
-    const GAS_API_URL_LOG = 'https://script.google.com/macros/s/AKfycbxVGuaW1uBynyiQdrzTlUO3g5WQ9lD3aI1bJnYVkcDreDJk7kgLMjKB4jHTiP-oCrU_dQ/exec';
+    // === 🚀 2. 換上您的 Supabase 配置 ===
+    const SUPABASE_URL = 'https://vhryiktpxidehcamxcek.supabase.co';
+    
+    // ⚠️ 必填：請前往 Supabase -> Project Settings -> API，複製 `anon` `public` 金鑰貼在下方引號內
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZocnlpa3RweGlkZWhjYW14Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1OTYyODQsImV4cCI6MjA5NTE3MjI4NH0.7Z1drPMsqGPYDaIS8qLaRALIapnOTahxPMmKnEi_KJA'; 
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // 這是您剛剛部署成功的 Edge Function 網址
+    const SUPABASE_SEARCH_API_URL = 'https://vhryiktpxidehcamxcek.supabase.co/functions/v1/search-ibox';
 
     const isLineApp = navigator.userAgent.includes('Line') || navigator.userAgent.includes('LINE');
 
@@ -972,12 +982,26 @@
 
     async function loadTotalSearches() {
       try {
-        const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'getStats' }) });
-        const result = await response.json();
-        if (result.status === 'success' && result.totalSearches > 0) {
-          document.getElementById('totalSearchCount').innerText = result.totalSearches.toLocaleString();
+        console.log("正在嘗試讀取搜尋總次數...");
+        
+        // 🚀 改為呼叫資料庫的專屬安全計數函式 (RPC)
+        const { data: count, error } = await supabaseClient.rpc('get_search_logs_count');
+          
+        if (error) {
+          console.error("Supabase 查詢錯誤:", error);
+          return;
         }
-      } catch (err) {}
+
+        console.log("查詢成功，總筆數為:", count);
+        
+        // 將總數填入畫面上的標籤
+        const element = document.getElementById('totalSearchCount');
+        if (element) {
+          element.innerText = count !== null ? count.toLocaleString() : '0';
+        }
+      } catch (err) {
+        console.error("無法載入搜尋統計 (例外狀況):", err);
+      }
     }
 
     function updateDistricts() {
@@ -1127,10 +1151,14 @@
     async function callBackendAPI(inputData, userAddressStr = '', dims = null) {
       toggleUI(true);
       try {
-        const cleanSearchUrl = GAS_API_URL_SEARCH.replace(/\s+/g, '');
-        const cleanLogUrl = GAS_API_URL_LOG.replace(/\s+/g, '');
         const payload = { inputData: inputData, dims: dims };
-        const response = await fetch(cleanSearchUrl, { method: 'POST', body: JSON.stringify(payload) });
+        
+        // 🚀 4. 改為呼叫 Supabase Edge Function 進行極速查詢
+        const response = await fetch(SUPABASE_SEARCH_API_URL, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload) 
+        });
         const result = await response.json();
         
         if (result.status === 'success') {
@@ -1143,14 +1171,23 @@
             const searchType = (typeof inputData === 'string') ? '文字搜尋' : 'GPS定位';
             let maskedUserAddress = (searchType === '文字搜尋' && userAddressStr) 
                 ? userAddressStr.replace(/\d+[-之]?\d*號.*$/, "") : 'GPS定位(無地址)';
+            
+            // 自動拆解縣市與鄉鎮市區以利於資料庫統計
+            let city = '未知', district = '未知';
+            const match = trueTop1Address.match(/(.{2,3}?[縣市])(.{2,3}?[區鄉鎮市])/);
+            if (match) { city = match[1]; district = match[2]; }
 
-            fetch(cleanLogUrl, { 
-                method: 'POST', 
-                body: JSON.stringify({ 
-                    action: 'logSearch', address: trueTop1Address, searchType: searchType, 
-                    userAddress: maskedUserAddress, dims: dims 
-                }) 
-            }).catch(err => console.log(err));
+            // 🚀 5. 改為用 Supabase JS 直接寫入日誌 (安全、完全不卡頓)
+            supabaseClient.from('search_logs').insert([{
+              search_type: searchType,
+              city: city,
+              district: district,
+              closest_address: trueTop1Address,
+              user_address: maskedUserAddress,
+              dim_l: dims ? dims[0] : null,
+              dim_w: dims ? dims[1] : null,
+              dim_h: dims ? dims[2] : null
+            }]).then(({error}) => { if (error) console.error("Log error:", error); });
           }
         } else { throw new Error(result.message); }
       } catch (err) {
@@ -1209,7 +1246,16 @@
         let boxesHtml = ''; let hasBoxes = false;
         
         if (item.boxes && Object.keys(item.boxes).length > 0) {
-          for (const [size, rawValue] of Object.entries(item.boxes)) {
+          // 🚀 將格位尺寸從小到大排序 (依據長x寬的面積大小)
+          const sortedBoxes = Object.entries(item.boxes).sort((a, b) => {
+            const getArea = (sizeStr) => {
+              const parts = sizeStr.split('x');
+              return (parseInt(parts[0], 10) || 0) * (parseInt(parts[1], 10) || 0);
+            };
+            return getArea(a[0]) - getArea(b[0]);
+          });
+
+          for (const [size, rawValue] of sortedBoxes) {
             let total = 0, used = 0, remain = '-';
             if (typeof rawValue === 'string' && rawValue.includes('/')) {
               const parts = rawValue.split('/'); used = parseInt(parts[0], 10) || 0; 
@@ -1225,12 +1271,16 @@
           }
         }
         
+        // 🚀 剛剛就是漏掉了這一行與上面的括號！
         let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">${t.jsSizeTh}</th><th>${t.jsTotalTh}</th><th>${t.jsRemainTh}</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : `<div class="small fw-bold text-center mt-2" style="color: #8C8476;">${t.jsNoData}</div>`;
-        const cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
+        let cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
 
         let distText = item.distanceText.replace('公里', 'km');
         let durText = item.duration.replace('分鐘', t.jsMin);
         let updatedText = (item.updateTime || t.jsNoData).replace('(即時)', t.jsLive);
+
+        // 🚀 加上郵遞區號 (如果有值的話，顯示藍色)，並放在地址的左邊
+        let displayAddress = item.zipcode ? `<span class="text-primary me-1">${item.zipcode}</span>${item.address}` : item.address;
 
         html += `
           <div class="result-card" ${cardId}>
@@ -1240,7 +1290,7 @@
                   <span class="badge-3d ${item.originalRank === 1 ? '' : 'bg-success'} mb-2 d-inline-block">${t.jsTopX.replace('{X}', item.originalRank)}</span>
                   <h3 style="font-weight: 900; font-size: 1.3rem; color: var(--post-green-dark);">${item.name}</h3>
                   <p class="mb-1 fw-bold" style="color: var(--text-main);">${t.jsRoute}<span class="text-danger">${distText}</span> (約 ${durText})</p>
-                  <p class="small fw-bold mb-0" style="color: #8C8476;">${item.address}</p>
+                  <p class="small fw-bold mb-0" style="color: #8C8476;">${displayAddress}</p>
                   ${locationHtml}
                 </div>
                 <div class="mt-auto pt-3 fw-bold" style="font-size: 0.75rem; color: #A6A095;">${t.jsUpdated}${updatedText}</div>
@@ -1267,24 +1317,7 @@
         else if (loopIndex === 2 && shuffledAds.length > 2) html += shuffledAds[2];
       });
       document.getElementById('results').innerHTML = html;
-      initSurveyObserver();
-    }
-
-    let surveyShownThisSearch = false;
-    function initSurveyObserver() {
-      surveyShownThisSearch = false;
-      const target = document.getElementById('rank1Card');
-      if (!target) return;
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !surveyShownThisSearch) {
-            surveyShownThisSearch = true;
-            setTimeout(() => { bootstrap.Modal.getOrCreateInstance(document.getElementById('surveyModal')).show(); }, 1000);
-            observer.unobserve(target);
-          }
-        });
-      }, { threshold: 0.5 });
-      observer.observe(target);
+      // 🚀 移除了 initSurveyObserver() 的呼叫，往下滑再也不會自動彈出了！
     }
 
     function copyText(text) { 
@@ -1305,9 +1338,14 @@
       if (!msg) return alert(msgEmpty);
       btn.disabled = true; btn.innerHTML = btnSending;
       try {
-        const response = await fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'feedback', name: name, message: msg }) });
-        const result = await response.json();
-        if (result.status === 'success') { alert(msgSuccess); bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide(); }
+        // 🚀 6. 意見回饋改為 Supabase 直接寫入
+        const { error } = await supabaseClient.from('feedbacks').insert([{ name: name, message: msg }]);
+        
+        if (!error) { 
+            alert(msgSuccess); 
+            bootstrap.Modal.getInstance(document.getElementById('feedbackModal')).hide(); 
+            document.getElementById('feedbackMessage').value = '';
+        } else throw error;
       } catch (err) { alert(currentLang === 'zh' ? '失敗' : 'Failed'); } finally { btn.disabled = false; btn.innerHTML = i18n[currentLang].fbSubmit; }
     }
 
@@ -1317,7 +1355,13 @@
       const role = document.querySelector('input[name="surveyRole"]:checked'), ux = document.querySelector('input[name="surveyUX"]:checked'), acc = document.querySelector('input[name="surveyAccuracy"]:checked');
       if (!role || !ux || !acc) return alert(currentLang === 'zh' ? '請填寫完整問卷！' : 'Please complete the survey!');
       bootstrap.Modal.getInstance(document.getElementById('surveyModal')).hide();
-      fetch(GAS_API_URL_LOG.replace(/\s+/g, ''), { method: 'POST', body: JSON.stringify({ action: 'survey', role: role.value, ux: ux.value, accuracy: acc.value }) }).catch(e => console.log(e));
+      
+      // 🚀 7. 問卷調查改為 Supabase 直接寫入
+      supabaseClient.from('surveys').insert([{ 
+        role: role.value, 
+        ux_score: parseInt(ux.value), 
+        accuracy_score: parseInt(acc.value) 
+      }]).then(({error}) => { if (error) console.error(error); });
     }
 
     let isDragging = false;
