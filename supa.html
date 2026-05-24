@@ -981,15 +981,21 @@
 
     async function loadTotalSearches() {
       try {
-        // 🚀 3. 改用 Supabase 直接讀取資料表總筆數 (極速)
+        // 🚀 改為直接向 Supabase 查詢 search_logs 資料表的總筆數
         const { count, error } = await supabaseClient
           .from('search_logs')
           .select('*', { count: 'exact', head: true });
           
-        if (!error && count !== null && count > 0) {
-          document.getElementById('totalSearchCount').innerText = count.toLocaleString();
+        if (!error && count !== null) {
+          // 將總數填入畫面上的標籤
+          const element = document.getElementById('totalSearchCount');
+          if (element) {
+            element.innerText = count.toLocaleString();
+          }
         }
-      } catch (err) { console.error(err); }
+      } catch (err) {
+        console.error("無法載入搜尋統計:", err);
+      }
     }
 
     function updateDistricts() {
