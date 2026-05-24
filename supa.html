@@ -1292,24 +1292,6 @@
         else if (loopIndex === 2 && shuffledAds.length > 2) html += shuffledAds[2];
       });
       document.getElementById('results').innerHTML = html;
-      initSurveyObserver();
-    }
-
-    let surveyShownThisSearch = false;
-    function initSurveyObserver() {
-      surveyShownThisSearch = false;
-      const target = document.getElementById('rank1Card');
-      if (!target) return;
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !surveyShownThisSearch) {
-            surveyShownThisSearch = true;
-            setTimeout(() => { bootstrap.Modal.getOrCreateInstance(document.getElementById('surveyModal')).show(); }, 1000);
-            observer.unobserve(target);
-          }
-        });
-      }, { threshold: 0.5 });
-      observer.observe(target);
     }
 
     function copyText(text) { 
