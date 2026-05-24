@@ -1234,7 +1234,16 @@
         let boxesHtml = ''; let hasBoxes = false;
         
         if (item.boxes && Object.keys(item.boxes).length > 0) {
-          for (const [size, rawValue] of Object.entries(item.boxes)) {
+          // 🚀 將格位尺寸從小到大排序 (依據長x寬的面積大小)
+          const sortedBoxes = Object.entries(item.boxes).sort((a, b) => {
+            const getArea = (sizeStr) => {
+              const parts = sizeStr.split('x');
+              return (parseInt(parts[0], 10) || 0) * (parseInt(parts[1], 10) || 0);
+            };
+            return getArea(a[0]) - getArea(b[0]);
+          });
+
+          for (const [size, rawValue] of sortedBoxes) {
             let total = 0, used = 0, remain = '-';
             if (typeof rawValue === 'string' && rawValue.includes('/')) {
               const parts = rawValue.split('/'); used = parseInt(parts[0], 10) || 0; 
@@ -1248,14 +1257,14 @@
               boxesHtml += `<tr><td class="size-col">${ds}</td><td class="fw-bold">${total}</td><td class="fw-bold ${remainColorClass}">${remain}</td></tr>`;
             }
           }
-        }
-        
-        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">${t.jsSizeTh}</th><th>${t.jsTotalTh}</th><th>${t.jsRemainTh}</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : `<div class="small fw-bold text-center mt-2" style="color: #8C8476;">${t.jsNoData}</div>`;
-        const cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
+        let cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
 
         let distText = item.distanceText.replace('公里', 'km');
         let durText = item.duration.replace('分鐘', t.jsMin);
         let updatedText = (item.updateTime || t.jsNoData).replace('(即時)', t.jsLive);
+
+        // 🚀 加上郵遞區號 (如果有值的話，顯示藍色)，並放在地址的左邊
+        let displayAddress = item.zipcode ? `<span class="text-primary me-1">${item.zipcode}</span>${item.address}` : item.address;
 
         html += `
           <div class="result-card" ${cardId}>
@@ -1265,7 +1274,7 @@
                   <span class="badge-3d ${item.originalRank === 1 ? '' : 'bg-success'} mb-2 d-inline-block">${t.jsTopX.replace('{X}', item.originalRank)}</span>
                   <h3 style="font-weight: 900; font-size: 1.3rem; color: var(--post-green-dark);">${item.name}</h3>
                   <p class="mb-1 fw-bold" style="color: var(--text-main);">${t.jsRoute}<span class="text-danger">${distText}</span> (約 ${durText})</p>
-                  <p class="small fw-bold mb-0" style="color: #8C8476;">${item.address}</p>
+                  <p class="small fw-bold mb-0" style="color: #8C8476;">${displayAddress}</p>
                   ${locationHtml}
                 </div>
                 <div class="mt-auto pt-3 fw-bold" style="font-size: 0.75rem; color: #A6A095;">${t.jsUpdated}${updatedText}</div>
@@ -1292,6 +1301,7 @@
         else if (loopIndex === 2 && shuffledAds.length > 2) html += shuffledAds[2];
       });
       document.getElementById('results').innerHTML = html;
+      // 🚀 移除了 initSurveyObserver() 的呼叫，往下滑再也不會自動彈出了！
     }
 
     function copyText(text) { 
