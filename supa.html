@@ -1257,6 +1257,10 @@
               boxesHtml += `<tr><td class="size-col">${ds}</td><td class="fw-bold">${total}</td><td class="fw-bold ${remainColorClass}">${remain}</td></tr>`;
             }
           }
+        }
+        
+        // 🚀 剛剛就是漏掉了這一行與上面的括號！
+        let tableHtml = hasBoxes ? `<table class="box-table"><thead><tr><th style="text-align: left;">${t.jsSizeTh}</th><th>${t.jsTotalTh}</th><th>${t.jsRemainTh}</th></tr></thead><tbody>${boxesHtml}</tbody></table>` : `<div class="small fw-bold text-center mt-2" style="color: #8C8476;">${t.jsNoData}</div>`;
         let cardId = item.originalRank === 1 ? 'id="rank1Card"' : '';
 
         let distText = item.distanceText.replace('公里', 'km');
