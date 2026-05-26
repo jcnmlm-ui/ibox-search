@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>i 郵箱查找大師 - 廣告管理後台</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --post-green: #4CAE7B;
+      --post-green-dark: #3A8960;
+      --bg-color: #F6F4EE;
+    }
+    body { background-color: var(--bg-color); font-family: 'Noto Sans TC', sans-serif; color: #5C554B; }
+    .admin-card { background: #fff; border-radius: 16px; border: 2px solid #D6D1C4; border-bottom-width: 6px; padding: 25px; margin-bottom: 25px; }
+    .btn-custom { background-color: var(--post-green); color: white; font-weight: bold; border-radius: 8px; border: none; padding: 10px 20px; transition: 0.2s; }
+    .btn-custom:hover { background-color: var(--post-green-dark); color: white; }
+    .banner-preview { width: 100%; max-width: 300px; border-radius: 8px; border: 2px solid #EAE6DB; }
+    .table th { color: #8C8476; }
+    .table td { vertical-align: middle; font-weight: bold; }
+    #loaderOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; }
+  </style>
+</head>
+<body>
+
+  <!-- 全局載入中遮罩 -->
+  <div id="loaderOverlay">
+    <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;"></div>
+    <h5 class="mt-3 fw-bold text-success" id="loaderText">處理中...</h5>
+  </div>
+
+  <div class="container mt-5">
+    
+    <!-- 登入區塊 (未登入時顯示) -->
+    <div id="loginSection" class="row justify-content-center" style="display: none;">
+      <div class="col-md-5">
+        <div class="admin-card text-center">
+          <h2 class="fw-bold mb-4" style="color: var(--post-green-dark);"><i class="fa-solid fa-lock me-2"></i>管理員登入</h2>
+          <div class="mb-3 text-start">
+            <label class="form-label fw-bold">帳號 (Email)</label>
+            <input type="email" id="emailInput" class="form-control" placeholder="admin@example.com">
+          </div>
+          <div class="mb-4 text-start">
+            <label class="form-label fw-bold">密碼</label>
+            <input type="password" id="passwordInput" class="form-control" placeholder="••••••••">
+          </div>
+          <button class="btn-custom w-100" onclick="login()">登入後台</button>
+          <div id="loginError" class="text-danger mt-3 fw-bold small" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 管理後台區塊 (已登入時顯示) -->
+    <div id="adminSection" style="display: none;">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold m-0" style="color: var(--post-green-dark);"><i class="fa-solid fa-rectangle-ad me-2"></i>廣告管理系統</h2>
+        <button class="btn btn-outline-danger fw-bold" onclick="logout()"><i class="fa-solid fa-right-from-bracket me-2"></i>登出</button>
+      </div>
+
+      <div class="row">
+        <!-- 左側：新增廣告表單 -->
+        <div class="col-lg-4">
+          <div class="admin-card">
+            <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="fa-solid fa-plus-circle text-primary me-2"></i>新增廣告</h5>
+            <div class="mb-3">
+              <label class="form-label fw-bold small">上傳圖片檔 (支援 JPG, PNG, WEBP)</label>
+              <input class="form-control" type="file" id="adImage" accept="image/*">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold small">目標網址 (推廣連結)</label>
+              <input type="url" class="form-control" id="adUrl" placeholder="https://...">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold small">替代文字 (Alt Text / 必填)</label>
+              <input type="text" class="form-control" id="adAlt" placeholder="例如：雙11郵箱優惠活動">
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-bold small">權重排序 (數字越大越容易出現)</label>
+              <input type="number" class="form-control" id="adWeight" value="0">
+            </div>
+            <button class="btn-custom w-100" onclick="uploadNewAd()"><i class="fa-solid fa-cloud-arrow-up me-2"></i>上傳並新增</button>
+          </div>
+        </div>
+
+        <!-- 右側：現有廣告列表 -->
+        <div class="col-lg-8">
+          <div class="admin-card">
+            <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="fa-solid fa-list text-warning me-2"></i>現有廣告列表</h5>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>圖片預覽</th>
+                    <th>詳細資訊</th>
+                    <th>狀態</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="bannerList">
+                  <!-- 資料動態載入 -->
+                </tbody>
+              </table>
+            </div>
+            <div id="emptyState" class="text-center text-muted fw-bold py-4" style="display:none;">目前還沒有任何廣告喔！趕快新增一個吧！</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // 🚀 填入您的 Supabase 資訊 (與前台相同)
+    const SUPABASE_URL = 'https://vhryiktpxidehcamxcek.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZocnlpa3RweGlkZWhjYW14Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1OTYyODQsImV4cCI6MjA5NTE3MjI4NH0.7Z1drPMsqGPYDaIS8qLaRALIapnOTahxPMmKnEi_KJA';
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // --- 認證與狀態管理 ---
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('adminSection').style.display = 'block';
+        fetchBanners(); // 登入成功後載入廣告
+      } else {
+        document.getElementById('loginSection').style.display = 'flex';
+        document.getElementById('adminSection').style.display = 'none';
+      }
+    });
+
+    function showLoader(text) {
+      document.getElementById('loaderText').innerText = text;
+      document.getElementById('loaderOverlay').style.display = 'flex';
+    }
+    function hideLoader() { document.getElementById('loaderOverlay').style.display = 'none'; }
+
+    async function login() {
+      const email = document.getElementById('emailInput').value;
+      const password = document.getElementById('passwordInput').value;
+      const errBox = document.getElementById('loginError');
+      errBox.style.display = 'none';
+
+      if(!email || !password) return alert("請輸入帳號密碼");
+
+      showLoader('登入中...');
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      hideLoader();
+
+      if (error) {
+        errBox.innerText = "登入失敗：" + error.message;
+        errBox.style.display = 'block';
+      }
+    }
+
+    async function logout() {
+      showLoader('登出中...');
+      await supabaseClient.auth.signOut();
+      hideLoader();
+    }
+
+    // --- 廣告資料 CRUD ---
+
+    // 1. 讀取廣告
+    async function fetchBanners() {
+      const { data, error } = await supabaseClient.from('banners').select('*').order('created_at', { ascending: false });
+      if (error) return alert("讀取失敗：" + error.message);
+
+      const listHtml = document.getElementById('bannerList');
+      const emptyState = document.getElementById('emptyState');
+      listHtml.innerHTML = '';
+
+      if (data.length === 0) { emptyState.style.display = 'block'; return; }
+      emptyState.style.display = 'none';
+
+      data.forEach(banner => {
+        const statusBadge = banner.is_active 
+          ? `<span class="badge bg-success mb-2">已上架</span>` 
+          : `<span class="badge bg-secondary mb-2">已下架</span>`;
+        
+        const toggleBtn = banner.is_active
+          ? `<button class="btn btn-sm btn-outline-secondary w-100 mb-1" onclick="toggleStatus('${banner.id}', false)">隱藏下架</button>`
+          : `<button class="btn btn-sm btn-outline-success w-100 mb-1" onclick="toggleStatus('${banner.id}', true)">發佈上架</button>`;
+
+        listHtml.innerHTML += `
+          <tr>
+            <td style="width: 35%;">
+              <a href="${banner.target_url}" target="_blank">
+                <img src="${banner.image_url}" class="banner-preview">
+              </a>
+            </td>
+            <td>
+              <div class="small text-muted mb-1">Alt: ${banner.alt_text}</div>
+              <div class="small text-primary mb-1 text-truncate" style="max-width:200px;">
+                 <a href="${banner.target_url}" target="_blank">${banner.target_url}</a>
+              </div>
+              <div class="small fw-bold">權重: <span class="text-danger">${banner.weight}</span></div>
+            </td>
+            <td>${statusBadge}</td>
+            <td style="width: 15%;">
+              ${toggleBtn}
+              <button class="btn btn-sm btn-outline-danger w-100" onclick="deleteBanner('${banner.id}', '${banner.image_url}')"><i class="fa-solid fa-trash me-1"></i>刪除</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // 2. 上傳與新增廣告
+    async function uploadNewAd() {
+      const fileInput = document.getElementById('adImage');
+      const urlInput = document.getElementById('adUrl').value.trim();
+      const altInput = document.getElementById('adAlt').value.trim();
+      const weightInput = parseInt(document.getElementById('adWeight').value) || 0;
+
+      if (!fileInput.files.length) return alert("請選擇一張圖片！");
+      if (!altInput) return alert("請輸入替代文字！");
+
+      const file = fileInput.files[0];
+      // 產生亂數檔名避免重複
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+
+      showLoader('正在上傳圖片並寫入資料庫...');
+      try {
+        // A. 上傳圖片到 Supabase Storage
+        const { error: uploadError } = await supabaseClient.storage.from('ad-images').upload(fileName, file);
+        if (uploadError) throw uploadError;
+
+        // B. 取得公開網址
+        const { data: publicUrlData } = supabaseClient.storage.from('ad-images').getPublicUrl(fileName);
+        const imageUrl = publicUrlData.publicUrl;
+
+        // C. 將資料寫入 banners 資料表
+        const { error: dbError } = await supabaseClient.from('banners').insert([{
+          image_url: imageUrl,
+          target_url: urlInput,
+          alt_text: altInput,
+          weight: weightInput,
+          is_active: true
+        }]);
+        if (dbError) throw dbError;
+
+        // 清空表單並重新載入
+        fileInput.value = '';
+        document.getElementById('adUrl').value = '';
+        document.getElementById('adAlt').value = '';
+        document.getElementById('adWeight').value = '0';
+        fetchBanners();
+
+      } catch (err) {
+        alert("新增失敗：" + err.message);
+      } finally {
+        hideLoader();
+      }
+    }
+
+    // 3. 切換上下架狀態
+    async function toggleStatus(id, newStatus) {
+      showLoader('更新狀態中...');
+      const { error } = await supabaseClient.from('banners').update({ is_active: newStatus }).eq('id', id);
+      hideLoader();
+      if (error) alert("更新失敗：" + error.message);
+      else fetchBanners();
+    }
+
+    // 4. 刪除廣告 (同時刪除圖片與資料庫)
+    async function deleteBanner(id, imageUrl) {
+      if(!confirm("確定要永久刪除這個廣告嗎？無法復原喔！")) return;
+      
+      showLoader('刪除中...');
+      try {
+        // 從資料庫中刪除紀錄
+        const { error: dbError } = await supabaseClient.from('banners').delete().eq('id', id);
+        if (dbError) throw dbError;
+
+        // 從網址中萃取出檔名並從 Storage 中刪除
+        const fileName = imageUrl.split('/').pop();
+        const { error: storageError } = await supabaseClient.storage.from('ad-images').remove([fileName]);
+        if (storageError) console.error("圖片檔案刪除失敗(可能已遺失)", storageError);
+
+        fetchBanners();
+      } catch (err) {
+        alert("刪除失敗：" + err.message);
+      } finally {
+        hideLoader();
+      }
+    }
+  </script>
+</body>
+</html>
