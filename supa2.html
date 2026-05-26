@@ -778,9 +778,17 @@
     // 將資料庫廣告物件轉換成 HTML，若是 fallback 字串則直接回傳
     function generateBannerHtml(banner) {
       if (typeof banner === 'string') return banner; 
-      return `<a href="${banner.target_url}" target="_blank" style="display: block; text-align: center; margin-bottom: 16px;">
+      return `<a href="${banner.target_url}" target="_blank" onclick="trackAdClick('${banner.id}')" style="display: block; text-align: center; margin-bottom: 16px;">
                 <img src="${banner.image_url}" alt="${banner.alt_text || '廣告推廣'}" class="img-fluid w-100 rounded" style="border: 2px solid var(--border-color); border-bottom-width: 4px;">
               </a>`;
+    }
+
+    // 🚀 新增：追蹤點擊次數
+    function trackAdClick(bannerId) {
+      if(!useFallback) {
+        supabaseClient.rpc('increment_banner_click', { banner_id: bannerId })
+          .then(({error}) => { if(error) console.error("點擊追蹤失敗", error); });
+      }
     }
 
     // 🚀 從 Supabase 動態載入廣告資料
@@ -809,6 +817,12 @@
       if (pool.length > 0) {
         const randomAd = pool[Math.floor(Math.random() * pool.length)];
         document.getElementById('bottomAd').innerHTML = generateBannerHtml(randomAd);
+        
+        // 🚀 新增：如果是資料庫廣告，呼叫曝光追蹤
+        if (!useFallback && randomAd.id) {
+          supabaseClient.rpc('increment_banner_view', { banner_id: randomAd.id })
+            .then(({error}) => { if(error) console.error("曝光追蹤失敗", error); });
+        }
       }
     }
 
