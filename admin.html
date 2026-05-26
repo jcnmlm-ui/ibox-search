@@ -197,6 +197,12 @@
                  <a href="${banner.target_url}" target="_blank">${banner.target_url}</a>
               </div>
               <div class="small fw-bold">權重: <span class="text-danger">${banner.weight}</span></div>
+              
+              <!-- 🚀 新增：顯示追蹤數據 -->
+              <div class="small fw-bold mt-2">
+                <span class="text-info me-3"><i class="fa-solid fa-eye me-1"></i>曝光: ${banner.views || 0}</span>
+                <span class="text-warning"><i class="fa-solid fa-hand-pointer me-1"></i>點擊: ${banner.clicks || 0}</span>
+              </div>
             </td>
             <td>${statusBadge}</td>
             <td style="width: 15%;">
