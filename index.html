@@ -953,11 +953,21 @@
 
         if (error || !data || !data.is_active || !data.button_text || !data.target_url) return;
 
+        // 🕒 顯示期間檢查：還沒到開始時間，或已經超過結束時間，就不顯示
+        const now = new Date();
+        const startAt = data.start_at ? new Date(data.start_at) : null;
+        const endAt = data.end_at ? new Date(data.end_at) : null;
+        if (startAt && now < startAt) return;
+        if (endAt && now >= endAt) return;
+
         const btn = document.getElementById('floatingAdButton');
         document.getElementById('floatingAdText').innerText = data.button_text;
         document.getElementById('floatingAdDesc').innerText = data.description_text || '';
         btn.href = data.target_url;
         btn.style.display = 'flex';
+
+        // 🕒 如果有設定結束時間，就算使用者頁面一直開著，時間一到也會自動隱藏(不用重新整理)
+        if (endAt) scheduleFloatingAdAutoHide(endAt);
 
         // 畫面可見時記一次曝光 (跟下方廣告 banner 用同一套追蹤邏輯)
         const observer = new IntersectionObserver((entries, observerInstance) => {
@@ -974,6 +984,21 @@
       } catch (err) {
         console.error('無法載入浮動廣告按鈕:', err);
       }
+    }
+
+    // 🕒 排程在「結束顯示時間」一到就自動隱藏浮動按鈕 (每次最多排6小時，避免單個計時器設太久造成瀏覽器負擔)
+    function scheduleFloatingAdAutoHide(endAt) {
+      const MAX_DELAY = 6 * 60 * 60 * 1000; // 6 小時
+      const check = () => {
+        const remaining = endAt - new Date();
+        if (remaining <= 0) {
+          const btn = document.getElementById('floatingAdButton');
+          if (btn) btn.style.display = 'none';
+          return;
+        }
+        setTimeout(check, Math.min(remaining, MAX_DELAY));
+      };
+      setTimeout(check, Math.min(endAt - new Date(), MAX_DELAY));
     }
 
     // 📢 浮動廣告按鈕：點擊追蹤 (連結本身用 target="_blank" 另開分頁，不會關閉目前網站)
