@@ -59,6 +59,52 @@
         <button class="btn btn-outline-danger fw-bold" onclick="logout()"><i class="fa-solid fa-right-from-bracket me-2"></i>登出</button>
       </div>
 
+      <!-- 📢 浮動廣告按鈕設定 (前台右側的大型浮動按鈕) -->
+      <div class="admin-card">
+        <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="fa-solid fa-bullhorn text-success me-2"></i>浮動廣告按鈕設定</h5>
+        <p class="small text-muted mb-3">顯示在前台網站（goibox.tw）右側的大型浮動按鈕，會在新分頁開啟連結，不會關閉使用者目前的頁面，並自動記錄曝光與點擊次數。</p>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label fw-bold small">按鈕文字 (限10字內)</label>
+              <input type="text" class="form-control" id="fbText" maxlength="10" placeholder="例如：雙11特賣中" oninput="updateFbTextCounter()">
+              <div class="form-text text-end" id="fbTextCounter">0 / 10</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold small">說明文字 (選填，顯示在按鈕文字下方小字)</label>
+              <input type="text" class="form-control" id="fbDesc" maxlength="20" placeholder="例如：點我看活動詳情">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold small">連結網址</label>
+              <input type="url" class="form-control" id="fbUrl" placeholder="https://...">
+            </div>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="fbActive">
+              <label class="form-check-label fw-bold" for="fbActive">啟用浮動按鈕（顯示在前台網站）</label>
+            </div>
+            <button class="btn-custom w-100" onclick="saveFloatingButton()"><i class="fa-solid fa-floppy-disk me-2"></i>儲存設定</button>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold small">成效數據</label>
+            <div class="p-3 rounded" style="background-color:#F6F4EE;">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="fw-bold small text-info"><i class="fa-solid fa-eye me-1"></i>曝光次數</span>
+                <span class="fw-bold" id="fbViews">0</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="fw-bold small text-warning"><i class="fa-solid fa-hand-pointer me-1"></i>點擊次數</span>
+                <span class="fw-bold" id="fbClicks">0</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span class="fw-bold small text-success"><i class="fa-solid fa-chart-line me-1"></i>點擊率 (CTR)</span>
+                <span class="fw-bold" id="fbCtr">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="row">
         <!-- 左側：新增廣告表單 -->
         <div class="col-lg-4">
@@ -125,6 +171,7 @@
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('adminSection').style.display = 'block';
         fetchBanners(); // 登入成功後載入廣告
+        fetchFloatingButton(); // 登入成功後載入浮動廣告按鈕設定
       } else {
         document.getElementById('loginSection').style.display = 'flex';
         document.getElementById('adminSection').style.display = 'none';
@@ -293,6 +340,56 @@
       } finally {
         hideLoader();
       }
+    }
+
+    // --- 📢 浮動廣告按鈕設定 (前台右側大型浮動按鈕，單一筆設定資料) ---
+
+    function updateFbTextCounter() {
+      const val = document.getElementById('fbText').value;
+      document.getElementById('fbTextCounter').innerText = `${val.length} / 10`;
+    }
+
+    // 5. 讀取浮動廣告按鈕設定
+    async function fetchFloatingButton() {
+      const { data, error } = await supabaseClient.from('floating_button').select('*').eq('id', 'main').single();
+      if (error) { console.error('讀取浮動按鈕設定失敗', error); return; }
+      if (!data) return;
+
+      document.getElementById('fbText').value = data.button_text || '';
+      document.getElementById('fbDesc').value = data.description_text || '';
+      document.getElementById('fbUrl').value = data.target_url || '';
+      document.getElementById('fbActive').checked = !!data.is_active;
+      updateFbTextCounter();
+
+      const views = data.views || 0;
+      const clicks = data.clicks || 0;
+      document.getElementById('fbViews').innerText = views;
+      document.getElementById('fbClicks').innerText = clicks;
+      document.getElementById('fbCtr').innerText = views > 0 ? `${((clicks / views) * 100).toFixed(1)}%` : '0%';
+    }
+
+    // 6. 儲存浮動廣告按鈕設定
+    async function saveFloatingButton() {
+      const buttonText = document.getElementById('fbText').value.trim();
+      const descText = document.getElementById('fbDesc').value.trim();
+      const url = document.getElementById('fbUrl').value.trim();
+      const active = document.getElementById('fbActive').checked;
+
+      if (buttonText.length > 10) return alert("按鈕文字請限制在10字以內！");
+      if (active && !buttonText) return alert("啟用時必須填寫按鈕文字！");
+      if (active && !url) return alert("啟用時必須填寫連結網址！");
+
+      showLoader('儲存浮動按鈕設定中...');
+      const { error } = await supabaseClient.from('floating_button').update({
+        button_text: buttonText,
+        description_text: descText,
+        target_url: url,
+        is_active: active
+      }).eq('id', 'main');
+      hideLoader();
+
+      if (error) alert("儲存失敗：" + error.message);
+      else alert("儲存成功！前台網站重新整理後即可看到變更。");
     }
   </script>
 </body>
