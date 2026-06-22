@@ -2,7 +2,7 @@
 <html lang="zh-TW" id="htmlTag">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="favicon.png">
   
@@ -52,6 +52,20 @@
       }
     }, {
       "@type": "Question",
+      "name": "蝦皮、MOMO 可以寄到 i 郵箱嗎？ Can I receive Shopee or MOMO parcels at iBox?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。"
+      }
+    }, {
+      "@type": "Question",
+      "name": "如何使用ｉ郵箱取件？ How do I pick up a parcel at iBox?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。"
+      }
+    }, {
+      "@type": "Question",
       "name": "什麼是ｉ郵箱？ What is iBox?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -64,10 +78,20 @@
         "@type": "Answer",
         "text": "提供郵政金融卡、悠遊卡、一卡通、icash 2.0及多種行動支付。"
       }
+    }, {
+      "@type": "Question",
+      "name": "重要！寄件注意事項！ Important notes before sending a parcel",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。一個儲格只能放置一個包裹且不可併箱。建議於i郵箱前台交寄時詳閱「寄件提醒」。"
+      }
     }]
   }
   </script>
 
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -571,27 +595,27 @@
             <h2 class="fw-bold mb-3 text-dark h5" data-i18n="faqTitle"><i class="fa-solid fa-clipboard-question text-info me-2"></i>常見問題 FAQ</h2>
             <div class="accordion accordion-flush" id="faqAccordion">
               <div class="accordion-item">
-                <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" data-i18n="faq1Q">包裹可以在 i 郵箱放多久？</button></h2>
+                <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" data-i18n="faq1Q">包裹可以在 i 郵箱放多久？</button></h3>
                 <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary fw-bold" style="line-height: 1.6;" data-i18n="faq1A">包裹送達後，提供 <strong>3 天 (72 小時)</strong>(含例假日)的待領期間。將於第4天早上8點前由郵局人員取出後轉郵局招領。</div></div>
               </div>
               <div class="accordion-item">
-                <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" data-i18n="faq2Q">蝦皮、MOMO 可以寄到 i 郵箱嗎？</button></h2>
+                <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" data-i18n="faq2Q">蝦皮、MOMO 可以寄到 i 郵箱嗎？</button></h3>
                 <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary fw-bold" style="line-height: 1.6;" data-i18n="faq2A">沒問題！結帳時只要物流選項支援「i郵箱」，您可以利用本網站搜尋距離您最近的據點，複製地址即可輕鬆取件。</div></div>
               </div>
               <div class="accordion-item">
-                <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" data-i18n="faq3Q">如何使用ｉ郵箱取件？</button></h2>
+                <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" data-i18n="faq3Q">如何使用ｉ郵箱取件？</button></h3>
                 <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary fw-bold" style="line-height: 1.6;" data-i18n="faq3A">郵局人員投入ｉ郵箱後，系統會發送簡訊通知。於收到簡訊3天內至前臺點選「取件」，輸入行動電話末3碼及6位數字取件碼即可領取。</div></div>
               </div>
               <div class="accordion-item">
-                <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" data-i18n="faq4Q">什麼是ｉ郵箱？</button></h2>
+                <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" data-i18n="faq4Q">什麼是ｉ郵箱？</button></h3>
                 <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary fw-bold" style="line-height: 1.6;" data-i18n="faq4A">ｉ郵箱提供24小時自助領取、交寄包裹及退貨之服務。可於網路購物後遞送至ｉ郵箱，在領件時間內至指定地點取件。</div></div>
               </div>
               <div class="accordion-item">
-                <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" data-i18n="faq5Q">如何支付寄件郵資？</button></h2>
+                <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" data-i18n="faq5Q">如何支付寄件郵資？</button></h3>
                 <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary fw-bold" style="line-height: 1.6;" data-i18n="faq5A">目前提供郵政金融卡、悠遊卡、一卡通及icash 2.0、iPASS MONEY、悠遊付、街口支付等多種行動支付。</div></div>
               </div>
               <div class="accordion-item">
-                <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" data-i18n="faq6Q">重要！寄件注意事項！</button></h2>
+                <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" data-i18n="faq6Q">重要！寄件注意事項！</button></h3>
                 <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body small text-secondary fw-bold" style="line-height: 1.6;" data-i18n="faq6A">1. 從ｉ郵箱只可交寄國內一般包裹，請勿交寄「信函」及「首次使用之便利箱（袋）」。<br>2. 設有「智慧郵筒」的ｉ郵箱，可交寄「普通／限時／航空郵件」。<br>3. 不可以寄禁止交寄物品，否則會由寄件人負擔全部責任，郵局也不會退回郵資。<a href="https://www.post.gov.tw/post/internet/SearchZone/index.jsp?ID=1406699177348" target="_blank" rel="noopener" class="text-decoration-none text-primary me-2">(參考網址)</a><br>4. 一個儲格只能放置一個包裹且不可併箱。<br>5. 建議於i郵箱前台交寄時詳閱「寄件提醒」。</div></div>
               </div>
             </div>
