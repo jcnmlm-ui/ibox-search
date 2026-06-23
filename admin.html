@@ -7,6 +7,7 @@
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
   <style>
     :root {
       --post-green: #4CAE7B;
@@ -222,6 +223,50 @@
             </div>
           </div>
         </div>
+
+      <!-- 📍 站點密度與重疊分析 -->
+      <div class="admin-card">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
+          <h5 class="fw-bold m-0"><i class="fa-solid fa-map-location-dot text-success me-2"></i>站點密度與重疊分析</h5>
+        </div>
+        <p class="small text-muted mb-3">用 DBSCAN 演算法分析全部站點的空間分布：地圖上同色圓點代表彼此距離在設定範圍內的「同一群」（可能重疊覆蓋），<span class="text-danger fw-bold">紅色</span>代表孤立站點（附近沒有足夠密集的鄰居，覆蓋範圍可能有缺口）。</p>
+
+        <div class="row mb-3 g-2 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label fw-bold small">群聚半徑 eps（公尺）</label>
+            <input type="number" class="form-control" id="clusterEps" value="500" min="50" step="50">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold small">最小群聚站點數 minPoints</label>
+            <input type="number" class="form-control" id="clusterMinPoints" value="3" min="2" step="1">
+          </div>
+          <div class="col-md-4">
+            <button class="btn-custom w-100" onclick="loadClusterAnalysis()"><i class="fa-solid fa-rotate me-2"></i>重新計算</button>
+          </div>
+        </div>
+
+        <div class="row mb-3 text-center">
+          <div class="col-6 col-md-3 mb-2">
+            <div class="small text-muted">總站點數</div>
+            <div class="fw-bold fs-5" id="statTotal">-</div>
+          </div>
+          <div class="col-6 col-md-3 mb-2">
+            <div class="small text-muted">密集群數</div>
+            <div class="fw-bold fs-5 text-success" id="statClusters">-</div>
+          </div>
+          <div class="col-6 col-md-3 mb-2">
+            <div class="small text-muted">孤立站點數</div>
+            <div class="fw-bold fs-5 text-danger" id="statNoise">-</div>
+          </div>
+          <div class="col-6 col-md-3 mb-2">
+            <div class="small text-muted">最大群聚站點數</div>
+            <div class="fw-bold fs-5" id="statMaxCluster">-</div>
+          </div>
+        </div>
+
+        <div id="clusterMap" style="height:480px; border-radius:12px; border:2px solid #D6D1C4;"></div>
+      </div>
+
       </div><!-- /analyticsTab -->
 
       </div><!-- /tab-content -->
@@ -232,6 +277,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
   <script>
     // 🚀 填入您的 Supabase 資訊 (與前台相同)
     const SUPABASE_URL = 'https://vhryiktpxidehcamxcek.supabase.co';
@@ -494,12 +540,17 @@
     let monthlyTrendChartInstance = null;
     let topLocationsChartInstance = null;
     let hotspotLoaded = false;
+    let clusterLoaded = false;
 
-    // 切到「數據分析」頁籤時才載入 (Chart.js 需要畫面可見才能正確計算尺寸)
+    // 切到「數據分析」頁籤時才載入 (Chart.js / Leaflet 需要畫面可見才能正確計算尺寸)
     document.getElementById('analytics-tab-btn').addEventListener('shown.bs.tab', () => {
       if (!hotspotLoaded) {
         hotspotLoaded = true;
         loadHotspotData(12, document.querySelector('#hotspotRangeButtons .active'));
+      }
+      if (!clusterLoaded) {
+        clusterLoaded = true;
+        loadClusterAnalysis();
       }
     });
 
@@ -602,6 +653,73 @@
           <td class="fw-bold text-success">${r.total}</td>
         </tr>
       `).join('');
+    }
+
+    // --- 📍 站點密度與重疊分析 (PostGIS DBSCAN) ---
+
+    let clusterMapInstance = null;
+    let clusterMarkerLayer = null;
+    const CLUSTER_COLORS = ['#4CAE7B', '#3A8960', '#E2A33B', '#5B8DEF', '#9B59B6', '#16A085', '#D35400', '#2C82C9', '#E84393', '#0FB9B1', '#8E6C8A', '#6C8EBF'];
+
+    async function loadClusterAnalysis() {
+      const eps = parseFloat(document.getElementById('clusterEps').value) || 500;
+      const minPoints = parseInt(document.getElementById('clusterMinPoints').value) || 3;
+
+      showLoader('計算站點密度分群中...');
+      const { data, error } = await supabaseClient.rpc('get_location_clusters', {
+        eps_meters: eps,
+        min_points: minPoints
+      });
+      hideLoader();
+
+      if (error) { console.error('密度分析失敗', error); alert('讀取失敗：' + error.message); return; }
+      renderClusterMap(data || []);
+    }
+
+    function renderClusterMap(rows) {
+      const validRows = rows.filter(r => r.lat != null && r.lng != null);
+
+      // 統計數字
+      const clusterIds = validRows.map(r => r.cluster_id).filter(c => c !== null && c !== undefined);
+      const distinctClusters = new Set(clusterIds);
+      const noiseCount = validRows.length - clusterIds.length;
+
+      const clusterSizeMap = {};
+      clusterIds.forEach(c => { clusterSizeMap[c] = (clusterSizeMap[c] || 0) + 1; });
+      const sizes = Object.values(clusterSizeMap);
+      const maxClusterSize = sizes.length ? Math.max(...sizes) : 0;
+
+      document.getElementById('statTotal').innerText = validRows.length;
+      document.getElementById('statClusters').innerText = distinctClusters.size;
+      document.getElementById('statNoise').innerText = noiseCount;
+      document.getElementById('statMaxCluster').innerText = maxClusterSize;
+
+      // 地圖只初始化一次，之後重新計算只清空圖層重畫
+      if (!clusterMapInstance) {
+        clusterMapInstance = L.map('clusterMap', { preferCanvas: true }).setView([23.6, 121.0], 8);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors',
+          maxZoom: 18
+        }).addTo(clusterMapInstance);
+        clusterMarkerLayer = L.layerGroup().addTo(clusterMapInstance);
+        // 頁籤剛切換出來時地圖容器尺寸可能還沒算好，補一次 resize
+        setTimeout(() => clusterMapInstance.invalidateSize(), 200);
+      } else {
+        clusterMarkerLayer.clearLayers();
+      }
+
+      validRows.forEach(r => {
+        const isNoise = (r.cluster_id === null || r.cluster_id === undefined);
+        const color = isNoise ? '#C0524A' : CLUSTER_COLORS[r.cluster_id % CLUSTER_COLORS.length];
+        L.circleMarker([r.lat, r.lng], {
+          radius: 4,
+          color: color,
+          fillColor: color,
+          fillOpacity: 0.75,
+          weight: 1
+        }).bindPopup(`<b>${r.name || ''}</b><br>${r.address || ''}<br>${isNoise ? '孤立站點' : '群組 #' + r.cluster_id}`)
+          .addTo(clusterMarkerLayer);
+      });
     }
   </script>
 </body>
