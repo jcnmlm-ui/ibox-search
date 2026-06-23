@@ -215,7 +215,7 @@
                 <h6 class="fw-bold small text-muted mb-2">完整排行榜（前 30）</h6>
                 <div class="table-responsive" style="max-height:340px; overflow-y:auto;">
                   <table class="table table-sm table-hover align-middle">
-                    <thead><tr><th>排名</th><th>地址</th><th>區域</th><th>查詢次數</th></tr></thead>
+                    <thead><tr><th>排名</th><th>站點名稱</th><th>地址</th><th>區域</th><th>查詢次數</th></tr></thead>
                     <tbody id="hotspotTableBody"></tbody>
                   </table>
                 </div>
@@ -657,7 +657,7 @@
       const byAddress = {};
       rows.forEach(r => {
         const key = r.closest_address;
-        if (!byAddress[key]) byAddress[key] = { address: key, city: r.city, district: r.district, total: 0 };
+        if (!byAddress[key]) byAddress[key] = { address: key, name: r.station_name, city: r.city, district: r.district, total: 0 };
         byAddress[key].total += Number(r.search_count);
       });
       const ranked = Object.values(byAddress).sort((a, b) => b.total - a.total);
@@ -668,7 +668,7 @@
       topLocationsChartInstance = new Chart(barCtx, {
         type: 'bar',
         data: {
-          labels: top10.map(r => (r.district || '') + ' ' + r.address),
+          labels: top10.map(r => (r.name ? r.name : r.address) + '（' + (r.district || '未知') + '）'),
           datasets: [{
             label: '查詢次數',
             data: top10.map(r => r.total),
@@ -687,7 +687,8 @@
       tbody.innerHTML = ranked.slice(0, 30).map((r, i) => `
         <tr>
           <td>${i + 1}</td>
-          <td class="small">${r.address}</td>
+          <td class="small fw-bold">${r.name || '<span class="text-muted">（找不到對應站點名稱）</span>'}</td>
+          <td class="small text-muted">${r.address}</td>
           <td class="small text-muted">${r.city || ''} ${r.district || ''}</td>
           <td class="fw-bold text-success">${r.total}</td>
         </tr>
