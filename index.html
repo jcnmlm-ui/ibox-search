@@ -1420,6 +1420,9 @@
             const match = trueTop1Address.match(/(.{2,3}?[縣市])(.{2,3}?[區鄉鎮市])/);
             if (match) { city = match[1]; district = match[2]; }
 
+            // 📊 直接使用後端 Edge Function 回傳的精確數值距離跟搜尋座標 (不用再從文字反推，文字搜尋現在也有座標了)
+            const distanceMeters = (result.data[0].distanceValue != null) ? Math.round(result.data[0].distanceValue) : null;
+
             // 🚀 5. 改為用 Supabase JS 直接寫入日誌 (安全、完全不卡頓)
             supabaseClient.from('search_logs').insert([{
               search_type: searchType,
@@ -1429,7 +1432,10 @@
               user_address: maskedUserAddress,
               dim_l: dims ? dims[0] : null,
               dim_w: dims ? dims[1] : null,
-              dim_h: dims ? dims[2] : null
+              dim_h: dims ? dims[2] : null,
+              closest_distance_m: distanceMeters,
+              search_lat: result.searchLat ?? null,
+              search_lng: result.searchLng ?? null
             }]).then(({error}) => { if (error) console.error("Log error:", error); });
           }
         } else { throw new Error(result.message); }
