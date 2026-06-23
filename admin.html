@@ -59,6 +59,22 @@
         <button class="btn btn-outline-danger fw-bold" onclick="logout()"><i class="fa-solid fa-right-from-bracket me-2"></i>登出</button>
       </div>
 
+      <ul class="nav nav-tabs mb-4 fw-bold" id="mainTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="ads-tab-btn" data-bs-toggle="tab" data-bs-target="#adsTab" type="button">
+            <i class="fa-solid fa-rectangle-ad me-1"></i>廣告管理
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="analytics-tab-btn" data-bs-toggle="tab" data-bs-target="#analyticsTab" type="button">
+            <i class="fa-solid fa-chart-line me-1"></i>數據分析
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+      <div class="tab-pane fade show active" id="adsTab" role="tabpanel">
+
       <!-- 📢 浮動廣告按鈕設定 (前台右側的大型浮動按鈕) -->
       <div class="admin-card">
         <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="fa-solid fa-bullhorn text-success me-2"></i>浮動廣告按鈕設定</h5>
@@ -167,11 +183,54 @@
           </div>
         </div>
       </div>
+
+      </div><!-- /adsTab -->
+
+      <div class="tab-pane fade" id="analyticsTab" role="tabpanel">
+        <div class="admin-card">
+          <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-fire text-danger me-2"></i>據點查詢熱點分析</h5>
+            <div class="btn-group btn-group-sm" role="group" id="hotspotRangeButtons">
+              <button class="btn btn-outline-success" onclick="loadHotspotData(1, this)">近1個月</button>
+              <button class="btn btn-outline-success" onclick="loadHotspotData(3, this)">近3個月</button>
+              <button class="btn btn-outline-success active" onclick="loadHotspotData(12, this)">近12個月</button>
+              <button class="btn btn-outline-success" onclick="loadHotspotData(1200, this)">全部</button>
+            </div>
+          </div>
+          <p class="small text-muted mb-3">統計使用者每次查詢後，系統推薦的最近據點，藉此找出查詢量最高（可能是日常使用熱點）的站點。</p>
+
+          <div id="hotspotEmptyState" class="text-center text-muted fw-bold py-4" style="display:none;">這段時間沒有查詢紀錄</div>
+
+          <div id="hotspotContent">
+            <h6 class="fw-bold small text-muted mb-2">每月查詢總量趨勢</h6>
+            <canvas id="monthlyTrendChart" height="90" class="mb-4"></canvas>
+
+            <div class="row">
+              <div class="col-lg-6 mb-4">
+                <h6 class="fw-bold small text-muted mb-2">查詢次數 Top 10 據點</h6>
+                <canvas id="topLocationsChart" height="260"></canvas>
+              </div>
+              <div class="col-lg-6">
+                <h6 class="fw-bold small text-muted mb-2">完整排行榜（前 30）</h6>
+                <div class="table-responsive" style="max-height:340px; overflow-y:auto;">
+                  <table class="table table-sm table-hover align-middle">
+                    <thead><tr><th>排名</th><th>地址</th><th>區域</th><th>查詢次數</th></tr></thead>
+                    <tbody id="hotspotTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /analyticsTab -->
+
+      </div><!-- /tab-content -->
     </div>
   </div>
 
   <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
   <script>
     // 🚀 填入您的 Supabase 資訊 (與前台相同)
     const SUPABASE_URL = 'https://vhryiktpxidehcamxcek.supabase.co';
@@ -427,6 +486,121 @@
 
       if (error) alert("儲存失敗：" + error.message);
       else alert("儲存成功！前台網站重新整理後即可看到變更。");
+    }
+
+    // --- 📊 據點查詢熱點分析 ---
+
+    let monthlyTrendChartInstance = null;
+    let topLocationsChartInstance = null;
+    let hotspotLoaded = false;
+
+    // 切到「數據分析」頁籤時才載入 (Chart.js 需要畫面可見才能正確計算尺寸)
+    document.getElementById('analytics-tab-btn').addEventListener('shown.bs.tab', () => {
+      if (!hotspotLoaded) {
+        hotspotLoaded = true;
+        loadHotspotData(12, document.querySelector('#hotspotRangeButtons .active'));
+      }
+    });
+
+    async function loadHotspotData(months, btnEl) {
+      document.querySelectorAll('#hotspotRangeButtons .btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setMonth(startDate.getMonth() - months);
+
+      showLoader('讀取熱點資料中...');
+      const { data, error } = await supabaseClient.rpc('get_location_hotspots', {
+        start_date: startDate.toISOString(),
+        end_date: endDate.toISOString()
+      });
+      hideLoader();
+
+      if (error) { console.error('讀取熱點資料失敗', error); alert('讀取失敗：' + error.message); return; }
+      renderHotspotAnalytics(data || []);
+    }
+
+    function renderHotspotAnalytics(rows) {
+      const emptyState = document.getElementById('hotspotEmptyState');
+      const content = document.getElementById('hotspotContent');
+
+      if (!rows.length) {
+        emptyState.style.display = 'block';
+        content.style.display = 'none';
+        return;
+      }
+      emptyState.style.display = 'none';
+      content.style.display = 'block';
+
+      // 1. 依月份加總「全部站點」的查詢量 -> 趨勢圖
+      const monthTotals = {};
+      rows.forEach(r => {
+        monthTotals[r.month_bucket] = (monthTotals[r.month_bucket] || 0) + Number(r.search_count);
+      });
+      const months = Object.keys(monthTotals).sort();
+      const monthValues = months.map(m => monthTotals[m]);
+
+      const trendCtx = document.getElementById('monthlyTrendChart');
+      if (monthlyTrendChartInstance) monthlyTrendChartInstance.destroy();
+      monthlyTrendChartInstance = new Chart(trendCtx, {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [{
+            label: '總查詢次數',
+            data: monthValues,
+            borderColor: '#4CAE7B',
+            backgroundColor: 'rgba(76,174,123,0.15)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+      });
+
+      // 2. 依站點加總 -> 排行榜
+      const byAddress = {};
+      rows.forEach(r => {
+        const key = r.closest_address;
+        if (!byAddress[key]) byAddress[key] = { address: key, city: r.city, district: r.district, total: 0 };
+        byAddress[key].total += Number(r.search_count);
+      });
+      const ranked = Object.values(byAddress).sort((a, b) => b.total - a.total);
+      const top10 = ranked.slice(0, 10);
+
+      const barCtx = document.getElementById('topLocationsChart');
+      if (topLocationsChartInstance) topLocationsChartInstance.destroy();
+      topLocationsChartInstance = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: top10.map(r => (r.district || '') + ' ' + r.address),
+          datasets: [{
+            label: '查詢次數',
+            data: top10.map(r => r.total),
+            backgroundColor: '#4CAE7B'
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          plugins: { legend: { display: false } },
+          scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+      });
+
+      // 3. 完整排行榜表格 (前 30)
+      const tbody = document.getElementById('hotspotTableBody');
+      tbody.innerHTML = ranked.slice(0, 30).map((r, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td class="small">${r.address}</td>
+          <td class="small text-muted">${r.city || ''} ${r.district || ''}</td>
+          <td class="fw-bold text-success">${r.total}</td>
+        </tr>
+      `).join('');
     }
   </script>
 </body>
