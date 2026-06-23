@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+<pre id="result">測試中...</pre>
+<script>
+fetch('https://vhryiktpxidehcamxcek.supabase.co/functions/v1/search-ibox', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZocnlpa3RweGlkZWhjYW14Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1OTYyODQsImV4cCI6MjA5NTE3MjI4NH0.7Z1drPMsqGPYDaIS8qLaRALIapnOTahxPMmKnEi_KJA'
+  },
+  body: JSON.stringify({ inputData: '高雄市新興區中正三路177號', dims: null })
+})
+  .then(r => r.json())
+  .then(data => document.getElementById('result').textContent = JSON.stringify(data, null, 2))
+  .catch(err => document.getElementById('result').textContent = 'Error: ' + err.message)
+</script>
+</body>
+</html>
