@@ -267,6 +267,35 @@
         <div id="clusterMap" style="height:480px; border-radius:12px; border:2px solid #D6D1C4;"></div>
       </div>
 
+      <!-- 📡 需求缺口分析 -->
+      <div class="admin-card">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
+          <h5 class="fw-bold m-0"><i class="fa-solid fa-tower-broadcast text-warning me-2"></i>需求缺口分析（搜尋地址 vs 推薦距離）</h5>
+          <div class="btn-group btn-group-sm" role="group" id="gapRangeButtons">
+            <button class="btn btn-outline-success" onclick="loadGapAnalysis(1, this)">近1個月</button>
+            <button class="btn btn-outline-success" onclick="loadGapAnalysis(3, this)">近3個月</button>
+            <button class="btn btn-outline-success active" onclick="loadGapAnalysis(12, this)">近12個月</button>
+            <button class="btn btn-outline-success" onclick="loadGapAnalysis(1200, this)">全部</button>
+          </div>
+        </div>
+        <p class="small text-muted mb-3">依行政區統計使用者查詢次數，以及離推薦站點的平均距離。<b>平均距離越遠、查詢次數越多</b>的行政區，代表該區可能有真實需求、但附近沒有足夠近的 i 郵箱可用。</p>
+
+        <div id="gapEmptyState" class="text-center text-muted fw-bold py-4" style="display:none;">這段時間沒有足夠的距離資料（記得：這個統計只會看到「補上距離欄位之後」發生的新搜尋，舊資料不會回溯補上）</div>
+
+        <div id="gapContent">
+          <h6 class="fw-bold small text-muted mb-2">平均距離 Top 15 行政區（查詢次數 ≥ 2）</h6>
+          <canvas id="gapChart" height="280" class="mb-4"></canvas>
+
+          <h6 class="fw-bold small text-muted mb-2">完整列表</h6>
+          <div class="table-responsive" style="max-height:340px; overflow-y:auto;">
+            <table class="table table-sm table-hover align-middle">
+              <thead><tr><th>縣市</th><th>行政區</th><th>查詢次數</th><th>平均距離</th><th>最遠距離</th></tr></thead>
+              <tbody id="gapTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       </div><!-- /analyticsTab -->
 
       </div><!-- /tab-content -->
@@ -541,6 +570,7 @@
     let topLocationsChartInstance = null;
     let hotspotLoaded = false;
     let clusterLoaded = false;
+    let gapLoaded = false;
 
     // 切到「數據分析」頁籤時才載入 (Chart.js / Leaflet 需要畫面可見才能正確計算尺寸)
     document.getElementById('analytics-tab-btn').addEventListener('shown.bs.tab', () => {
@@ -551,6 +581,10 @@
       if (!clusterLoaded) {
         clusterLoaded = true;
         loadClusterAnalysis();
+      }
+      if (!gapLoaded) {
+        gapLoaded = true;
+        loadGapAnalysis(12, document.querySelector('#gapRangeButtons .active'));
       }
     });
 
@@ -725,6 +759,85 @@
         }).bindPopup(`<b>${r.name || ''}</b><br>${r.address || ''}<br>${isNoise ? '孤立站點' : '群組 #' + r.cluster_id}`)
           .addTo(clusterMarkerLayer);
       });
+    }
+
+    // --- 📡 需求缺口分析 (搜尋地址 vs 推薦距離) ---
+
+    let gapChartInstance = null;
+
+    async function loadGapAnalysis(months, btnEl) {
+      document.querySelectorAll('#gapRangeButtons .btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setMonth(startDate.getMonth() - months);
+
+      showLoader('讀取需求缺口資料中...');
+      const { data, error } = await supabaseClient.rpc('get_demand_gap_analysis', {
+        start_date: startDate.toISOString(),
+        end_date: endDate.toISOString()
+      });
+      hideLoader();
+
+      if (error) { console.error('需求缺口分析失敗', error); alert('讀取失敗：' + error.message); return; }
+      renderGapAnalysis(data || []);
+    }
+
+    function renderGapAnalysis(rows) {
+      if (typeof Chart === 'undefined') {
+        console.error('Chart.js 沒有正確載入，圖表無法顯示');
+        alert('圖表函式庫載入失敗，請重新整理頁面再試一次');
+        return;
+      }
+      const emptyState = document.getElementById('gapEmptyState');
+      const content = document.getElementById('gapContent');
+
+      if (!rows.length) {
+        emptyState.style.display = 'block';
+        content.style.display = 'none';
+        return;
+      }
+      emptyState.style.display = 'none';
+      content.style.display = 'block';
+
+      // 圖表只看有一定樣本量的行政區 (查詢次數 >= 2)，避免單筆極端值誤導判斷
+      const meaningful = rows.filter(r => Number(r.search_count) >= 2);
+      const top15 = meaningful.slice(0, 15);
+
+      const gapCtx = document.getElementById('gapChart');
+      if (gapChartInstance) gapChartInstance.destroy();
+      gapChartInstance = new Chart(gapCtx, {
+        type: 'bar',
+        data: {
+          labels: top15.map(r => r.city + ' ' + r.district),
+          datasets: [{
+            label: '平均距離 (公尺)',
+            data: top15.map(r => Number(r.avg_distance_m)),
+            backgroundColor: '#E2A33B'
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          plugins: { legend: { display: false } },
+          scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+      });
+
+      // 完整列表 (全部，不限樣本量，但會把樣本太少的用淡色標示)
+      const tbody = document.getElementById('gapTableBody');
+      tbody.innerHTML = rows.map(r => {
+        const lowSample = Number(r.search_count) < 2;
+        const rowClass = lowSample ? 'text-muted' : '';
+        return `
+        <tr class="${rowClass}">
+          <td>${r.city}</td>
+          <td>${r.district}</td>
+          <td>${r.search_count}${lowSample ? ' <span class="small">(樣本少)</span>' : ''}</td>
+          <td class="fw-bold ${lowSample ? '' : 'text-warning'}">${Math.round(r.avg_distance_m)} 公尺</td>
+          <td>${Math.round(r.max_distance_m)} 公尺</td>
+        </tr>`;
+      }).join('');
     }
   </script>
 </body>
