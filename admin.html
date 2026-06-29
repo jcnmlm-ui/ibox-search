@@ -71,6 +71,11 @@
             <i class="fa-solid fa-chart-line me-1"></i>數據分析
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="feedback-tab-btn" data-bs-toggle="tab" data-bs-target="#feedbackTab" type="button">
+            <i class="fa-solid fa-comment-dots me-1"></i>客戶回饋
+          </button>
+        </li>
       </ul>
 
       <div class="tab-content">
@@ -297,6 +302,22 @@
       </div>
 
       </div><!-- /analyticsTab -->
+
+      <div class="tab-pane fade" id="feedbackTab" role="tabpanel">
+        <div class="admin-card">
+          <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-comment-dots text-info me-2"></i>客戶回饋列表</h5>
+            <span class="badge bg-secondary" id="feedbackCount">- 筆</span>
+          </div>
+          <div id="feedbackEmptyState" class="text-center text-muted fw-bold py-4" style="display:none;">目前還沒有任何回饋</div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead><tr><th style="width:160px;">時間</th><th style="width:140px;">名稱</th><th>內容</th><th style="width:70px;">操作</th></tr></thead>
+              <tbody id="feedbackTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div><!-- /feedbackTab -->
 
       </div><!-- /tab-content -->
     </div>
@@ -839,6 +860,64 @@
           <td>${Math.round(r.max_distance_m)} 公尺</td>
         </tr>`;
       }).join('');
+    }
+
+    // --- 💬 客戶回饋 ---
+
+    let feedbackLoaded = false;
+
+    document.getElementById('feedback-tab-btn').addEventListener('shown.bs.tab', () => {
+      if (!feedbackLoaded) {
+        feedbackLoaded = true;
+        fetchFeedbacks();
+      }
+    });
+
+    // 防止使用者提交的內容被當成 HTML 執行 (XSS 防護)，回饋是公開表單任何人都能填，要特別小心
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function fetchFeedbacks() {
+      showLoader('讀取客戶回饋中...');
+      const { data, error } = await supabaseClient.from('feedbacks').select('*').order('created_at', { ascending: false });
+      hideLoader();
+      if (error) { console.error('讀取回饋失敗', error); alert('讀取失敗：' + error.message); return; }
+      renderFeedbacks(data || []);
+    }
+
+    function renderFeedbacks(rows) {
+      const emptyState = document.getElementById('feedbackEmptyState');
+      const tbody = document.getElementById('feedbackTableBody');
+      document.getElementById('feedbackCount').innerText = rows.length + ' 筆';
+
+      if (!rows.length) { emptyState.style.display = 'block'; tbody.innerHTML = ''; return; }
+      emptyState.style.display = 'none';
+
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td class="small text-muted">${r.created_at ? new Date(r.created_at).toLocaleString('zh-TW') : ''}</td>
+          <td class="fw-bold small">${escapeHtml(r.name) || '匿名'}</td>
+          <td class="small">${escapeHtml(r.message)}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteFeedback('${r.id}')" title="刪除"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function deleteFeedback(id) {
+      if (!confirm('確定要刪除這筆回饋嗎？無法復原喔！')) return;
+      showLoader('刪除中...');
+      const { error } = await supabaseClient.from('feedbacks').delete().eq('id', id);
+      hideLoader();
+      if (error) { alert('刪除失敗：' + error.message); return; }
+      fetchFeedbacks();
     }
   </script>
 </body>
