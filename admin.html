@@ -374,8 +374,24 @@
           <div id="hcErrorEmptyState" class="text-center text-muted fw-bold py-4" style="display:none;">目前沒有被標記異常的站點</div>
           <div class="table-responsive">
             <table class="table table-hover align-middle">
-              <thead><tr><th style="width:100px;">ID</th><th>站點名稱</th><th>地址</th><th style="width:160px;">上次檢查時間</th><th>失敗原因</th></tr></thead>
+              <thead><tr><th style="width:100px;">ID</th><th>站點名稱</th><th>地址</th><th style="width:160px;">上次檢查時間</th><th>失敗原因</th><th style="width:90px;">操作</th></tr></thead>
               <tbody id="hcErrorTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 已被人工停用的站點清單 -->
+        <div class="admin-card">
+          <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-ban text-secondary me-2"></i>已停用站點</h5>
+            <span class="badge bg-secondary" id="hcDisabledCount">- 筆</span>
+          </div>
+          <p class="small text-muted mb-3">按「啟用」會立即重新去問中華郵政一次；如果對方真的又有資料了，會自動把正確的名稱/地址/座標抓回來並解除停用。如果還是查無資料，會顯示尚未真的恢復。</p>
+          <div id="hcDisabledEmptyState" class="text-center text-muted fw-bold py-4" style="display:none;">目前沒有被人工停用的站點</div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead><tr><th style="width:100px;">ID</th><th>停用時間</th><th style="width:110px;">操作</th></tr></thead>
+              <tbody id="hcDisabledTableBody"></tbody>
             </table>
           </div>
         </div>
@@ -1101,6 +1117,21 @@
       if (errorRowsErr) console.error('讀取異常站點失敗', errorRowsErr);
       renderHcErrorTable(errorRows || []);
 
+      // 2b. 已被人工停用的站點清單
+      const { count: disabledCount } = await supabaseClient
+        .from('ibox_locations').select('*', { count: 'exact', head: true })
+        .eq('disabled_by_admin', true);
+
+      const { data: disabledRows, error: disabledRowsErr } = await supabaseClient
+        .from('ibox_locations')
+        .select('id, disabled_at')
+        .eq('disabled_by_admin', true)
+        .order('disabled_at', { ascending: false });
+
+      if (disabledRowsErr) console.error('讀取停用站點失敗', disabledRowsErr);
+      document.getElementById('hcDisabledCount').innerText = (disabledCount ?? 0) + ' 筆';
+      renderHcDisabledTable(disabledRows || []);
+
       // 3. 最近 200 筆完整檢查紀錄
       const { data: logRows, error: logErr } = await supabaseClient
         .from('health_check_log')
@@ -1134,8 +1165,74 @@
           <td class="small text-muted">${escapeHtml(r.address)}</td>
           <td class="small text-muted">${r.last_health_check_at ? new Date(r.last_health_check_at).toLocaleString('zh-TW') : ''}</td>
           <td class="small text-danger">${escapeHtml(r.last_health_error)}</td>
+          <td><button class="btn btn-sm btn-outline-secondary" onclick="disableStation('${escapeHtml(r.id)}', this)">停用</button></td>
         </tr>
       `).join('');
+    }
+
+    function renderHcDisabledTable(rows) {
+      const emptyState = document.getElementById('hcDisabledEmptyState');
+      const tbody = document.getElementById('hcDisabledTableBody');
+
+      if (!rows.length) { emptyState.style.display = 'block'; tbody.innerHTML = ''; return; }
+      emptyState.style.display = 'none';
+
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td class="fw-bold small">#${escapeHtml(r.id)}</td>
+          <td class="small text-muted">${r.disabled_at ? new Date(r.disabled_at).toLocaleString('zh-TW') : ''}</td>
+          <td><button class="btn btn-sm btn-success" onclick="enableStation('${escapeHtml(r.id)}', this)">啟用</button></td>
+        </tr>
+      `).join('');
+    }
+
+    async function disableStation(id, btn) {
+      if (!confirm(`確定要停用站點 #${id} 嗎？這會把它的名稱/地址/座標清空成「尚未啟用」狀態，之後不會再出現在搜尋結果中。`)) return;
+      btn.disabled = true;
+      showLoader('停用中...');
+      try {
+        const { data: sessionData } = await supabaseClient.auth.getSession();
+        const token = sessionData?.session?.access_token;
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/station-disable`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        const json = await res.json();
+        hideLoader();
+        if (json.status !== 'success') { alert('停用失敗：' + (json.message || '未知錯誤')); btn.disabled = false; return; }
+        fetchHealthCheckData();
+      } catch (err) {
+        hideLoader();
+        alert('連線失敗：' + err.message);
+        btn.disabled = false;
+      }
+    }
+
+    async function enableStation(id, btn) {
+      btn.disabled = true;
+      showLoader('重新檢查中...');
+      try {
+        const { data: sessionData } = await supabaseClient.auth.getSession();
+        const token = sessionData?.session?.access_token;
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/station-health-check?test_id=${encodeURIComponent(id)}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const json = await res.json();
+        hideLoader();
+        if (json.status !== 'success') { alert('查詢失敗：' + (json.message || '未知錯誤')); btn.disabled = false; return; }
+
+        if (json.checked.result === 'ok') {
+          alert(`#${id} 已成功重新啟用！資料已自動還原：\n` + Object.keys(json.syncChanges || {}).join('、'));
+        } else {
+          alert(`#${id} 目前中華郵政那邊仍查無資料，尚未真的恢復，暫時無法啟用。`);
+        }
+        fetchHealthCheckData();
+      } catch (err) {
+        hideLoader();
+        alert('連線失敗：' + err.message);
+        btn.disabled = false;
+      }
     }
 
     function setHcLogFilter(filter, btn) {
