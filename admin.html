@@ -76,6 +76,11 @@
             <i class="fa-solid fa-comment-dots me-1"></i>客戶回饋
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="healthcheck-tab-btn" data-bs-toggle="tab" data-bs-target="#healthcheckTab" type="button">
+            <i class="fa-solid fa-truck-medical me-1"></i>站點健檢
+          </button>
+        </li>
       </ul>
 
       <div class="tab-content">
@@ -318,6 +323,69 @@
           </div>
         </div>
       </div><!-- /feedbackTab -->
+
+      <div class="tab-pane fade" id="healthcheckTab" role="tabpanel">
+        <div class="admin-card">
+          <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-truck-medical text-danger me-2"></i>站點健檢總覽</h5>
+            <span class="small text-muted" id="hcLastRun">最近檢查時間：-</span>
+          </div>
+          <p class="small text-muted mb-3">每天自動抽查一批站點是否仍能從中華郵政 API 查到即時資料，大約每 27-29 天可以把全部站點都檢查過一輪。這裡列出目前被標記異常的站點，建議定期確認是否已下架或需要修正資料。</p>
+
+          <div class="row mb-3 text-center">
+            <div class="col-6 col-md-3 mb-2">
+              <div class="small text-muted">站點總數</div>
+              <div class="fw-bold fs-5" id="hcTotal">-</div>
+            </div>
+            <div class="col-6 col-md-3 mb-2">
+              <div class="small text-muted">已檢查過</div>
+              <div class="fw-bold fs-5" id="hcChecked">-</div>
+            </div>
+            <div class="col-6 col-md-3 mb-2">
+              <div class="small text-muted">正常</div>
+              <div class="fw-bold fs-5 text-success" id="hcOk">-</div>
+            </div>
+            <div class="col-6 col-md-3 mb-2">
+              <div class="small text-muted">異常待確認</div>
+              <div class="fw-bold fs-5 text-danger" id="hcError">-</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 目前異常的站點清單(最需要人工確認的部分) -->
+        <div class="admin-card">
+          <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>目前異常站點（待人工確認）</h5>
+            <span class="badge bg-danger" id="hcErrorCount">- 筆</span>
+          </div>
+          <div id="hcErrorEmptyState" class="text-center text-muted fw-bold py-4" style="display:none;">目前沒有被標記異常的站點</div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead><tr><th style="width:100px;">ID</th><th>站點名稱</th><th>地址</th><th style="width:160px;">上次檢查時間</th><th>失敗原因</th></tr></thead>
+              <tbody id="hcErrorTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 完整檢查紀錄(給稽核用) -->
+        <div class="admin-card">
+          <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-clock-rotate-left text-info me-2"></i>完整檢查紀錄</h5>
+            <div class="btn-group btn-group-sm" role="group" id="hcLogFilterButtons">
+              <button class="btn btn-outline-success active" onclick="setHcLogFilter('all', this)">全部</button>
+              <button class="btn btn-outline-success" onclick="setHcLogFilter('error', this)">只看異常</button>
+            </div>
+          </div>
+          <p class="small text-muted mb-3">最近 200 筆檢查紀錄（含正常與異常），依檢查時間新到舊排序。</p>
+          <div id="hcLogEmptyState" class="text-center text-muted fw-bold py-4" style="display:none;">目前還沒有任何檢查紀錄</div>
+          <div class="table-responsive" style="max-height:480px; overflow-y:auto;">
+            <table class="table table-sm table-hover align-middle">
+              <thead><tr><th style="width:160px;">檢查時間</th><th style="width:90px;">ID</th><th>站點名稱</th><th>地址</th><th style="width:90px;">結果</th><th>詳細說明</th></tr></thead>
+              <tbody id="hcLogTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div><!-- /healthcheckTab -->
 
       </div><!-- /tab-content -->
     </div>
@@ -918,6 +986,121 @@
       hideLoader();
       if (error) { alert('刪除失敗：' + error.message); return; }
       fetchFeedbacks();
+    }
+
+    // --- 🩺 站點健檢 ---
+
+    let healthcheckLoaded = false;
+    let hcLogFilter = 'all';       // 'all' | 'error'
+    let hcLogRowsCache = [];       // 快取最近一次抓到的紀錄，切換篩選時不用重打 API
+
+    document.getElementById('healthcheck-tab-btn').addEventListener('shown.bs.tab', () => {
+      if (!healthcheckLoaded) {
+        healthcheckLoaded = true;
+        fetchHealthCheckData();
+      }
+    });
+
+    async function fetchHealthCheckData() {
+      showLoader('讀取站點健檢資料中...');
+
+      // 1. 摘要統計：從 ibox_locations 目前的健檢欄位算總數/已檢查/正常/異常
+      const { count: totalCount } = await supabaseClient
+        .from('ibox_locations').select('*', { count: 'exact', head: true });
+
+      const { count: checkedCount } = await supabaseClient
+        .from('ibox_locations').select('*', { count: 'exact', head: true })
+        .not('health_status', 'is', null);
+
+      const { count: okCount } = await supabaseClient
+        .from('ibox_locations').select('*', { count: 'exact', head: true })
+        .eq('health_status', 'ok');
+
+      const { count: errorCount } = await supabaseClient
+        .from('ibox_locations').select('*', { count: 'exact', head: true })
+        .eq('health_status', 'error');
+
+      document.getElementById('hcTotal').innerText = totalCount ?? '-';
+      document.getElementById('hcChecked').innerText = checkedCount ?? '-';
+      document.getElementById('hcOk').innerText = okCount ?? '-';
+      document.getElementById('hcError').innerText = errorCount ?? '-';
+      document.getElementById('hcErrorCount').innerText = (errorCount ?? 0) + ' 筆';
+
+      // 2. 目前異常的站點清單(依上次檢查時間新到舊)
+      const { data: errorRows, error: errorRowsErr } = await supabaseClient
+        .from('ibox_locations')
+        .select('id, name, address, last_health_check_at, last_health_error')
+        .eq('health_status', 'error')
+        .order('last_health_check_at', { ascending: false });
+
+      if (errorRowsErr) console.error('讀取異常站點失敗', errorRowsErr);
+      renderHcErrorTable(errorRows || []);
+
+      // 3. 最近 200 筆完整檢查紀錄
+      const { data: logRows, error: logErr } = await supabaseClient
+        .from('health_check_log')
+        .select('*')
+        .order('checked_at', { ascending: false })
+        .limit(200);
+
+      hideLoader();
+      if (logErr) { console.error('讀取健檢紀錄失敗', logErr); alert('讀取失敗：' + logErr.message); return; }
+
+      hcLogRowsCache = logRows || [];
+
+      // 最近一次檢查時間(取紀錄裡最新的一筆)
+      document.getElementById('hcLastRun').innerText =
+        '最近檢查時間：' + (hcLogRowsCache[0]?.checked_at ? new Date(hcLogRowsCache[0].checked_at).toLocaleString('zh-TW') : '尚無紀錄');
+
+      renderHcLogTable();
+    }
+
+    function renderHcErrorTable(rows) {
+      const emptyState = document.getElementById('hcErrorEmptyState');
+      const tbody = document.getElementById('hcErrorTableBody');
+
+      if (!rows.length) { emptyState.style.display = 'block'; tbody.innerHTML = ''; return; }
+      emptyState.style.display = 'none';
+
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td class="fw-bold small">#${escapeHtml(r.id)}</td>
+          <td class="fw-bold small">${escapeHtml(r.name)}</td>
+          <td class="small text-muted">${escapeHtml(r.address)}</td>
+          <td class="small text-muted">${r.last_health_check_at ? new Date(r.last_health_check_at).toLocaleString('zh-TW') : ''}</td>
+          <td class="small text-danger">${escapeHtml(r.last_health_error)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function setHcLogFilter(filter, btn) {
+      hcLogFilter = filter;
+      document.querySelectorAll('#hcLogFilterButtons button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderHcLogTable();
+    }
+
+    function renderHcLogTable() {
+      const emptyState = document.getElementById('hcLogEmptyState');
+      const tbody = document.getElementById('hcLogTableBody');
+
+      const rows = hcLogFilter === 'error'
+        ? hcLogRowsCache.filter(r => r.status === 'error')
+        : hcLogRowsCache;
+
+      if (!rows.length) { emptyState.style.display = 'block'; tbody.innerHTML = ''; return; }
+      emptyState.style.display = 'none';
+
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td class="small text-muted">${r.checked_at ? new Date(r.checked_at).toLocaleString('zh-TW') : ''}</td>
+          <td class="fw-bold small">#${escapeHtml(r.location_id)}</td>
+          <td class="fw-bold small">${escapeHtml(r.location_name)}</td>
+          <td class="small text-muted">${escapeHtml(r.location_address)}</td>
+          <td>${r.status === 'error' ? '<span class="badge bg-danger">異常</span>' : '<span class="badge bg-success">正常</span>'}</td>
+          <td class="small">${escapeHtml(r.detail)}</td>
+        </tr>
+      `).join('');
     }
   </script>
 </body>
