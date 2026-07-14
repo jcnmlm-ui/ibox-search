@@ -1067,6 +1067,7 @@
         jsUpdated: "<i class='fa-regular fa-clock me-1'></i>更新時間：",
         jsLive: "(即時)", jsStatusTitle: "格位狀態", jsSizeTh: "寬*高*深(cm)", jsTotalTh: "總數", jsRemainTh: "剩餘",
         jsNoData: "暫無資料", 
+        jsReportLink: "<i class='fa-solid fa-arrow-up-right-from-square ms-1 me-1'></i>前往回報",
         jsCopied: "<i class='fa-solid fa-check-circle text-success me-1'></i>已複製！",
         shareWeb: "<i class='fa-solid fa-share-nodes me-1'></i>分享本站",
         jsCopyBtn: "<i class='fa-regular fa-copy me-1'></i>複製",
@@ -1134,6 +1135,7 @@
         jsUpdated: "<i class='fa-regular fa-clock me-1'></i>Updated: ",
         jsLive: "(Live)", jsStatusTitle: "Locker Status", jsSizeTh: "W*H*D(cm)", jsTotalTh: "Total", jsRemainTh: "Free",
         jsNoData: "No Data", 
+        jsReportLink: "<i class='fa-solid fa-arrow-up-right-from-square ms-1 me-1'></i>Report Issue",
         jsCopied: "<i class='fa-solid fa-check-circle text-success me-1'></i>Copied!",
         shareWeb: "<i class='fa-solid fa-share-nodes me-1'></i>Share",
         jsCopyBtn: "<i class='fa-regular fa-copy me-1'></i>Copy",
@@ -1528,6 +1530,11 @@
         let distText = item.distanceText.replace('公里', 'km');
         let durText = item.duration.replace('分鐘', t.jsMin);
         let updatedText = (item.updateTime || t.jsNoData).replace('(即時)', t.jsLive);
+        let idText = item.id ? `<span class="fw-bold ms-1" style="font-size: 0.75rem; color: #A6A095;">#${item.id}</span>` : '';
+        const isStationError = item.updateTime === '無此位置，請協助錯誤回報';
+        let reportLinkHtml = isStationError
+          ? ` <a href="#" class="fw-bold text-decoration-underline" style="font-size: 0.75rem; color: var(--post-red);" onclick="openStationFeedback('${item.name}', '${item.id}'); return false;">${t.jsReportLink}</a>`
+          : '';
 
         let displayAddress = item.zipcode ? `<span class="text-primary me-1">${item.zipcode}</span>${item.address}` : item.address;
 
@@ -1536,13 +1543,13 @@
             <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
               <div class="flex-grow-1 pe-md-2 d-flex flex-column">
                 <div>
-                  <span class="badge-3d ${item.originalRank === 1 ? '' : 'bg-success'} mb-2 d-inline-block">${t.jsTopX.replace('{X}', item.originalRank)}</span>
+                  <span class="badge-3d ${item.originalRank === 1 ? '' : 'bg-success'} mb-2 d-inline-block">${t.jsTopX.replace('{X}', item.originalRank)}</span>${idText}
                   <h3 style="font-weight: 900; font-size: 1.3rem; color: var(--post-green-dark);">${item.name}</h3>
                   <p class="mb-1 fw-bold" style="color: var(--text-main);">${t.jsRoute}<span class="text-danger">${distText}</span> (約 ${durText})</p>
                   <p class="small fw-bold mb-0" style="color: #8C8476;">${displayAddress}</p>
                   ${locationHtml}
                 </div>
-                <div class="mt-auto pt-3 fw-bold" style="font-size: 0.75rem; color: #A6A095;">${t.jsUpdated}${updatedText}</div>
+                <div class="mt-auto pt-3 fw-bold" style="font-size: 0.75rem; color: #A6A095;">${t.jsUpdated}${updatedText}${reportLinkHtml}</div>
               </div>
               <div class="box-status flex-shrink-0 align-self-md-start w-100 w-md-auto"><div class="box-status-title">${t.jsStatusTitle}</div>${tableHtml}</div>
             </div>
@@ -1577,6 +1584,18 @@
       textArea.select();
       try { document.execCommand('copy'); alert(i18n[currentLang].jsCopied.replace(/<[^>]*>?/gm, '')); } catch (err) {}
       document.body.removeChild(textArea);
+    }
+
+    function openStationFeedback(name, id) {
+      const msgField = document.getElementById('feedbackMessage');
+      const prefill = currentLang === 'zh'
+        ? `站點回報：${name} (#${id})\n問題：查無此站點即時資料，請協助確認。\n\n`
+        : `Station report: ${name} (#${id})\nIssue: No real-time data available for this station.\n\n`;
+      msgField.value = prefill;
+      const modalEl = document.getElementById('feedbackModal');
+      const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+      modal.show();
+      msgField.focus();
     }
 
     async function submitFeedback() {
