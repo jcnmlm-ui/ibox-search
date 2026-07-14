@@ -352,6 +352,19 @@
           </div>
         </div>
 
+        <!-- 手動指定站點檢查 -->
+        <div class="admin-card">
+          <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-magnifying-glass text-primary me-2"></i>手動查詢特定站點</h5>
+          </div>
+          <p class="small text-muted mb-3">輸入站點 ID，立即檢查該站點是否正常，並比對是否需要同步更新資料（不會影響正式排程的自動輪替進度）。</p>
+          <div class="d-flex gap-2 mb-3" style="max-width:400px;">
+            <input type="text" class="form-control" id="hcManualId" placeholder="輸入站點 ID，例如 1865" onkeydown="if(event.key==='Enter') manualCheckStation()">
+            <button class="btn btn-primary text-nowrap" onclick="manualCheckStation()"><i class="fa-solid fa-play me-1"></i>立即檢查</button>
+          </div>
+          <div id="hcManualResult" style="display:none;"></div>
+        </div>
+
         <!-- 目前異常的站點清單(最需要人工確認的部分) -->
         <div class="admin-card">
           <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
@@ -989,6 +1002,58 @@
     }
 
     // --- 🩺 站點健檢 ---
+
+    async function manualCheckStation() {
+      const idInput = document.getElementById('hcManualId');
+      const id = idInput.value.trim();
+      if (!id) { alert('請輸入站點 ID'); return; }
+
+      const resultBox = document.getElementById('hcManualResult');
+      resultBox.style.display = 'none';
+      showLoader('檢查中...');
+
+      try {
+        const { data: sessionData } = await supabaseClient.auth.getSession();
+        const token = sessionData?.session?.access_token;
+
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/station-health-check?test_id=${encodeURIComponent(id)}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const json = await res.json();
+        hideLoader();
+
+        if (json.status !== 'success') {
+          resultBox.innerHTML = `<div class="alert alert-danger mb-0">查詢失敗：${escapeHtml(json.message || '未知錯誤')}</div>`;
+          resultBox.style.display = 'block';
+          return;
+        }
+
+        const c = json.checked;
+        let html = `<div class="alert ${c.result === 'ok' ? 'alert-success' : 'alert-danger'} mb-2">
+          <strong>#${escapeHtml(c.id)} ${escapeHtml(c.name)}</strong>　結果：${c.result === 'ok' ? '正常' : '異常'}<br>
+          <span class="small">${escapeHtml(c.detail)}</span>
+        </div>`;
+
+        if (json.syncChanges) {
+          html += `<div class="small border rounded p-2 bg-light"><strong>已同步更新的欄位：</strong><ul class="mb-0">`;
+          for (const field in json.syncChanges) {
+            const ch = json.syncChanges[field];
+            html += `<li>${escapeHtml(field)}：${escapeHtml(String(ch.old ?? '(空)'))} → ${escapeHtml(String(ch.new))}</li>`;
+          }
+          html += `</ul></div>`;
+        }
+
+        resultBox.innerHTML = html;
+        resultBox.style.display = 'block';
+
+        // 重新整理總覽跟清單，反映最新狀態
+        fetchHealthCheckData();
+      } catch (err) {
+        hideLoader();
+        resultBox.innerHTML = `<div class="alert alert-danger mb-0">連線失敗：${escapeHtml(err.message)}</div>`;
+        resultBox.style.display = 'block';
+      }
+    }
 
     let healthcheckLoaded = false;
     let hcLogFilter = 'all';       // 'all' | 'error'
