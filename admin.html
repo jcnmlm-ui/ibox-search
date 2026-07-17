@@ -372,7 +372,7 @@
             <span class="badge bg-danger" id="hcErrorCount">- 筆</span>
           </div>
           <div id="hcErrorEmptyState" class="text-center text-muted fw-bold py-4" style="display:none;">目前沒有被標記異常的站點</div>
-          <div class="table-responsive">
+          <div class="table-responsive" style="max-height:420px; overflow-y:auto;">
             <table class="table table-hover align-middle">
               <thead><tr><th style="width:100px;">ID</th><th>站點名稱</th><th>地址</th><th style="width:160px;">上次檢查時間</th><th>失敗原因</th><th style="width:90px;">操作</th></tr></thead>
               <tbody id="hcErrorTableBody"></tbody>
@@ -384,17 +384,22 @@
         <div class="admin-card">
           <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 flex-wrap gap-2">
             <h5 class="fw-bold m-0"><i class="fa-solid fa-ban text-secondary me-2"></i>已停用站點</h5>
-            <span class="badge bg-secondary" id="hcDisabledCount">- 筆</span>
+            <div class="d-flex align-items-center gap-2">
+              <span class="small text-muted" id="hcBatchEnableStatus"></span>
+              <button class="btn btn-sm btn-outline-success" id="hcBatchEnableBtn" onclick="enableAllDisabledStations()"><i class="fa-solid fa-rotate me-1"></i>一鍵重新檢查全部</button>
+              <span class="badge bg-secondary" id="hcDisabledCount">- 筆</span>
+            </div>
           </div>
-          <p class="small text-muted mb-3">按「啟用」會立即重新去問中華郵政一次；如果對方真的又有資料了，會自動把正確的名稱/地址/座標抓回來並解除停用。如果還是查無資料，會顯示尚未真的恢復。</p>
+          <p class="small text-muted mb-3">按單筆「啟用」或上方「一鍵重新檢查全部」，都會立即重新去問中華郵政一次；如果對方真的又有資料了，會自動把正確的名稱/地址/座標抓回來並解除停用。如果還是查無資料，會顯示尚未真的恢復。</p>
           <div id="hcDisabledEmptyState" class="text-center text-muted fw-bold py-4" style="display:none;">目前沒有被人工停用的站點</div>
-          <div class="table-responsive">
+          <div class="table-responsive" style="max-height:420px; overflow-y:auto;">
             <table class="table table-hover align-middle">
               <thead><tr><th style="width:100px;">ID</th><th>停用時間</th><th style="width:110px;">操作</th></tr></thead>
               <tbody id="hcDisabledTableBody"></tbody>
             </table>
           </div>
         </div>
+
 
         <!-- 完整檢查紀錄(給稽核用) -->
         <div class="admin-card">
@@ -1074,6 +1079,7 @@
     let healthcheckLoaded = false;
     let hcLogFilter = 'all';       // 'all' | 'error'
     let hcLogRowsCache = [];       // 快取最近一次抓到的紀錄，切換篩選時不用重打 API
+    let hcDisabledRowsCache = [];  // 快取已停用站點清單，供「一鍵重新檢查全部」使用
 
     document.getElementById('healthcheck-tab-btn').addEventListener('shown.bs.tab', () => {
       if (!healthcheckLoaded) {
@@ -1130,7 +1136,8 @@
 
       if (disabledRowsErr) console.error('讀取停用站點失敗', disabledRowsErr);
       document.getElementById('hcDisabledCount').innerText = (disabledCount ?? 0) + ' 筆';
-      renderHcDisabledTable(disabledRows || []);
+      hcDisabledRowsCache = disabledRows || [];
+      renderHcDisabledTable(hcDisabledRowsCache);
 
       // 3. 最近 200 筆完整檢查紀錄
       const { data: logRows, error: logErr } = await supabaseClient
@@ -1233,6 +1240,57 @@
         alert('連線失敗：' + err.message);
         btn.disabled = false;
       }
+    }
+
+    async function enableAllDisabledStations() {
+      if (hcDisabledRowsCache.length === 0) { alert('目前沒有已停用的站點可以檢查'); return; }
+      if (!confirm(`確定要重新檢查全部 ${hcDisabledRowsCache.length} 個已停用站點嗎？\n會依序一筆一筆問中華郵政（不是同時），所以需要一點時間，請耐心等候，過程中請不要關閉頁面。`)) return;
+
+      const btn = document.getElementById('hcBatchEnableBtn');
+      const statusEl = document.getElementById('hcBatchEnableStatus');
+      btn.disabled = true;
+
+      const ids = hcDisabledRowsCache.map(r => r.id);
+      let reactivatedCount = 0;
+      let stillDisabledCount = 0;
+      let failCount = 0;
+
+      const { data: sessionData } = await supabaseClient.auth.getSession();
+      const token = sessionData?.session?.access_token;
+
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i];
+        statusEl.innerText = `檢查中... ${i + 1}/${ids.length}（#${id}）`;
+        try {
+          const res = await fetch(`${SUPABASE_URL}/functions/v1/station-health-check?test_id=${encodeURIComponent(id)}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          const json = await res.json();
+          if (json.status === 'success' && json.checked.result === 'ok') {
+            reactivatedCount++;
+          } else if (json.status === 'success') {
+            stillDisabledCount++;
+          } else {
+            failCount++;
+          }
+        } catch (err) {
+          failCount++;
+        }
+        // 每筆之間稍微間隔一下，對中華郵政的伺服器比較有禮貌
+        await new Promise(resolve => setTimeout(resolve, 400));
+      }
+
+      statusEl.innerText = '';
+      btn.disabled = false;
+
+      alert(
+        `批次檢查完成，共 ${ids.length} 筆：\n` +
+        `✅ 已重新啟用：${reactivatedCount} 筆\n` +
+        `⏳ 仍未恢復：${stillDisabledCount} 筆\n` +
+        (failCount > 0 ? `⚠️ 查詢失敗：${failCount} 筆\n` : '')
+      );
+
+      fetchHealthCheckData();
     }
 
     function setHcLogFilter(filter, btn) {
